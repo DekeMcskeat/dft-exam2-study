@@ -1,0 +1,1573 @@
+<meta charset="utf-8">
+<title>DFT Exam 2 Prep</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+<style>
+/* Layout: bright lab-notebook study tool. Light band header with a stem-plot motif, sticky tabs,
+   color-coded topics (each topic keeps one hue everywhere it appears). Deliberately light-only. */
+:root {
+  color-scheme: light;
+  --bg: #F6F8FC;
+  --surface: #FFFFFF;
+  --band: #EAF1FF;
+  --ink: #1A2233;
+  --muted: #5B6680;
+  --line: #E0E6F0;
+  --accent: #2F6FEB;
+  --accent-soft: #EAF1FF;
+  --good: #12925A;
+  --good-soft: #E4F7EE;
+  --bad: #D14B2F;
+  --bad-soft: #FDECE7;
+  --stem: #2F6FEB;
+  --callout: #FFF8E6;
+  --callout-line: #F2C94C;
+  --t-samp: #0E9F6E; --t-read: #2F6FEB; --t-inner: #8B5CF6; --t-sym: #DB2777;
+  --t-ls: #D97706; --t-shift: #0891B2; --t-ext: #EA580C; --t-conv: #4F46E5;
+  --shadow: 0 1px 2px rgba(26, 34, 51, .05), 0 4px 14px rgba(47, 111, 235, .06);
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 15.5px; line-height: 1.55;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap {
+  max-width: 1440px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+header.top { background: var(--band); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+header.top .wrap { padding-block: 26px 10px; position: relative; z-index: 1; }
+header.top .motif { position: absolute; right: 0; bottom: 0; height: 100%; width: min(520px, 55%); opacity: .9; pointer-events: none; }
+@media (max-width: 1000px) { header.top .motif { opacity: .3; } }
+[hidden] { display: none !important; }
+h1 .accent { color: var(--accent); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 5vw, 38px); margin: 4px 0 6px; text-wrap: balance; letter-spacing: -.01em; }
+.sub { color: var(--muted); margin: 0 0 16px; max-width: 64ch; }
+nav.tabs {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+nav.tabs .wrap { display: flex; gap: 4px; overflow-x: auto; }
+nav.tabs a {
+  font-family: var(--font-display); font-weight: 600; font-size: 15px; text-decoration: none;
+  color: var(--muted); padding: 12px 14px 10px; border-bottom: 3px solid transparent; white-space: nowrap;
+}
+nav.tabs a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+nav.tabs a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main .wrap { padding-block: 24px 64px; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 24px; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 18px; margin: 0 0 8px; }
+.lede { color: var(--muted); margin: 0 0 20px; max-width: 70ch; }
+
+/* formula sheet */
+.sheet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; box-shadow: var(--shadow); }
+.panel.wide { grid-column: 1 / -1; }
+.pairs { width: 100%; border-collapse: collapse; }
+.pairs td { padding: 7px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.pairs tr:last-child td { border-bottom: 0; }
+.pairs td.arrow { color: var(--muted); text-align: center; width: 36px; }
+.pairs td.note { color: var(--muted); font-size: 13.5px; }
+.scroll-x { overflow-x: auto; }
+ul.recipes { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+ul.recipes li { padding-left: 2px; }
+ul.recipes b { font-weight: 600; }
+.tag { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+
+/* problems */
+.prob-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 820px) { .prob-layout { grid-template-columns: minmax(0, 1fr); } }
+/* Shrink equations to fit their box so nothing needs sideways scrolling */
+mjx-container { max-width: 100%; }
+mjx-container svg { max-width: 100%; height: auto; }
+mjx-container[display="true"] { overflow: visible !important; margin: 8px 0 !important; }
+.pairs td { overflow-wrap: anywhere; }
+.q, .reveal { overflow-x: visible !important; }
+.scroll-x { overflow-x: visible; }
+.filters { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 60px); display: grid; gap: 16px; }
+@media (max-width: 820px) { .filters { position: static; } }
+.filters label.h { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font: inherit; font-size: 13.5px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 4px 10px; border-radius: 999px; cursor: pointer;
+}
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tc, var(--accent)); }
+.chip[aria-pressed="true"] { background: var(--tc, var(--accent)); border-color: var(--tc, var(--accent)); color: #fff; }
+.chip[aria-pressed="true"]::before { background: #fff; }
+.chip[aria-pressed="false"] { color: var(--muted); }
+select, input[type="text"], input[type="number"], textarea {
+  font: inherit; font-size: 14.5px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; width: 100%;
+}
+textarea { font-family: var(--font-mono); font-size: 14px; resize: vertical; min-height: 64px; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.stats { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
+.bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; display: flex; }
+.bar span { display: block; height: 100%; }
+.bar .g { background: var(--good); } .bar .b { background: var(--bad); }
+.cards { display: grid; gap: 16px; min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--tc, var(--accent)); border-radius: 10px; padding: 18px 20px; min-width: 0; box-shadow: var(--shadow); }
+.card.got { box-shadow: inset 4px 0 0 var(--good), var(--shadow); }
+.card.miss { box-shadow: inset 4px 0 0 var(--bad), var(--shadow); }
+.topic-pill { display: inline-block; font-family: var(--font-mono); font-size: 11.5px; padding: 2px 8px; border-radius: 999px; color: var(--tc); background: color-mix(in srgb, var(--tc) 12%, white); white-space: nowrap; }
+.card-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.card-title { font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+.src { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.q { overflow-x: auto; }
+.q p, .sol p { margin: 0 0 10px; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.choice { font: inherit; border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.choice.right { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+.choice.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.btn {
+  font: inherit; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn.good { border-color: var(--good); color: var(--good); }
+.btn.bad { border-color: var(--bad); color: var(--bad); }
+.btn.good[aria-pressed="true"] { background: var(--good); color: var(--surface); }
+.btn.bad[aria-pressed="true"] { background: var(--bad); color: var(--surface); }
+.reveal { margin-top: 12px; padding: 14px 16px; border-radius: 6px; background: var(--bg); border: 1px dashed var(--line); overflow-x: auto; }
+.reveal.hint { border-style: solid; border-color: var(--accent-soft); background: var(--accent-soft); }
+.reveal .lbl { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+.answer { font-weight: 600; }
+.plots { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 12px; }
+.plots svg { max-width: 100%; height: auto; }
+.plots figure { margin: 0; }
+.plots figcaption { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+details.think { margin-top: 10px; border: 1px solid var(--accent); border-radius: 6px; background: var(--surface); }
+details.think > summary {
+  cursor: pointer; list-style: none; padding: 9px 14px; font-weight: 600; font-size: 14.5px; color: var(--accent);
+  display: flex; align-items: center; gap: 8px; border-radius: 6px;
+}
+details.think > summary::-webkit-details-marker { display: none; }
+details.think > summary::before { content: "▸"; display: inline-block; transition: transform .15s; }
+details.think[open] > summary::before { transform: rotate(90deg); }
+details.think[open] > summary { background: var(--accent-soft); border-radius: 6px 6px 0 0; }
+details.think > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.think ol { margin: 0; padding: 12px 18px 4px 36px; display: grid; gap: 10px; }
+details.think li { padding-left: 4px; }
+details.think li::marker { color: var(--accent); font-family: var(--font-mono); font-size: 13px; }
+details.think > .btn { margin: 8px 14px 14px; }
+@media (prefers-reduced-motion: reduce) { details.think > summary::before { transition: none; } }
+.empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
+.warn { font-size: 13.5px; color: var(--muted); border-left: 3px solid var(--bad); padding-left: 10px; margin-top: 8px; }
+
+/* drill */
+.drill-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.score { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); }
+
+/* tools */
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.form-row { display: grid; gap: 6px; margin-bottom: 12px; }
+.form-row label { font-size: 13.5px; color: var(--muted); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+table.out { border-collapse: collapse; width: 100%; font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+table.out th, table.out td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+table.out th { color: var(--muted); font-weight: 500; }
+.result { margin-top: 12px; }
+.err { color: var(--bad); font-size: 14px; }
+.mono { font-family: var(--font-mono); font-size: 13.5px; }
+/* learn */
+.learn-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 820px) { .learn-layout { grid-template-columns: minmax(0, 1fr); } }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 60px); display: grid; gap: 2px; }
+@media (max-width: 820px) { .toc { position: static; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; } }
+.toc button {
+  font: inherit; font-size: 14px; text-align: left; border: 0; background: transparent; color: var(--muted);
+  padding: 7px 10px; border-radius: 6px; cursor: pointer; display: flex; gap: 8px; align-items: baseline;
+}
+.toc button .n { font-family: var(--font-mono); font-size: 12px; color: var(--tc, var(--accent)); min-width: 18px; }
+.toc button[aria-current="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-weight: 500; }
+.lesson { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--tc, var(--accent)); border-radius: 10px; padding: 22px 24px; box-shadow: var(--shadow); min-width: 0; }
+.lesson h2 { font-size: 26px; }
+.lesson .kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--tc, var(--accent)); }
+.lesson section { margin-top: 18px; }
+.lesson h4 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 0 0 6px; color: var(--ink); }
+.lesson p { margin: 0 0 10px; max-width: 74ch; }
+.lesson ol, .lesson ul { margin: 0 0 10px; padding-left: 22px; display: grid; gap: 6px; max-width: 74ch; }
+.keyidea { background: var(--callout); border: 1px solid var(--callout-line); border-radius: 8px; padding: 12px 16px; margin-top: 14px; }
+.keyidea .lbl, .worked .lbl { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+.worked { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+.worked p:last-child { margin-bottom: 0; }
+.lesson-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+table.simple { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+table.simple th, table.simple td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.simple th { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.widget { background: color-mix(in srgb, var(--tc, var(--accent)) 6%, white); border: 1px solid color-mix(in srgb, var(--tc, var(--accent)) 30%, white); border-radius: 10px; padding: 16px; }
+.widget-table td, .widget-table th { text-align: center; }
+.widget-table td:first-child { text-align: left; color: var(--muted); }
+.widget-table td.hot { background: color-mix(in srgb, var(--tc, var(--accent)) 14%, white); }
+.widget-table td.hot2 { background: color-mix(in srgb, var(--tc, var(--accent)) 7%, white); }
+table.circ { width: auto; }
+table.circ td { width: 52px; height: 36px; text-align: center; border: 2px solid var(--surface); border-radius: 4px; }
+.phasor-wrap { display: grid; grid-template-columns: minmax(200px, 280px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 640px) { .phasor-wrap { grid-template-columns: minmax(0, 1fr); } .phasor-svg { max-width: 280px; margin: 0 auto; } }
+.phasor-svg { width: 100%; height: auto; background: var(--surface); border-radius: 50%; }
+.phasor-read { margin: 12px 0; font-size: 16px; }
+.ph-k { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+.walks { display: grid; gap: 14px; }
+.walk { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
+.walk-title { font-family: var(--font-display); font-weight: 600; font-size: 15.5px; color: var(--tc, var(--accent)); margin-bottom: 4px; }
+.walk-q { margin: 0 0 10px; }
+ol.steps { list-style: none; counter-reset: st; padding: 0; margin: 0; display: grid; gap: 10px; max-width: none; }
+ol.steps li { counter-increment: st; position: relative; padding-left: 36px; min-height: 26px; }
+ol.steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--tc, var(--accent)); color: #fff; font-family: var(--font-mono); font-size: 12.5px; display: grid; place-items: center; }
+ul.mistakes { list-style: none; padding: 0; }
+ul.mistakes li { position: relative; padding-left: 26px; }
+ul.mistakes li::before { content: "✕"; position: absolute; left: 4px; top: 0; color: var(--bad); font-weight: 700; }
+.note-guide { font-size: 13.5px; color: var(--muted); border-left: 3px solid var(--callout-line); padding-left: 10px; margin-top: 8px; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: in .18s ease-out; } @keyframes in { from { transform: translateY(-3px); opacity: .6 } to { transform: none; opacity: 1 } } }
+</style>
+
+<header class="top">
+  <svg class="motif" viewBox="0 0 520 170" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+    <path d="M10 95 Q 45 20 80 95 T 150 95 T 220 95 T 290 95 T 360 95 T 430 95 T 500 95" fill="none" stroke="#2F6FEB" stroke-opacity=".18" stroke-width="3"/>
+    <line x1="10" y1="140" x2="510" y2="140" stroke="#1A2233" stroke-opacity=".15"/>
+    <g stroke-width="3" stroke-linecap="round">
+      <line x1="60" y1="140" x2="60" y2="70" stroke="#2F6FEB"/><circle cx="60" cy="70" r="5" fill="#2F6FEB"/>
+      <line x1="140" y1="140" x2="140" y2="104" stroke="#0E9F6E"/><circle cx="140" cy="104" r="5" fill="#0E9F6E"/>
+      <line x1="220" y1="140" x2="220" y2="52" stroke="#EA580C"/><circle cx="220" cy="52" r="5" fill="#EA580C"/>
+      <line x1="320" y1="140" x2="320" y2="52" stroke="#EA580C" stroke-opacity=".55"/><circle cx="320" cy="52" r="5" fill="#EA580C" fill-opacity=".55"/>
+      <line x1="400" y1="140" x2="400" y2="104" stroke="#0E9F6E" stroke-opacity=".55"/><circle cx="400" cy="104" r="5" fill="#0E9F6E" fill-opacity=".55"/>
+    </g>
+    <g fill="#1A2233" fill-opacity=".3"><circle cx="100" cy="140" r="2.5"/><circle cx="180" cy="140" r="2.5"/><circle cx="260" cy="140" r="2.5"/><circle cx="360" cy="140" r="2.5"/><circle cx="440" cy="140" r="2.5"/><circle cx="480" cy="140" r="2.5"/></g>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">ENEE222 · Exam 2 · DFT</div>
+    <h1>DFT Exam 2 <span class="accent">Prep</span></h1>
+    <p class="sub">Start with the lessons to learn how each idea works. Then practice on all 44 past-exam and practice problems, which come with hints, walkthroughs and checked solutions.</p>
+  </div>
+</header>
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap">
+    <a href="#learn" data-view="learn">Learn</a>
+    <a href="#formulas" data-view="formulas">Formula sheet</a>
+    <a href="#problems" data-view="problems">Problems</a>
+    <a href="#drill" data-view="drill">Drill</a>
+    <a href="#tools" data-view="tools">Calculators</a>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+
+<!-- ================= LEARN ================= -->
+<section id="view-learn" data-view-panel="learn">
+  <div class="learn-layout">
+    <nav class="toc" id="toc" aria-label="Lessons"></nav>
+    <div id="lessonBox"></div>
+  </div>
+</section>
+
+<!-- ================= FORMULAS ================= -->
+<section id="view-formulas" data-view-panel="formulas" hidden>
+  <h2>Formula sheet</h2>
+  <p class="lede">The left panel matches the sheet you get in the exam. The other panels list what it leaves out: the operator definitions, the extension rules from the handout, and the shortcuts these problems keep using.</p>
+  <div class="sheet-grid">
+    <div class="panel">
+      <h3>Given on the exam</h3>
+      <div class="scroll-x">
+      <table class="pairs">
+        <tr><td>\(x[n]=\frac1N\sum_{k} X[k]e^{j\frac{2\pi}{N}kn}\)</td><td class="arrow">⟷</td><td>\(X[k]=\sum_n x[n]e^{-j\frac{2\pi}{N}kn}\)</td></tr>
+        <tr><td>\(\mathbf{x}=\frac1N\mathbf{V}\mathbf{X}\)</td><td class="arrow">⟷</td><td>\(\mathbf{X}=\mathbf{V}^*\mathbf{x}\)</td></tr>
+        <tr><td>\(\alpha\mathbf{x}+\beta\mathbf{y}\)</td><td class="arrow">⟷</td><td>\(\alpha\mathbf{X}+\beta\mathbf{Y}\)</td></tr>
+        <tr><td>\(\mathbf{x}^*\)</td><td class="arrow">⟷</td><td>\(\mathbf{R}\mathbf{X}^*\)</td></tr>
+        <tr><td>\(\mathbf{R}\mathbf{x}\)</td><td class="arrow">⟷</td><td>\(\mathbf{R}\mathbf{X}\)</td></tr>
+        <tr><td>\(\mathbf{P}^m\mathbf{x}\)</td><td class="arrow">⟷</td><td>\(\mathbf{F}^{-m}\mathbf{X}\)</td></tr>
+        <tr><td>\(\mathbf{F}^m\mathbf{x}\)</td><td class="arrow">⟷</td><td>\(\mathbf{P}^{m}\mathbf{X}\)</td></tr>
+        <tr><td>\(\mathbf{X}\)</td><td class="arrow">⟷</td><td>\(N\mathbf{R}\mathbf{x}\)</td></tr>
+        <tr><td>\(x[n]\,y[n]\)</td><td class="arrow">⟷</td><td>\(\frac1N\,\mathbf{X}\circledast\mathbf{Y}\)</td></tr>
+        <tr><td>\(\mathbf{x}\circledast\mathbf{y}\)</td><td class="arrow">⟷</td><td>\(X[k]\,Y[k]\)</td></tr>
+      </table>
+      </div>
+      <p class="mono" style="margin:12px 0 0;color:var(--muted)">cos(π/6)=sin(π/3)=√3/2 · cos(π/4)=sin(π/4)=√2/2 · cos(π/3)=sin(π/6)=1/2</p>
+    </div>
+
+    <div class="panel">
+      <h3>What the operators do</h3>
+      <div class="scroll-x">
+      <table class="pairs">
+        <tr><td>\((\mathbf{P}\mathbf{x})[n]=x[n-1]\)</td><td class="note">circular delay: \(\mathbf{P}[a\,b\,c\,d]^T=[d\,a\,b\,c]^T\)</td></tr>
+        <tr><td>\((\mathbf{F}\mathbf{x})[n]=e^{j2\pi n/N}x[n]\)</td><td class="note">modulation: shifts the spectrum up one bin</td></tr>
+        <tr><td>\((\mathbf{R}\mathbf{x})[n]=x[-n \bmod N]\)</td><td class="note">reversal, sample 0 stays put: \(\mathbf{R}[a\,b\,c\,d]^T=[a\,d\,c\,b]^T\)</td></tr>
+      </table>
+      </div>
+      <p style="margin:12px 0 6px">So in the frequency domain:</p>
+      <ul class="recipes">
+        <li>Multiplying \(X[k]\) by \(e^{-j2\pi mk/N}\) means delaying \(\mathbf{x}\) by \(m\).</li>
+        <li>Multiplying \(X[k]\) by \((-1)^k\) (when \(N\) is even) means circularly shifting \(\mathbf{x}\) by \(N/2\).</li>
+        <li>Multiplying \(x[n]\) by \((-1)^n\) means \(X[k]\to X[k+N/2]\).</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Extensions (from the handout)</h3>
+      <p style="margin:0 0 8px"><b>Periodic</b>, with \(N=ML\): \([\mathbf{s};\mathbf{s};\dots;\mathbf{s}]\) has</p>
+      <p>\[X[kM]=M\,S[k],\qquad X[\ell]=0 \text{ otherwise}\]</p>
+      <p style="margin:0 0 8px"><b>Zero-padded</b>, with \(N=ML\): \([\mathbf{s};\mathbf{0};\dots]\) has</p>
+      <p>\[Y[kM]=S[k]\]</p>
+      <p style="margin:0" class="note">The other \(Y_\ell\) are interpolated values with no simple formula. <b>Upsampling</b> (zeros between samples): \([a\,0\,b\,0\,c\,0\,d\,0]\) ⟷ \([\mathbf{S};\mathbf{S}]\).</p>
+    </div>
+
+    <div class="panel wide">
+      <h3>Shortcuts for each problem type</h3>
+      <ul class="recipes">
+        <li><span class="tag">Sampling</span> A sinusoid at \(f\) Hz has \(\omega=2\pi f/f_s\), folded into \([0,\pi]\). It lands exactly on a bin only if \(k=fN/f_s\) is an integer. Otherwise it leaks into every bin. So \(N\) has to be a common multiple of each frequency's denominator. Each sinusoid gives 2 bins (\(k\) and \(N-k\)) and DC gives 1.</li>
+        <li><span class="tag">Real signal</span> \(X[N-k]=X[k]^*\). Terms: DC \(=X[0]/N\). Amplitude \(=2|X[k]|/N\) at \(\omega=2\pi k/N\), phase \(=\angle X[k]\). A bin at \(k=N/2\) contributes \(X[N/2]/N\) times \((-1)^n\).</li>
+        <li><span class="tag">Sums</span> Write the weights \(c[n]\) as a combination of \(e^{\pm j2\pi kn/N}\). Then \(\sum x[n]e^{-j2\pi kn/N}=X[k]\) and \(\sum x[n]e^{+j2\pi kn/N}=X[N-k]\). For example, \(2\cos(2\pi kn/N)\) gives \(X[k]+X[N-k]\).</li>
+        <li><span class="tag">Least squares</span> Projecting onto a few Fourier sinusoids keeps those bins. Error \(=\frac1N\sum_{\text{dropped }k}|X[k]|^2\) (Parseval). A constant keeps bin 0, and \([a\,b\,a\,b]\) keeps bins 0 and \(N/2\).</li>
+        <li><span class="tag">Real / imag</span> \(\text{DFT}(\operatorname{Re}\mathbf{s})=\tfrac12(\mathbf{S}+\mathbf{R}\mathbf{S}^*)\) and \(\text{DFT}(j\operatorname{Im}\mathbf{s})=\tfrac12(\mathbf{S}-\mathbf{R}\mathbf{S}^*)\). If \(\mathbf{s}=\mathbf{R}\mathbf{s}^*\) (conjugate-symmetric), then \(\mathbf{S}\) is real.</li>
+        <li><span class="tag">Cosine mod</span> \(y[n]=x[n]\cos(2\pi mn/N)\ \Rightarrow\ Y[k]=\tfrac12(X[k-m]+X[k+m])\). Check whether the shifted copies overlap.</li>
+        <li><span class="tag">Duality</span> To find \(\mathbf{u}\) whose DFT equals a given vector \(\mathbf{w}\): \(\mathbf{u}=\frac1N\mathbf{R}\,\text{DFT}(\mathbf{w})\).</li>
+        <li><span class="tag">Circulant</span> A matrix whose first column is \(\mathbf{h}\) and whose next columns shift it down one each time computes \(\mathbf{h}\circledast\mathbf{u}\). So to solve \(\mathbf{A}\mathbf{u}=\mathbf{b}\): <span class="mono">u = ifft(fft(b)./fft(h))</span>.</li>
+        <li><span class="tag">Index puzzles</span> Write the target vector as an operator (\(\mathbf{P}^m\), \(\mathbf{R}\), \(\mathbf{F}^m\)) applied to a known vector. Pattern \([ag\ dh\ ce\ bf]\) is \((\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\), so \(\mathbf{S}=\frac14(\mathbf{R}\mathbf{X})\circledast(\mathbf{F}^{-2}\mathbf{Y})\).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEMS ================= -->
+<section id="view-problems" data-view-panel="problems" hidden>
+  <div class="prob-layout">
+    <aside class="filters" aria-label="Filters">
+      <div>
+        <label class="h">Topic</label>
+        <div class="chips" id="topicChips"></div>
+      </div>
+      <div>
+        <label class="h" for="srcSel">Source</label>
+        <select id="srcSel"></select>
+      </div>
+      <label class="check"><input type="checkbox" id="onlyMiss"> Only problems marked "review again"</label>
+      <div class="stats" id="stats"></div>
+      <button class="btn" id="resetProg" type="button">Reset progress</button>
+      <div id="resetConfirm" hidden class="stats">
+        <span>Clear all your got-it and review marks?</span>
+        <div class="actions" style="margin:0"><button class="btn bad" id="resetYes" type="button">Clear marks</button><button class="btn" id="resetNo" type="button">Keep them</button></div>
+      </div>
+    </aside>
+    <div>
+      <h2 id="probCount">Problems</h2>
+      <p class="lede">Try each problem before you open the hint or solution. Mark it so the drill knows what to bring back. Answers to the Fall 2020 exam and the practice sets are my own, each checked numerically.</p>
+      <div class="cards" id="cards"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DRILL ================= -->
+<section id="view-drill" data-view-panel="drill" hidden>
+  <div class="drill-top">
+    <div>
+      <h2>Drill</h2>
+      <p class="lede" style="margin:0">Random problems from the topics selected on the Problems tab. Ones you mark "review again" come up more often.</p>
+    </div>
+    <div class="score" id="drillScore"></div>
+  </div>
+  <div id="drillCard"></div>
+  <div class="actions"><button class="btn primary" id="nextBtn" type="button">Next problem</button></div>
+</section>
+
+<!-- ================= TOOLS ================= -->
+<section id="view-tools" data-view-panel="tools" hidden>
+  <h2>Calculators</h2>
+  <p class="lede">Use these to check answers you work out by hand. They do the same thing MATLAB's <span class="mono">fft</span> and <span class="mono">ifft</span> do.</p>
+  <div class="tool-grid">
+    <div class="panel">
+      <h3>DFT / IDFT</h3>
+      <div class="form-row">
+        <label for="dftIn">Vector, separated by commas (complex values like <span class="mono">3+5j</span>, <span class="mono">-j</span>)</label>
+        <textarea id="dftIn">-4, 2-j, 3+5j, 7j, 13, -7j, 3-5j, 2+j</textarea>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button class="btn primary" id="doFFT" type="button">Compute DFT</button>
+        <button class="btn" id="doIFFT" type="button">Compute inverse DFT</button>
+      </div>
+      <div class="result scroll-x" id="dftOut"></div>
+    </div>
+    <div class="panel">
+      <h3>Which bins are nonzero?</h3>
+      <p class="note" style="margin:0 0 12px;color:var(--muted)">For "smallest N such that the DFT has exactly K nonzero entries" problems.</p>
+      <div class="row2">
+        <div class="form-row"><label for="fsIn">Sample rate f<sub>s</sub> (Hz)</label><input type="number" id="fsIn" value="192"></div>
+        <div class="form-row"><label for="minN">N must be greater than</label><input type="number" id="minN" value="5"></div>
+      </div>
+      <div class="form-row"><label for="freqIn">Sinusoid frequencies in Hz, separated by commas</label><input type="text" id="freqIn" value="32, 48"></div>
+      <label class="check" style="margin-bottom:12px"><input type="checkbox" id="dcIn" checked> Signal has a DC offset</label>
+      <div class="actions" style="margin-top:0"><button class="btn primary" id="doBins" type="button">Find smallest N</button></div>
+      <div class="result" id="binOut"></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+/* ---------------- stem plots ---------------- */
+function stem(o) {
+  // o: {maxK, pts: {k: [value, label]}, ticks: [k...], title, h}
+  const W = 340, H = o.h || 120, padL = 14, padR = 14, padT = 22, padB = 22;
+  const vals = Object.values(o.pts).map(p => p[0]);
+  const vmax = Math.max(1e-9, ...vals.map(Math.abs));
+  const hasNeg = vals.some(v => v < 0);
+  const plotH = H - padT - padB;
+  const base = hasNeg ? padT + plotH * 0.55 : padT + plotH;
+  const scale = hasNeg ? plotH * 0.55 : plotH;
+  const x = k => padL + k * (W - padL - padR) / o.maxK;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${o.title}">`;
+  s += `<line x1="${padL - 4}" y1="${base}" x2="${W - padR + 4}" y2="${base}" stroke="currentColor" stroke-opacity=".5" stroke-width="1"/>`;
+  for (let k = 0; k <= o.maxK; k++) {
+    if (!(k in o.pts)) s += `<circle cx="${x(k)}" cy="${base}" r="1.8" fill="currentColor" fill-opacity=".6"/>`;
+  }
+  for (const [kk, [v, lab, col]] of Object.entries(o.pts)) {
+    const k = +kk, y = base - (v / vmax) * scale * 0.85, c = col || 'var(--stem)';
+    s += `<line x1="${x(k)}" y1="${base}" x2="${x(k)}" y2="${y}" stroke="${c}" stroke-width="2"/>`;
+    s += `<circle cx="${x(k)}" cy="${y}" r="3.4" fill="${c}"/>`;
+    if (lab) s += `<text x="${x(k) + 5}" y="${v >= 0 ? y - 4 : y + 13}" font-size="11" font-family="IBM Plex Mono, monospace" fill="currentColor">${lab}</text>`;
+  }
+  for (const k of o.ticks) s += `<text x="${x(k)}" y="${H - 5}" font-size="11" text-anchor="middle" font-family="IBM Plex Mono, monospace" fill="currentColor" fill-opacity=".75">${k}</text>`;
+  s += `</svg>`;
+  return `<figure>${s}<figcaption>${o.title}</figcaption></figure>`;
+}
+
+/* ---------------- data ---------------- */
+const TOPICS = {
+  samp:  'Sampling & nonzero bins',
+  read:  'Reading spectra',
+  inner: 'Sums as DFT values',
+  sym:   'Symmetry & real/imag',
+  ls:    'Least squares',
+  shift: 'Shift, modulate, duality',
+  ext:   'Zero-pad & periodic ext.',
+  conv:  'Convolution & products'
+};
+const SOURCES = ['Fall 2019 Exam 2', 'Fall 2020 Exam 2', 'Practice Set 1', 'Practice Set 2', 'Practice Set 3'];
+
+const P = [
+/* ---------- FALL 2019 ---------- */
+{ id:'f19-1', src:0, num:'Problem 1', topic:'read', title:'Complete the spectrum, then write s[n] and s(t)',
+  q:String.raw`<p>A <b>real-valued</b> vector \(\mathbf{s}\) of size \(N=32\) has the magnitude and phase spectra below (only \(k=0,\dots,16\) shown).</p>
+  <p>(i) Extend both graphs to \(k=17,\dots,31\).<br>(ii) Write \(s[n]\) using real sinusoids \(A\cos(\omega n+\phi)\) with \(0\le\omega\le\pi\).<br>(iii) If \(s[n]=s(nT_s)\) with \(f_s=160\) Hz and \(s(t)\) is a DC offset plus two sinusoids below 80 Hz, write \(s(t)\).</p>`,
+  plots:[{maxK:16,pts:{0:[48,'48'],5:[16,'16'],12:[24,'24']},ticks:[0,5,12,16],title:'|S[k]|'},
+         {maxK:16,pts:{0:[1,'π'],5:[-0.3,'−0.3π'],12:[0.7,'0.7π']},ticks:[0,5,12,16],title:'∠S[k]'}],
+  hint:String.raw`Real signal means \(S[32-k]=S[k]^*\): same magnitude, negated phase. A phase of \(\pi\) at \(k=0\) means \(S[0]=-48\).`,
+  sol:String.raw`<p>(i) Mirror: \(S[27]=16e^{+j0.3\pi}\), \(S[20]=24e^{-j0.7\pi}\). All other bins are zero.</p>
+  <p>(ii) \[s[n]=-\tfrac{48}{32}+\tfrac{2\cdot16}{32}\cos\!\left(\tfrac{5\pi}{16}n-0.3\pi\right)+\tfrac{2\cdot 24}{32}\cos\!\left(\tfrac{3\pi}{4}n+0.7\pi\right)\]
+  \[=-1.5+\cos\!\left(\tfrac{5\pi n}{16}-0.3\pi\right)+1.5\cos\!\left(\tfrac{3\pi n}{4}+0.7\pi\right)\]</p>
+  <p>(iii) \(f=\frac{k}{N}f_s\): \(\frac{5}{32}160=25\) Hz and \(\frac{12}{32}160=60\) Hz.</p>
+  <p class="answer">\(s(t)=-1.5+\cos(50\pi t-0.3\pi)+1.5\cos(120\pi t+0.7\pi)\)</p>`},
+{ id:'f19-2', src:0, num:'Problem 2', topic:'ext', title:'Zero-padding, periodic extension, matching bins',
+  q:String.raw`<p>\(\mathbf{s}=[a\ b\ c\ 0\ 0\ 0\ 0\ 0\ 0]^T\) has DFT \(\mathbf{S}=[S_0\ \dots\ S_8]^T\).</p>
+  <p>(i) Express the DFT \(\mathbf{U}\) of \(\mathbf{u}=[a\ b\ c]^T\) in terms of \(\mathbf{S}\).<br>
+  (ii) Express \(q=a+be^{j4\pi/9}+ce^{j8\pi/9}\) in terms of \(\mathbf{S}\).<br>
+  (iii) Express the DFT of \(\mathbf{x}=[a\ c\ b\ a\ c\ b\ a\ c\ b]^T\) in terms of \(\mathbf{S}\).<br>
+  (iv) If \(\mathbf{y}=[a\ b\ c\ 0\ 0\ 0]^T\) has DFT \(\mathbf{Y}\), for which \((k,\ell)\) is \(Y_k=S_\ell\)?</p>`,
+  hint:String.raw`\(\mathbf{s}\) is \(\mathbf{u}\) zero-padded to 3× its length, so \(U[k]=S[3k]\). For (ii), match \(e^{+j4\pi n/9}\) to \(e^{-j2\pi kn/9}\). For (iv), match frequencies: \(2\pi k/6=2\pi\ell/9\).`,
+  sol:String.raw`<p>(i) Zero-padding by \(M=3\): <span class="answer">\(\mathbf{U}=[S_0\ S_3\ S_6]^T\)</span></p>
+  <p>(ii) \(q=\sum s[n]e^{+j2\pi(2)n/9}=\sum s[n]e^{-j2\pi(7)n/9}\), so <span class="answer">\(q=S_7\)</span></p>
+  <p>(iii) \(\mathbf{x}\) is a 3× periodic extension of \([a\ c\ b]=\mathbf{R}\mathbf{u}\), whose DFT is \(\mathbf{R}\mathbf{U}=[S_0\ S_6\ S_3]\). So
+  <span class="answer">\(\mathbf{X}=[3S_0\ 0\ 0\ 3S_6\ 0\ 0\ 3S_3\ 0\ 0]^T\)</span></p>
+  <p>(iv) Both are samples of \(a+be^{-j\omega}+ce^{-j2\omega}\). They agree when \(k/6=\ell/9\): <span class="answer">\((k,\ell)=(0,0),(2,3),(4,6)\)</span></p>`},
+{ id:'f19-3', src:0, num:'Problem 3', topic:'shift', title:'Shifts and modulation on an 8-point signal',
+  q:String.raw`<p>\(\mathbf{s}=[a\ b\ c\ d\ e\ f\ g\ h]^T\) has DFT \(\mathbf{S}=[A\ B\ C\ D\ E\ F\ G\ H]^T\). Find the DFT, in terms of \(A,\dots,H\), of:</p>
+  <p>(i) \(\mathbf{x}=[c{+}g\ \ d{+}h\ \ e{+}a\ \ f{+}b\ \ g{+}c\ \ h{+}d\ \ a{+}e\ \ b{+}f]^T\)<br>
+  (ii) \(\mathbf{y}=[0\ \ \sqrt2 b\ \ 2c\ \ \sqrt2 d\ \ 0\ \ {-\sqrt2} f\ \ {-2}g\ \ {-\sqrt2} h]^T\)<br>
+  (iii) \(\mathbf{u}=[a{-}1\ \ b{+}1\ \ c{-}1\ \ d{+}1\ \ e{-}1\ \ f{+}1\ \ g{-}1\ \ h{+}1]^T\)</p>`,
+  hint:String.raw`(i) \(\mathbf{x}=(\mathbf{P}^2+\mathbf{P}^{-2})\mathbf{s}\). (ii) The weights are \(2\sin(\pi n/4)\). (iii) You're subtracting \((-1)^n\), a Fourier sinusoid at \(k=4\).`,
+  sol:String.raw`<p>(i) \(X[k]=(e^{-j\pi k/2}+e^{j\pi k/2})S[k]=2\cos(\pi k/2)S[k]\):
+  <span class="answer">\(\mathbf{X}=[2A\ \ 0\ \ {-2C}\ \ 0\ \ 2E\ \ 0\ \ {-2G}\ \ 0]^T\)</span></p>
+  <p>(ii) \(y[n]=2\sin(\pi n/4)s[n]=-j(e^{j2\pi n/8}-e^{-j2\pi n/8})s[n]\), so \(\mathbf{y}=j(\mathbf{F}^{-1}-\mathbf{F})\mathbf{s}\) and \(\mathbf{Y}=j(\mathbf{P}^{-1}-\mathbf{P})\mathbf{S}\):
+  <span class="answer">\(\mathbf{Y}=j[B{-}H\ \ C{-}A\ \ D{-}B\ \ E{-}C\ \ F{-}D\ \ G{-}E\ \ H{-}F\ \ A{-}G]^T\)</span></p>
+  <p>(iii) \(\mathbf{u}=\mathbf{s}-\mathbf{v}^{(4)}\) with \(v^{(4)}[n]=(-1)^n\), whose DFT is \(8\) at \(k=4\):
+  <span class="answer">\(\mathbf{U}=[A\ B\ C\ D\ E{-}8\ F\ G\ H]^T\)</span></p>`},
+{ id:'f19-4', src:0, num:'Problem 4', topic:'conv', title:'Product of rearranged vectors; circulant times DFT',
+  q:String.raw`<p>\(\mathbf{x}=[a\ b\ c\ d]^T \leftrightarrow \mathbf{X}=[1\ 2\ 3\ 4]^T\), and \(\mathbf{y}=[e\ f\ g\ h]^T\leftrightarrow\mathbf{Y}=[3\ {-5}\ 0\ 4]^T\).</p>
+  <p>(i) Find the DFT \(\mathbf{S}\) of \(\mathbf{s}=[ag\ \ dh\ \ ce\ \ bf]^T\) numerically.</p>
+  <p>(ii) Find, in terms of \(a,b,c,d\), the DFT \(\mathbf{U}\) of \(\mathbf{u}=\begin{bmatrix}a&d&c&b\\b&a&d&c\\c&b&a&d\\d&c&b&a\end{bmatrix}\begin{bmatrix}1\\2\\3\\4\end{bmatrix}\).</p>`,
+  hint:String.raw`(i) \([a\,d\,c\,b]=\mathbf{R}\mathbf{x}\) and \([g\,h\,e\,f]=\mathbf{P}^2\mathbf{y}\). A product in time is a circular convolution divided by \(N\) in frequency. (ii) The matrix is circulant, so \(\mathbf{u}=\mathbf{x}\circledast[1\,2\,3\,4]\). Use duality for the DFT of \([1\,2\,3\,4]\).`,
+  sol:String.raw`<p>(i) \(\mathbf{s}=(\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\), so \(4\mathbf{S}=(\mathbf{R}\mathbf{X})\circledast(\mathbf{F}^{-2}\mathbf{Y})=[1\,4\,3\,2]\circledast[3\,5\,0\,{-4}]\).</p>
+  <p>\[4\mathbf{S}=\begin{bmatrix}1&2&3&4\\4&1&2&3\\3&4&1&2\\2&3&4&1\end{bmatrix}\begin{bmatrix}3\\5\\0\\-4\end{bmatrix}\quad\Rightarrow\quad \mathbf{S}=\left[-\tfrac34\ \ \tfrac54\ \ \tfrac{21}4\ \ \tfrac{17}4\right]^T\]</p>
+  <p>(ii) Duality: \(\mathbf{X}=[1\,2\,3\,4]\) as a time vector has DFT \(4\mathbf{R}\mathbf{x}=4[a\,d\,c\,b]\). Then \(\mathbf{U}=\mathbf{X}\odot 4\mathbf{R}\mathbf{x}\):
+  <span class="answer">\(\mathbf{U}=[4a\ \ 8d\ \ 12c\ \ 16b]^T\)</span></p>
+  <p class="warn">The official key has a typo here: it writes 4R·x = 4[a d c d]. It should be 4[a d c b]. Its final answer is still correct.</p>`},
+
+/* ---------- FALL 2020 ---------- */
+{ id:'f20-1', src:1, num:'Question 1', topic:'samp', title:'Smallest N for exactly five nonzero bins',
+  q:String.raw`<p>\(x(t)=a+b\cos(64\pi t+2.7)+c\cos(96\pi t-1.3)\) is sampled at \(f_s=192\) Hz starting at \(t=0\). What is the smallest \(N>5\) such that the DFT of \(x[0:N-1]\) has <b>exactly five</b> nonzero entries?</p>`,
+  choices:['12','24','32','48'], correct:0,
+  hint:String.raw`The frequencies are 32 Hz and 48 Hz, so \(\omega=\pi/3\) and \(\pi/2\). Each must equal \(2\pi k/N\) exactly.`,
+  sol:String.raw`<p>\(\omega_1=2\pi\cdot32/192=\pi/3\) needs \(6\mid N\). \(\omega_2=2\pi\cdot48/192=\pi/2\) needs \(4\mid N\). So \(N\) is a multiple of 12.</p>
+  <p class="answer">N = 12, with nonzero bins k = 0, 2, 3, 9, 10.</p>`},
+{ id:'f20-2', src:1, num:'Question 2', topic:'read', title:'Which DFT coefficient is largest?',
+  q:String.raw`<p>For \(\mathbf{x}=x[0:39]\) with \(x[n]=2+5\cos\!\left(\frac{3\pi n}{10}-0.3\right)+4\cos\!\left(\frac{9\pi n}{20}+1.7\right)\), which DFT coefficient has the largest modulus?</p>`,
+  choices:['X[0]','X[3]','X[6]','X[9]'], correct:2,
+  hint:String.raw`Find each bin with \(k=\omega N/2\pi\). DC gives \(X[0]=N\cdot\text{DC}\). A cosine with amplitude \(A\) gives \(|X[k]|=NA/2\).`,
+  sol:String.raw`<p>\(3\pi/10\to k=6\) and \(9\pi/20\to k=9\). \(|X[0]|=40\cdot2=80\), \(|X[6]|=40\cdot5/2=100\), \(|X[9]|=40\cdot4/2=80\), \(X[3]=0\).</p>
+  <p class="answer">X[6]</p>`},
+{ id:'f20-3', src:1, num:'Question 3', topic:'read', title:'Recover x[0] from a plotted spectrum',
+  q:String.raw`<p>A <b>real-valued</b> \(\mathbf{x}=x[0:29]\) has the DFT shown (indices 0 to 15). Find \(x[0]\).</p>`,
+  plots:[{maxK:15,pts:{0:[15,'15'],4:[45,'45']},ticks:[0,4,15],title:'|X[k]|'},{maxK:15,pts:{0:[1,'π'],4:[1/3,'π/3']},ticks:[0,4,15],title:'∠X[k]'}],
+  choices:['−1/2','1/2','1','2'], correct:2,
+  hint:String.raw`\(X[0]=15e^{j\pi}=-15\). Write \(x[n]\) as a DC term plus one cosine, then plug in \(n=0\).`,
+  sol:String.raw`<p>\(x[n]=\frac{-15}{30}+\frac{2\cdot45}{30}\cos\!\left(\frac{4\pi n}{15}+\frac\pi3\right)=-0.5+3\cos\!\left(\frac{4\pi n}{15}+\frac\pi3\right)\)</p>
+  <p>\(x[0]=-0.5+3\cdot\tfrac12\). <span class="answer">x[0] = 1</span></p>`},
+{ id:'f20-4', src:1, num:'Question 4', topic:'sym', title:'Spot the symmetry of S',
+  q:String.raw`<p>\(\mathbf{s}=[-4\ \ 2{-}j\ \ 3{+}5j\ \ 7j\ \ 13\ \ {-7j}\ \ 3{-}5j\ \ 2{+}j]^T\) has DFT \(\mathbf{S}=[A\ \dots\ H]^T\). Which is true? (Justify.)</p>`,
+  choices:['A = H*','C = G*','C = G','C = C*'], correct:3,
+  hint:String.raw`Compare \(s[n]\) with \(s[8-n]\). What does \(\mathbf{s}=\mathbf{R}\mathbf{s}^*\) imply for \(\mathbf{S}\)?`,
+  sol:String.raw`<p>\(s[7]=s[1]^*\), \(s[6]=s[2]^*\), \(s[5]=s[3]^*\), and \(s[0]\), \(s[4]\) are real. So \(\mathbf{s}=\mathbf{R}\mathbf{s}^*\).</p>
+  <p>Taking DFTs: \(\mathbf{S}=\mathbf{R}(\mathbf{R}\mathbf{S}^*)=\mathbf{S}^*\), so every \(S[k]\) is real. The other options would need \(\mathbf{s}\) to be real or even, and it is neither.</p>
+  <p class="answer">C = C*. Numerically, S = [19, 4.31, −13, −21.34, 11, −18.31, 19, −32.66].</p>`},
+{ id:'f20-5', src:1, num:'Question 5', topic:'ls', title:'Best fit with DC and ω = π',
+  q:String.raw`<p>\(\mathbf{X}=[1\ \ 3{-}j\ \ 1{+}5j\ \ {-4}\ \ 1{-}5j\ \ 3{+}j]^T\). If \(\hat{\mathbf{x}}\) is a linear combination of \(\mathbf{v}^{(0)}\) and \(\mathbf{v}^{(3)}\), what is the smallest possible \(\|\mathbf{x}-\hat{\mathbf{x}}\|^2\)?</p>`,
+  choices:['6','12','26','36'], correct:1,
+  hint:String.raw`The best fit keeps bins 0 and 3. The error is \(\frac1N\sum|X[k]|^2\) over the other bins.`,
+  sol:String.raw`<p>\(\frac16\left(|3-j|^2+|1+5j|^2+|1-5j|^2+|3+j|^2\right)=\frac{10+26+26+10}{6}\)</p>
+  <p class="answer">12</p>`},
+{ id:'f20-6', src:1, num:'Question 6', topic:'shift', title:'Which s gives this weighted spectrum?',
+  q:String.raw`<p>\(\mathbf{x}=[a\ \dots\ h]^T\leftrightarrow\mathbf{X}=[A\ \dots\ H]^T\). Find \(\mathbf{s}\) with DFT \(\mathbf{S}=[2A\ \ {-\sqrt2}B\ \ 0\ \ \sqrt2D\ \ {-2E}\ \ \sqrt2F\ \ 0\ \ {-\sqrt2}H]^T\).</p>
+  <p class="note" style="color:var(--muted)">(The answer choices didn't come through in the PDF scan, so treat this as free response.)</p>`,
+  hint:String.raw`The weights are \(2\cos(3\pi k/4)=e^{-j2\pi 3k/8}+e^{j2\pi 3k/8}\). Each exponential is a delay or an advance by 3.`,
+  sol:String.raw`<p>\(S[k]=2\cos(2\pi\cdot3k/8)X[k]\), so \(\mathbf{s}=(\mathbf{P}^3+\mathbf{P}^{-3})\mathbf{x}\) and \(s[n]=x[n-3]+x[n+3]\).</p>
+  <p class="answer">\(\mathbf{s}=[d{+}f\ \ e{+}g\ \ f{+}h\ \ g{+}a\ \ h{+}b\ \ a{+}c\ \ b{+}d\ \ c{+}e]^T\)</p>`},
+{ id:'f20-7', src:1, num:'Question 7', topic:'ext', title:'Shifted, then periodically extended',
+  q:String.raw`<p>\(\mathbf{x}=[a\ b\ c\ d]^T\leftrightarrow\mathbf{X}=[A\ B\ C\ D]^T\). Find the DFT of \(\mathbf{y}=[c\ d\ a\ b\ c\ d\ a\ b]^T\).</p>`,
+  hint:String.raw`\([c\,d\,a\,b]\) is \(\mathbf{x}\) shifted by 2, with DFT \((-1)^kX[k]\). Then extend it periodically 2×.`,
+  sol:String.raw`<p>DFT of \([c\ d\ a\ b]\) is \([A\ {-B}\ C\ {-D}]\). A 2× periodic extension doubles each value and places it at the even indices.</p>
+  <p class="answer">\(\mathbf{Y}=[2A\ \ 0\ \ {-2B}\ \ 0\ \ 2C\ \ 0\ \ {-2D}\ \ 0]^T\)</p>`},
+{ id:'f20-8', src:1, num:'Question 8', topic:'shift', title:'A spectrum made of time samples (duality)',
+  q:String.raw`<p>\(\mathbf{s}=[a\ b\ c\ 0\ 0\ 0\ 0\ 0\ 0\ 0\ 0\ 0]^T\) has DFT \([S_0\ \dots\ S_{11}]^T\). Which time vector \(\mathbf{u}\) has DFT \(\mathbf{U}=[a\ b\ c\ 0]^T\)?</p>`,
+  hint:String.raw`Let \(\mathbf{w}=[a\,b\,c\,0]\). Then \(\mathbf{u}=\frac14\mathbf{R}\,\text{DFT}(\mathbf{w})\). \(\mathbf{s}\) is \(\mathbf{w}\) zero-padded 3×, so \(\text{DFT}(\mathbf{w})[k]=S_{3k}\).`,
+  sol:String.raw`<p>\(\text{DFT}(\mathbf{w})=[S_0\ S_3\ S_6\ S_9]\). Reverse it and divide by 4.</p>
+  <p class="answer">\(\mathbf{u}=\tfrac14[S_0\ \ S_9\ \ S_6\ \ S_3]^T\)</p>`},
+{ id:'f20-9', src:1, num:'Question 9', topic:'conv', title:'Which operation is a circular convolution?',
+  q:String.raw`<p>\(\mathbf{x}\) has length \(N>2\) and may be complex. Which \(\mathbf{y}\) can be written as \(\mathbf{a}\circledast\mathbf{x}\) for a suitable \(\mathbf{a}\)? Give \(\mathbf{a}\).</p>`,
+  choices:['y = x*','y = Rx','y = Px','y = Fx'], correct:2,
+  hint:`Circular convolution is linear and commutes with circular shifts. Which option has both properties?`,
+  sol:String.raw`<p>Conjugation isn't linear over complex numbers. Reversal and modulation don't commute with shifts. Delay does: \(\mathbf{P}\mathbf{x}=\boldsymbol\delta_1\circledast\mathbf{x}\).</p>
+  <p class="answer">y = Px, with a = [0 1 0 … 0]ᵀ</p>`},
+{ id:'f20-10', src:1, num:'Question 10', topic:'conv', title:'Last sample of a product of spectra',
+  q:String.raw`<p>\(\mathbf{x}=[a\ b\ c\ d]^T\leftrightarrow[A\ B\ C\ D]^T\) and \(\mathbf{y}=[1\ 2\ 3\ 4]^T\leftrightarrow[E\ F\ G\ H]^T\). If \(\mathbf{s}\) has DFT \([AE\ \ {-BF}\ \ CG\ \ {-DH}]^T\), find \(s[3]\).</p>`,
+  hint:String.raw`\((-1)^kY[k]\) is the DFT of \(\mathbf{P}^2\mathbf{y}=[3\,4\,1\,2]\). Then \(\mathbf{s}=\mathbf{x}\circledast[3\,4\,1\,2]\).`,
+  sol:String.raw`<p>\(s[3]=\sum_m x[m]z[3-m]\) with \(\mathbf{z}=[3\,4\,1\,2]\): \(a z_3+b z_2+c z_1+d z_0\).</p>
+  <p class="answer">s[3] = 2a + b + 4c + 3d</p>`},
+
+/* ---------- PRACTICE 1 ---------- */
+{ id:'p1-1', src:2, num:'Problem 1', topic:'samp', title:'Three sinusoids, six nonzero bins',
+  q:String.raw`<p>\(s(t)=a\cos(40\pi t+\phi_a)+b\cos(60\pi t+\phi_b)+c\cos(70\pi t+\phi_b)\) is sampled at \(f_s=120\) Hz. What is the smallest \(L>6\) such that the DFT of \(s[0:L-1]\) has exactly six nonzero entries? Which \(k\)?</p>`,
+  hint:String.raw`\(\omega=\pi/3,\ \pi/2,\ 7\pi/12\). Find the smallest \(L\) for which all three are multiples of \(2\pi/L\).`,
+  sol:String.raw`<p>\(\pi/3\) needs \(6\mid L\), \(\pi/2\) needs \(4\mid L\), and \(7\pi/12\) needs \(24\mid L\) (because \(k=7L/24\)).</p>
+  <p class="answer">L = 24, with k = 4, 6, 7, 17, 18, 20</p>`},
+{ id:'p1-2', src:2, num:'Problem 2', topic:'read', title:'Amplitudes from a magnitude plot',
+  q:String.raw`<p>Real \(\mathbf{s}\), \(N=30\), has the magnitude spectrum shown (\(k=0..15\)). Write \(s[n]\) as real sinusoids \(A\cos(\omega n+\phi)\) with \(0\le\omega\le\pi\). Give \(A\) and \(\omega\) for each term. You don't need \(\phi\).</p>`,
+  plots:[{maxK:15,pts:{4:[30,'30'],11:[10,'10']},ticks:[0,4,11,15],title:'|S[k]|'}],
+  hint:String.raw`\(A=2|S[k]|/N\) and \(\omega=2\pi k/N\).`,
+  sol:String.raw`<p class="answer">\(s[n]=2\cos\!\left(\tfrac{4\pi}{15}n+\phi_1\right)+\tfrac23\cos\!\left(\tfrac{11\pi}{15}n+\phi_2\right)\)</p>`},
+{ id:'p1-3', src:2, num:'Problem 3', topic:'inner', title:'Sum of odd-indexed samples',
+  q:String.raw`<p>\(\mathbf{s}=[a\ \dots\ h]^T\) has DFT \(\mathbf{S}=[5\ \ 3{+}j\ \ 4{-}5j\ \ 2j\ \ {-11}\ \ {-2j}\ \ 4{+}5j\ \ 3{-}j]^T\). Find \(r=b+d+f+h\).</p>`,
+  hint:String.raw`\(S[0]\) is the sum of all samples, and \(S[4]\) is the even samples minus the odd samples.`,
+  sol:String.raw`<p>\(r=\tfrac12(S[0]-S[4])=\tfrac12(5+11)\).</p><p class="answer">r = 8</p>`},
+{ id:'p1-4', src:2, num:'Problem 4', topic:'sym', title:'DFT of the real part',
+  q:String.raw`<p>\(\mathbf{s}\) has DFT \(\mathbf{S}=[3\ 5\ 7\ 1\ {-1}\ {-5}\ 9\ 11]^T\). Find the DFT of \(\mathbf{x}=\operatorname{Re}\mathbf{s}\).</p>`,
+  hint:String.raw`\(\mathbf{x}=\tfrac12(\mathbf{s}+\mathbf{s}^*)\) and \(\mathbf{s}^*\leftrightarrow\mathbf{R}\mathbf{S}^*\).`,
+  sol:String.raw`<p>\(\mathbf{R}\mathbf{S}^*=[3\ 11\ 9\ {-5}\ {-1}\ 1\ 7\ 5]\). Average it with \(\mathbf{S}\).</p>
+  <p class="answer">\(\mathbf{X}=[3\ \ 8\ \ 8\ \ {-2}\ \ {-1}\ \ {-2}\ \ 8\ \ 8]^T\)</p>`},
+{ id:'p1-5', src:2, num:'Problem 5', topic:'ls', title:'Best constant approximation',
+  q:String.raw`<p>\(\mathbf{X}=[5\ \ 1{+}3j\ \ {-2}\ \ 1{-}3j]^T\). Approximating \(\mathbf{x}\) by \([a\ a\ a\ a]^T\), what is the smallest \(\|\mathbf{x}-\hat{\mathbf{x}}\|^2\)?</p>`,
+  hint:`A constant keeps only bin 0.`,
+  sol:String.raw`<p>\(\frac14(10+4+10)\)</p><p class="answer">6</p>`},
+{ id:'p1-6', src:2, num:'Problem 6', topic:'shift', title:'Difference of shifted spectra',
+  q:String.raw`<p>\(\mathbf{s}=[a\ \dots\ f]^T\leftrightarrow[A\ \dots\ F]^T\). Find \(\mathbf{x}\) with DFT \(\mathbf{X}=[C{-}E\ \ D{-}F\ \ E{-}A\ \ F{-}B\ \ A{-}C\ \ B{-}D]^T\).</p>`,
+  hint:String.raw`\(X[k]=S[k+2]-S[k-2]\). Shifting the spectrum means modulating in time: \(\mathbf{F}^m\mathbf{s}\leftrightarrow\mathbf{P}^m\mathbf{S}\).`,
+  sol:String.raw`<p>\(x[n]=s[n]\left(e^{-j2\pi 2n/6}-e^{j2\pi2n/6}\right)=-2j\sin(2\pi n/3)\,s[n]\).</p>
+  <p class="answer">\(\mathbf{x}=[0\ \ {-j\sqrt3}\,b\ \ j\sqrt3\,c\ \ 0\ \ {-j\sqrt3}\,e\ \ j\sqrt3\,f]^T\)</p>`},
+{ id:'p1-7', src:2, num:'Problem 7', topic:'ext', title:'From zero-padded to periodic',
+  q:String.raw`<p>\(\mathbf{x}=[c\ d\ a\ b\ 0\ 0\ 0\ 0]^T\) has DFT \([X_0\ \dots\ X_7]^T\). Find the DFT of \(\mathbf{s}=[a\ b\ c\ d\ a\ b\ c\ d\ a\ b\ c\ d]^T\).</p>`,
+  hint:String.raw`\(\mathbf{w}=[c\,d\,a\,b]\) has DFT \([X_0\,X_2\,X_4\,X_6]\). Shifting by 2 multiplies it by \((-1)^k\). Then extend 3×.`,
+  sol:String.raw`<p>The DFT of \([a\,b\,c\,d]\) is \([X_0\ {-X_2}\ X_4\ {-X_6}]\). Three periods multiply by 3 and place the values at every 3rd index.</p>
+  <p class="answer">\(\mathbf{S}=[3X_0\ 0\ 0\ {-3X_2}\ 0\ 0\ 3X_4\ 0\ 0\ {-3X_6}\ 0\ 0]^T\)</p>`},
+{ id:'p1-8', src:2, num:'Problem 8', topic:'shift', title:'Time samples used as a spectrum',
+  q:String.raw`<p>\(\mathbf{s}=[a\ \dots\ f]^T\leftrightarrow[A\ \dots\ F]^T\). Find \(\mathbf{u}\) whose DFT is \(\mathbf{U}=[d\ e\ f\ a\ b\ c]^T\).</p>`,
+  hint:String.raw`\(\mathbf{U}=\mathbf{P}^3\mathbf{s}\). Use duality: \(\mathbf{u}=\tfrac16\mathbf{R}\,\text{DFT}(\mathbf{P}^3\mathbf{s})\).`,
+  sol:String.raw`<p>\(\text{DFT}(\mathbf{P}^3\mathbf{s})=(-1)^kS[k]=[A\ {-B}\ C\ {-D}\ E\ {-F}]\). Reverse it and divide by 6.</p>
+  <p class="answer">\(\mathbf{u}=\tfrac16[A\ \ {-F}\ \ E\ \ {-D}\ \ C\ \ {-B}]^T\)</p>
+  <p class="note-guide">Your study guide reads this problem as \(\mathbf{U}=[D\,E\,F\,A\,B\,C]\) (capital letters, so \(\mathbf{U}=\mathbf{P}^3\mathbf{S}\)). In that version, \(\mathbf{u}=\mathbf{F}^3\mathbf{s}=[a,\ -b,\ c,\ -d,\ e,\ -f]^T\). The practice PDF prints lowercase letters, which gives the answer above. Know both.</p>`},
+{ id:'p1-9', src:2, num:'Problem 9', topic:'conv', title:'What system does this MATLAB code solve?',
+  q:String.raw`<p><span class="mono">DFT1 = fft([3 -4 1 5].'); DFT2 = fft([2 7 -2 1].'); x = ifft(DFT2 ./ DFT1);</span></p><p>This solves \(\mathbf{A}\mathbf{x}=\mathbf{b}\). Find \(\mathbf{A}\) and \(\mathbf{b}\).</p>`,
+  hint:String.raw`Dividing DFTs undoes a convolution: \(\mathbf{h}\circledast\mathbf{x}=\mathbf{b}\).`,
+  sol:String.raw`<p>\(\mathbf{h}=[3\,{-4}\,1\,5]\) and \(\mathbf{h}\circledast\mathbf{x}=\mathbf{b}\). \(\mathbf{A}\) is circulant with first column \(\mathbf{h}\).</p>
+  <p>\[\mathbf{A}=\begin{bmatrix}3&5&1&-4\\-4&3&5&1\\1&-4&3&5\\5&1&-4&3\end{bmatrix},\qquad \mathbf{b}=\begin{bmatrix}2\\7\\-2\\1\end{bmatrix}\]</p>`},
+{ id:'p1-10', src:2, num:'Problem 10', topic:'conv', title:'DFT of [ag dh ce bf] with numbers',
+  q:String.raw`<p>\(\mathbf{X}=[4\ {-2}\ 0\ 1]^T\), \(\mathbf{Y}=[3\ 1\ 2\ {-1}]^T\). Without inverting, find the DFT of \(\mathbf{s}=[ag\ \ dh\ \ ce\ \ bf]^T\).</p>`,
+  hint:String.raw`Same structure as Fall 2019 #4: \(\mathbf{S}=\tfrac14(\mathbf{R}\mathbf{X})\circledast(\mathbf{F}^{-2}\mathbf{Y})\).`,
+  sol:String.raw`<p>\(\mathbf{R}\mathbf{X}=[4\,1\,0\,{-2}]\), \(\mathbf{F}^{-2}\mathbf{Y}=[3\,{-1}\,2\,1]\). Their circular convolution is \([15\ {-5}\ 5\ 0]\).</p>
+  <p class="answer">\(\mathbf{S}=\left[\tfrac{15}4\ \ {-\tfrac54}\ \ \tfrac54\ \ 0\right]^T\)</p>`},
+
+/* ---------- PRACTICE 2 ---------- */
+{ id:'p2-1', src:3, num:'Problem 1', topic:'samp', title:'Frequencies from a 20-point spectrum',
+  q:String.raw`<p>\(s(t)=a\cos(2\pi f_1t+\phi_1)+b\cos(2\pi f_2t+\phi_2)\) with \(f_2>f_1>0\). Twenty samples at \(f_s=240\) Hz give the magnitude spectrum below. Find \(f_1\) and \(f_2\). (Assume \(f_s>2f_2\).)</p>`,
+  plots:[{maxK:19,pts:{2:[1,''],5:[0.6,''],15:[0.6,''],18:[1,'']},ticks:[0,2,5,15,18],title:'|X[k]|'}],
+  hint:String.raw`Bins pair up as \(k\) and \(20-k\). Then use \(f=kf_s/N\).`,
+  sol:String.raw`<p>The pairs are (2, 18) and (5, 15). Each bin is \(240/20=12\) Hz wide.</p><p class="answer">f₁ = 24 Hz, f₂ = 60 Hz</p>`},
+{ id:'p2-2', src:3, num:'Problem 2', topic:'read', title:'x[n] from three DFT values',
+  q:String.raw`<p>Real \(x[0:31]\) has \(X[0]=16\), \(X[3]=64e^{-j0.7}\), \(X[7]=96e^{j1.5}\), and these are the only nonzero \(X[k]\) for \(0\le k\le16\). Write \(x[n]\).</p>`,
+  hint:String.raw`DC is \(X[0]/N\). Each other bin gives a cosine with amplitude \(2|X[k]|/N\).`,
+  sol:String.raw`<p class="answer">\(x[n]=0.5+4\cos\!\left(\tfrac{3\pi n}{16}-0.7\right)+6\cos\!\left(\tfrac{7\pi n}{16}+1.5\right)\)</p>`},
+{ id:'p2-3', src:3, num:'Problem 3', topic:'inner', title:'Weights 2, −1, −1 repeating',
+  q:String.raw`<p>\(\mathbf{x}=x_{0:8}\) has DFT \(X[0:8]\). Express \(r=2x_0-x_1-x_2+2x_3-x_4-x_5+2x_6-x_7-x_8\) in terms of \(X[k]\).</p>`,
+  hint:String.raw`\(2,-1,-1\) are the values of \(2\cos(2\pi n/3)=2\cos(2\pi\cdot3n/9)\).`,
+  sol:String.raw`<p>\(r=\sum x[n](e^{-j2\pi3n/9}+e^{j2\pi3n/9})\)</p><p class="answer">r = X[3] + X[6]</p>`},
+{ id:'p2-4', src:3, num:'Problem 4', topic:'shift', title:'Subtracting an alternating pattern in frequency',
+  q:String.raw`<p>\(\mathbf{s}=[a\ \dots\ h]^T\leftrightarrow[A\ \dots\ H]^T\). Find \(\mathbf{x}\) with DFT \([A{-}1\ \ B{+}1\ \ C{-}1\ \ D{+}1\ \ E{-}1\ \ F{+}1\ \ G{-}1\ \ H{+}1]^T\).</p>`,
+  hint:String.raw`Which time signal has DFT \((-1)^k\)? A delta delayed by \(N/2=4\).`,
+  sol:String.raw`<p>\(\boldsymbol\delta_4\leftrightarrow e^{-j2\pi4k/8}=(-1)^k\), so \(\mathbf{x}=\mathbf{s}-\boldsymbol\delta_4\).</p><p class="answer">\(\mathbf{x}=[a\ b\ c\ d\ e{-}1\ f\ g\ h]^T\)</p>`},
+{ id:'p2-5', src:3, num:'Problem 5', topic:'ls', title:'Best fit of the form [a b a b]',
+  q:String.raw`<p>\(\mathbf{X}=[1\ \ 2{+}j\ \ {-3}\ \ 2{-}j]^T\). Approximating by \([a\ b\ a\ b]^T\), find the smallest \(\|\mathbf{x}-\hat{\mathbf{x}}\|^2\).</p>`,
+  hint:String.raw`\([a\,b\,a\,b]\) is spanned by \(\mathbf{v}^{(0)}\) and \(\mathbf{v}^{(2)}\), so bins 0 and 2 are kept.`,
+  sol:String.raw`<p>\(\frac14(|2+j|^2+|2-j|^2)=\frac{10}{4}\)</p><p class="answer">2.5</p>`},
+{ id:'p2-6', src:3, num:'Problem 6', topic:'shift', title:'S minus S shifted by N/2',
+  q:String.raw`<p>\(\mathbf{s}=[a\ \dots\ f]^T\leftrightarrow[A\ \dots\ F]^T\). Find \(\mathbf{x}\) with DFT \([A{-}D\ \ B{-}E\ \ C{-}F\ \ D{-}A\ \ E{-}B\ \ F{-}C]^T\).</p>`,
+  hint:String.raw`\(S[k+3]\) corresponds to \((-1)^n s[n]\) when \(N=6\).`,
+  sol:String.raw`<p>\(x[n]=(1-(-1)^n)s[n]\)</p><p class="answer">\(\mathbf{x}=[0\ \ 2b\ \ 0\ \ 2d\ \ 0\ \ 2f]^T\)</p>`},
+{ id:'p2-7', src:3, num:'Problem 7', topic:'ext', title:'Shifted zero-pad, then periodic',
+  q:String.raw`<p>\(\mathbf{x}=[0\ 0\ 0\ 0\ 0\ 0\ a\ b\ c\ d\ 0\ 0]^T\) has DFT \([X_0\ \dots\ X_{11}]^T\). Find the DFT of \(\mathbf{s}=[a\ b\ c\ d\ a\ b\ c\ d]^T\).</p>`,
+  hint:String.raw`Undo the delay of 6 by multiplying by \((-1)^k\). Then pick every 3rd bin to get the DFT of \([a\,b\,c\,d]\).`,
+  sol:String.raw`<p>The DFT of \([a\,b\,c\,d]\) is \((-1)^{3k}X_{3k}=[X_0\ {-X_3}\ X_6\ {-X_9}]\). Extend 2×.</p>
+  <p class="answer">\(\mathbf{S}=[2X_0\ \ 0\ \ {-2X_3}\ \ 0\ \ 2X_6\ \ 0\ \ {-2X_9}\ \ 0]^T\)</p>`},
+{ id:'p2-8', src:3, num:'Problem 8', topic:'conv', title:'Find the convolution kernel',
+  q:String.raw`<p>For \(\mathbf{x}=x_{0:5}\), find \(\mathbf{a}\) with \(\mathbf{a}\circledast\mathbf{x}=[x_1{+}2x_5\ \ x_2{+}2x_0\ \ x_3{+}2x_1\ \ x_4{+}2x_2\ \ x_5{+}2x_3\ \ x_0{+}2x_4]^T\).</p>`,
+  hint:String.raw`\(y[n]=x[n+1]+2x[n-1]\). Place a 1 at index \(-1\equiv5\) and a 2 at index 1.`,
+  sol:String.raw`<p class="answer">\(\mathbf{a}=[0\ \ 2\ \ 0\ \ 0\ \ 0\ \ 1]^T\)</p>`},
+{ id:'p2-9', src:3, num:'Problem 9', topic:'conv', title:'Solve a circulant system with FFT',
+  q:String.raw`<p>Use FFT, IFFT and ./ to solve \(\begin{bmatrix}1&2&3&4\\4&1&2&3\\3&4&1&2\\2&3&4&1\end{bmatrix}\mathbf{u}=\begin{bmatrix}7\\-16\\3\\2\end{bmatrix}\).</p>`,
+  hint:`Read the first column. That vector is h.`,
+  sol:String.raw`<p>First column \(\mathbf{h}=[1\,4\,3\,2]\):</p>
+  <p class="mono answer">u = ifft( fft([7 -16 3 2].') ./ fft([1 4 3 2].') )</p>
+  <p>This gives \(\mathbf{u}=[-5.85\ \ 4.65\ \ {-0.35}\ \ 1.15]^T\).</p>`},
+{ id:'p2-10', src:3, num:'Problem 10', topic:'conv', title:'Time samples times spectral values',
+  q:String.raw`<p>\(\mathbf{x}\leftrightarrow[A\ B\ C\ D]\), \(\mathbf{y}=[e\ f\ g\ h]\leftrightarrow[E\ F\ G\ H]\). Find, in terms of \(A..D\) and \(e..h\), the DFT of \(\mathbf{s}=[aE\ \ bF\ \ cG\ \ dH]^T\).</p>`,
+  hint:String.raw`\(\mathbf{s}=\mathbf{x}\odot\mathbf{Y}\). By duality, the DFT of \(\mathbf{Y}\) (as a time vector) is \(4\mathbf{R}\mathbf{y}\).`,
+  sol:String.raw`<p>\(\mathbf{S}=\tfrac14\mathbf{X}\circledast4\mathbf{R}\mathbf{y}=\mathbf{X}\circledast[e\,h\,g\,f]\):</p>
+  <p>\[\mathbf{S}=\begin{bmatrix}e&f&g&h\\h&e&f&g\\g&h&e&f\\f&g&h&e\end{bmatrix}\begin{bmatrix}A\\B\\C\\D\end{bmatrix}\]</p>`},
+
+/* ---------- PRACTICE 3 ---------- */
+{ id:'p3-1', src:4, num:'Problem 1', topic:'samp', title:'Aliasing changes the answer',
+  q:String.raw`<p>\(s(t)=c+a\cos(60\pi t+\phi_a)+b\cos(200\pi t+\phi_b)\) is sampled at \(f_s=150\) Hz. Find the smallest \(L>5\) such that the DFT of \(s[0:L-1]\) has exactly five nonzero entries, and list the five \(k\).</p>`,
+  hint:String.raw`100 Hz is above \(f_s/2\): \(\omega=4\pi/3\equiv-2\pi/3\). And 30 Hz gives \(\omega=2\pi/5\).`,
+  sol:String.raw`<p>\(2\pi/5\) needs \(5\mid L\), and \(2\pi/3\) needs \(3\mid L\). So \(L=15\).</p><p class="answer">L = 15, with k = 0, 3, 5, 10, 12</p>`},
+{ id:'p3-2', src:4, num:'Problem 2', topic:'read', title:'x[n] with no DC term',
+  q:String.raw`<p>Real \(x[0:29]\) has \(X[4]=12e^{j1.7}\) and \(X[11]=45e^{-j2.5}\) as its only nonzero entries in \(0:15\). Write \(x[n]\).</p>`,
+  hint:String.raw`\(A=2|X[k]|/30\) and \(\omega=2\pi k/30\).`,
+  sol:String.raw`<p class="answer">\(x[n]=0.8\cos\!\left(\tfrac{4\pi n}{15}+1.7\right)+3\cos\!\left(\tfrac{11\pi n}{15}-2.5\right)\)</p>`},
+{ id:'p3-3', src:4, num:'Problem 3', topic:'inner', title:'Sine-weighted sum',
+  q:String.raw`<p>\(\mathbf{x}=x_{0:7}\). Express \(r=\sqrt2x_1-2x_2+\sqrt2x_3-\sqrt2x_5+2x_6-\sqrt2x_7\) using \(X[k]\).</p>`,
+  hint:String.raw`The weights are odd-symmetric, so think sine: \(2\sin(3\pi n/4)\).`,
+  sol:String.raw`<p>\(2\sin(2\pi3n/8)=-j(e^{j2\pi3n/8}-e^{-j2\pi3n/8})\), so \(r=-j(X[5]-X[3])\).</p><p class="answer">r = j(X[3] − X[5])</p>`},
+{ id:'p3-4', src:4, num:'Problem 4', topic:'sym', title:'Extract the imaginary part’s DFT',
+  q:String.raw`<p>\(\mathbf{s}=\mathbf{x}+j\mathbf{y}\) (with \(\mathbf{x},\mathbf{y}\) real) has DFT \([3\ 5\ 7\ 9\ 8\ 6\ 4\ 2]^T\). Find the DFT of \(\mathbf{u}=j\mathbf{y}\).</p>`,
+  hint:String.raw`\(j\mathbf{y}=\tfrac12(\mathbf{s}-\mathbf{s}^*)\) and \(\mathbf{s}^*\leftrightarrow\mathbf{R}\mathbf{S}^*\).`,
+  sol:String.raw`<p>\(\mathbf{R}\mathbf{S}^*=[3\ 2\ 4\ 6\ 8\ 9\ 7\ 5]\)</p><p class="answer">\(\mathbf{U}=\left[0\ \ \tfrac32\ \ \tfrac32\ \ \tfrac32\ \ 0\ \ {-\tfrac32}\ \ {-\tfrac32}\ \ {-\tfrac32}\right]^T\)</p>`},
+{ id:'p3-5', src:4, num:'Problem 5', topic:'read', title:'Multiply by a cosine, shift the spectrum',
+  q:String.raw`<p>\(x[0:23]\) has the DFT magnitude below. If \(y[n]=x[n]\cos(5\pi n/12)\), find and sketch \(|Y[k]|\).</p>`,
+  plots:[{maxK:23,pts:{0:[6,'6'],4:[8,'8'],20:[8,'8']},ticks:[0,4,12,20,23],title:'|X[k]|'}],
+  hint:String.raw`\(5\pi/12=2\pi\cdot5/24\), so \(Y[k]=\tfrac12(X[k-5]+X[k+5])\). Check that no copies overlap.`,
+  sol:String.raw`<p>Bin 0 moves to 5 and 19 (3 each). Bin 4 moves to 9 and 23 (4 each). Bin 20 moves to 1 and 15 (4 each). Nothing overlaps.</p>`,
+  solPlots:[{maxK:23,pts:{1:[4,'4'],5:[3,'3'],9:[4,'4'],15:[4,'4'],19:[3,'3'],23:[4,'4']},ticks:[0,1,5,9,12,15,19,23],title:'|Y[k]|'}]},
+{ id:'p3-6', src:4, num:'Problem 6', topic:'ls', title:'Best constant, 5 points',
+  q:String.raw`<p>\(\mathbf{X}=[5\ \ {-2}{+}j\ \ 3{-}4j\ \ 3{+}4j\ \ {-2}{-}j]^T\). Approximating by \([a\ a\ a\ a\ a]^T\), find the smallest \(\|\mathbf{x}-\hat{\mathbf{x}}\|^2\).</p>`,
+  hint:`Keep bin 0 and drop the rest.`,
+  sol:String.raw`<p>\(\frac15(5+25+25+5)\)</p><p class="answer">12</p>`},
+{ id:'p3-7', src:4, num:'Problem 7', topic:'ext', title:'Insert zeros between samples',
+  q:String.raw`<p>\(\mathbf{s}=[a\ b\ c\ d]^T\leftrightarrow[A\ B\ C\ D]^T\). Find the DFT of \(\mathbf{y}=[a\ 0\ b\ 0\ c\ 0\ d\ 0]^T\).</p>`,
+  hint:String.raw`\(Y[k]=\sum_m s[m]e^{-j2\pi k(2m)/8}=\sum_m s[m]e^{-j2\pi km/4}\).`,
+  sol:String.raw`<p>\(Y[k]=S[k\bmod4]\).</p><p class="answer">\(\mathbf{Y}=[A\ B\ C\ D\ A\ B\ C\ D]^T\)</p>`},
+{ id:'p3-8', src:4, num:'Problem 8', topic:'ext', title:'Shifted zero-pad with a sign flip',
+  q:String.raw`<p>\(\mathbf{x}=[0\ 0\ 0\ 0\ 0\ 0\ a\ {-b}\ c\ 0\ 0\ 0]^T\) has DFT \([X_0\ \dots\ X_{11}]^T\). Find the DFT of \(\mathbf{s}=[a\ b\ c]^T\).</p>`,
+  hint:String.raw`Multiplying by \((-1)^n\) (12-point) flips the sign of \(b\) and shifts the spectrum by 6. Then take every 4th bin.`,
+  sol:String.raw`<p>\(S[k]=X[4k+6]\). Check: \(e^{-j2\pi(4k+6)\cdot7/12}=-e^{-j2\pi k/3}\), which fixes the sign on \(b\).</p>
+  <p class="answer">\(\mathbf{S}=[X_6\ \ X_{10}\ \ X_2]^T\)</p>`},
+{ id:'p3-9', src:4, num:'Problem 9', topic:'conv', title:'Build x and y for a given convolution',
+  q:String.raw`<p>Find \(\mathbf{x},\mathbf{y}\) with \(\mathbf{x}\circledast\mathbf{y}=[3a{+}2d\ \ 3b{+}2e\ \ 3c{+}2a\ \ 3d{+}2b\ \ 3e{+}2c]^T\).</p>`,
+  hint:String.raw`\(z[n]=3x[n]+2x[n-2]\) with \(\mathbf{x}=[a\,b\,c\,d\,e]\).`,
+  sol:String.raw`<p class="answer">\(\mathbf{x}=[a\ b\ c\ d\ e]^T,\quad \mathbf{y}=[3\ 0\ 2\ 0\ 0]^T\)</p>`},
+{ id:'p3-10', src:4, num:'Problem 10', topic:'conv', title:'[ag dh ce bf] as a matrix-vector product',
+  q:String.raw`<p>\(\mathbf{x}\leftrightarrow[A\ B\ C\ D]\), \(\mathbf{y}\leftrightarrow[E\ F\ G\ H]\). Find the DFT of \(\mathbf{s}=[ag\ \ dh\ \ ce\ \ bf]^T\) as a matrix-vector product.</p>`,
+  hint:String.raw`\(\mathbf{s}=(\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\).`,
+  sol:String.raw`<p>\[\mathbf{S}=\frac14\begin{bmatrix}A&B&C&D\\D&A&B&C\\C&D&A&B\\B&C&D&A\end{bmatrix}\begin{bmatrix}E\\-F\\G\\-H\end{bmatrix}\]</p>`}
+];
+
+/* ---------------- thought process per problem ---------------- */
+const R = String.raw;
+const THINK = {
+'f19-1':[R`"Real-valued" is the key word. It means \(S[N-k]=S[k]^*\): same height, opposite phase. That's all part (i) tests.`,
+  R`Mirror each spike: \(k\to 32-k\). So 5 goes to 27 and 12 goes to 20. Bin 0 is its own mirror and stays put.`,
+  R`For (ii), each mirror pair \((k,\,N-k)\) becomes one cosine with amplitude \(2|S[k]|/N\), frequency \(2\pi k/N\) and phase \(\angle S[k]\). DC is \(S[0]/N\). A phase of \(\pi\) at \(k=0\) just means \(S[0]\) is negative.`,
+  R`Simplify the frequencies: \(2\pi\cdot5/32=5\pi/16\) and \(2\pi\cdot12/32=3\pi/4\).`,
+  R`For (iii), convert bins to Hz with \(f=k f_s/N\), then use \(\Omega=2\pi f\) rad/s. Both come out under \(f_s/2=80\) Hz, so there's no aliasing to worry about.`],
+'f19-2':[R`Spot the structure: \(\mathbf{s}\) is \([a\,b\,c]\) followed by zeros, length \(9=3\times3\). That's a zero-padded extension with \(M=3\).`,
+  R`Zero-padding samples the same function \(a+be^{-j\omega}+ce^{-j2\omega}\) more finely. The 3-point DFT is every 3rd sample of the 9-point one, so \(U[k]=S[3k]\).`,
+  R`(ii) Any sum \(\sum s[n]e^{\pm j\omega n}\) is a DFT value when \(\omega\) is a 9-point Fourier frequency. Rewrite \(e^{+j4\pi n/9}=e^{-j2\pi(-2)n/9}\). Index \(-2\equiv7\).`,
+  R`(iii) \([a\,c\,b]\) repeats 3 times, so this is a periodic extension. First get the DFT of one period: \([a\,c\,b]=\mathbf{R}[a\,b\,c]\), so it's \(\mathbf{R}\mathbf{U}\). Then apply the periodic rule: multiply by 3 and spread to every 3rd index.`,
+  R`(iv) \(\mathbf{Y}\) and \(\mathbf{S}\) sample the same function at \(2\pi k/6\) and \(2\pi\ell/9\). They match exactly where those frequencies are equal.`],
+'f19-3':[R`For each part, ask what was done to \(\mathbf{s}\). Shifted copies point to \(\mathbf{P}\). Multiplication by something that depends on \(n\) points to \(\mathbf{F}\) (modulation). Adding a fixed vector means using linearity.`,
+  R`(i) Entry 0 is \(c+g=s[2]+s[6]=s[n+2]+s[n-2]\): an advance plus a delay by 2. A delay by \(m\) multiplies \(S[k]\) by \(e^{-j2\pi mk/N}\), and the pair together gives \(2\cos(2\pi mk/N)\). Evaluate it for \(k=0..7\).`,
+  R`(ii) Divide each entry by the matching \(s[n]\) to get the weights: \(0,\sqrt2,2,\sqrt2,0,-\sqrt2,-2,-\sqrt2\). Those are \(2\sin(\pi n/4)\), straight from the trig table.`,
+  R`Write the sine as exponentials: \(2\sin\theta=-j(e^{j\theta}-e^{-j\theta})\). Since \(e^{\pm j2\pi n/8}\) is \(\mathbf{F}^{\pm1}\), each term shifts the spectrum by one bin. Watch the signs.`,
+  R`(iii) The \(\pm1\) pattern is \(-(-1)^n\). \((-1)^n\) is the Fourier sinusoid at \(k=N/2=4\), and its DFT is \(N=8\) at that bin only. By linearity, subtract 8 from \(E\).`],
+'f19-4':[R`(i) Label where each letter in \(\mathbf{s}\) comes from. The first factors \(a,d,c,b\) are \(\mathbf{R}\mathbf{x}\). The second factors \(g,h,e,f\) are \(\mathbf{y}\) delayed by 2, which is \(\mathbf{P}^2\mathbf{y}\).`,
+  R`A product in time becomes \(\frac1N\) times a circular convolution in frequency. Transform each factor with the table: \(\mathbf{R}\mathbf{x}\leftrightarrow\mathbf{R}\mathbf{X}\) and \(\mathbf{P}^2\mathbf{y}\leftrightarrow\mathbf{F}^{-2}\mathbf{Y}\). For \(N=4\), \(\mathbf{F}^{-2}\) just multiplies by \((-1)^k\).`,
+  R`Do the convolution as a circulant matrix (first column \(\mathbf{R}\mathbf{X}\)) times a vector. Don't forget the \(\frac14\).`,
+  R`(ii) Look at the matrix. Each column is the previous one shifted down, so it's circulant with first column \(\mathbf{x}\). That makes \(\mathbf{u}=\mathbf{x}\circledast[1\,2\,3\,4]\).`,
+  R`Convolution becomes a product of DFTs. You know the DFT of \(\mathbf{x}\). The other vector \([1\,2\,3\,4]\) is \(\mathbf{X}\) itself used as a time vector. Duality gives \(\text{DFT}(\mathbf{X})=N\mathbf{R}\mathbf{x}\).`],
+'f20-1':[R`Convert each continuous frequency to a digital one with \(\omega=2\pi f/f_s\). \(64\pi t\) is 32 Hz, giving \(\pi/3\). \(96\pi t\) is 48 Hz, giving \(\pi/2\).`,
+  R`Count the bins you want: DC (1) plus two cosines (2 each) makes 5. You only get exactly 5 if nothing leaks, which means every \(\omega\) lands exactly on some \(2\pi k/N\).`,
+  R`\(\pi/3=2\pi k/N\) means \(N=6k\), so \(N\) is a multiple of 6. Likewise \(\pi/2\) needs a multiple of 4.`,
+  R`The smallest common multiple above 5 is 12. Check the bins: \(12/6=2\) and \(12/4=3\), plus mirrors 10 and 9 and DC.`],
+'f20-2':[R`Find the bin each term lands in with \(k=\omega N/2\pi\): \(3\pi/10\) gives 6 and \(9\pi/20\) gives 9.`,
+  R`Size of each bin: a DC level \(c\) gives \(X[0]=Nc\). A cosine with amplitude \(A\) gives \(|X[k]|=NA/2\), because it splits between \(k\) and \(N-k\).`,
+  R`Compare 80, 100 and 80. \(X[3]\) doesn't match any term, so it's 0. Phases don't affect the modulus.`],
+'f20-3':[R`Read the plot as complex numbers. \(X[0]=15e^{j\pi}=-15\) (a phase of \(\pi\) at DC just means negative), and \(X[4]=45e^{j\pi/3}\).`,
+  R`Fastest route: \(x[0]=\frac1N\sum_k X[k]\), since every exponential equals 1 at \(n=0\).`,
+  R`The real signal has a conjugate partner at \(k=26\), so the sum is \(-15+2\cdot45\cos(\pi/3)=30\). Divide by 30.`],
+'f20-4':[R`Every option relates entries of \(\mathbf{S}\) to each other, so this is a symmetry question. Look for symmetry in \(\mathbf{s}\).`,
+  R`Compare \(s[n]\) with \(s[N-n]\). The pairs (1,7), (2,6) and (3,5) are conjugates, and \(s[0]\), \(s[4]\) are real. That's \(\mathbf{s}=\mathbf{R}\mathbf{s}^*\).`,
+  R`Translate with the table: \(\mathbf{x}^*\leftrightarrow\mathbf{R}\mathbf{X}^*\) and \(\mathbf{R}\leftrightarrow\mathbf{R}\). So \(\text{DFT}(\mathbf{R}\mathbf{s}^*)=\mathbf{R}\mathbf{R}\mathbf{S}^*=\mathbf{S}^*\), which means \(\mathbf{S}\) is real.`,
+  R`Rule out the rest. \(A=H^*\) would need a real \(\mathbf{s}\). \(C=G\) would need \(\mathbf{s}=\mathbf{R}\mathbf{s}\) (even). Neither holds.`],
+'f20-5':[R`Fourier sinusoids are orthogonal. The best fit using some of them keeps those DFT coefficients and drops the rest.`,
+  R`What's left over is the error. By Parseval, \(\|\mathbf{e}\|^2=\frac1N\sum|X[k]|^2\) over the dropped bins.`,
+  R`Keep \(k=0,3\) and drop 1, 2, 4, 5: \((10+26+26+10)/6\).`],
+'f20-6':[R`\(S[k]=c_kX[k]\): every entry of the spectrum is scaled. Find a formula for \(c_k\).`,
+  R`The values \(2,-\sqrt2,0,\sqrt2,-2,\dots\) look like \(2\cos\) of multiples of \(\pi/4\). Try \(2\cos(3\pi k/4)\) and check each \(k\).`,
+  R`\(2\cos(2\pi\cdot3k/8)=e^{-j2\pi3k/8}+e^{j2\pi3k/8}\). Those are the spectral factors for a delay by 3 and an advance by 3.`,
+  R`So \(s[n]=x[n-3]+x[n+3]\). Write out the indices mod 8.`],
+'f20-7':[R`\(\mathbf{y}\) has length \(8=2\times4\) and repeats \([c\,d\,a\,b]\) twice, so this is a periodic extension with \(M=2\).`,
+  R`First get the DFT of one period. \([c\,d\,a\,b]\) is \(\mathbf{x}\) shifted by 2, so multiply \(X[k]\) by \(e^{-j\pi k}=(-1)^k\).`,
+  R`Periodic rule: \(Y[2k]=2\times\) that value, and the odd bins are 0.`],
+'f20-8':[R`\(\mathbf{U}\) is given as time samples. When a spectrum is made of time samples, use duality.`,
+  R`If \(\text{DFT}(\mathbf{u})=\mathbf{w}\), then \(\mathbf{u}=\frac1N\mathbf{R}\,\text{DFT}(\mathbf{w})\). So you need the 4-point DFT of \(\mathbf{w}=[a\,b\,c\,0]\).`,
+  R`\(\mathbf{s}\) is \(\mathbf{w}\) zero-padded to \(12=3\times4\), so \(\text{DFT}(\mathbf{w})[k]=S[3k]\).`,
+  R`Apply \(\mathbf{R}\) (keep entry 0, reverse the rest) and divide by 4.`],
+'f20-9':[R`What's special about \(\mathbf{a}\circledast\mathbf{x}\)? It's linear in \(\mathbf{x}\) and shift-invariant: shift \(\mathbf{x}\) and the output shifts the same way.`,
+  R`Test each option. \(\mathbf{x}^*\) isn't linear, since \((\alpha\mathbf{x})^*=\alpha^*\mathbf{x}^*\). \(\mathbf{R}\mathbf{x}\) shifts the opposite way. \(\mathbf{F}\mathbf{x}\) multiplies by a factor that depends on \(n\). \(\mathbf{P}\mathbf{x}\) is a plain delay.`,
+  R`A delay by 1 is convolution with an impulse at index 1.`],
+'f20-10':[R`A product of spectra means a convolution in time. So find the time vector whose spectrum is \([E\ {-F}\ G\ {-H}]\).`,
+  R`\((-1)^k=e^{-j2\pi\cdot2k/4}\), which is a delay by 2: \([1\,2\,3\,4]\to[3\,4\,1\,2]\).`,
+  R`\(\mathbf{s}=\mathbf{x}\circledast[3\,4\,1\,2]\). Compute only entry 3: \(\sum_m x[m]z[3-m]\).`],
+'p1-1':[R`Digital frequencies: 20 Hz gives \(\pi/3\), 30 Hz gives \(\pi/2\), 35 Hz gives \(7\pi/12\).`,
+  R`Six nonzero bins means 3 cosines × 2 bins and no DC. That needs all three exactly on bins.`,
+  R`Bin condition \(k=\omega L/2\pi\) must be an integer: \(L/6\), \(L/4\) and \(7L/24\). The 35 Hz term forces \(L\) to be a multiple of 24.`,
+  R`Read off the bins \(L\omega/2\pi\) = 4, 6, 7 and their mirrors \(24-k\).`],
+'p1-2':[R`The plot shows half the spectrum of a real signal. Each spike at \(0<k<N/2\) pairs with \(N-k\) to make one cosine.`,
+  R`\(A=2|S[k]|/N\) gives \(2\) and \(2/3\). \(\omega=2\pi k/N\) gives \(4\pi/15\) and \(11\pi/15\).`,
+  R`\(S[0]=0\), so there's no DC term.`],
+'p1-3':[R`\(r\) is a weighted sum of samples with weights \((0,1,0,1,\dots)\). Express the weights using Fourier sinusoids.`,
+  R`All-ones weights give \(S[0]\). Weights \((-1)^n\) give \(S[4]\). The odd-sample indicator is \(\frac12(1-(-1)^n)\).`,
+  R`So \(r=\frac12(S[0]-S[4])\). The complex entries don't matter here.`],
+'p1-4':[R`\(\operatorname{Re}\mathbf{s}=\frac12(\mathbf{s}+\mathbf{s}^*)\). Use linearity plus the conjugation rule.`,
+  R`\(\mathbf{s}^*\leftrightarrow\mathbf{R}\mathbf{S}^*\). Here \(\mathbf{S}\) is real, so that's just \(\mathbf{R}\mathbf{S}\): keep index 0, reverse the rest.`,
+  R`Average entry by entry. Sanity check: the result should satisfy \(X[k]=X[8-k]^*\), since a real signal must.`],
+'p1-5':[R`A constant vector is a multiple of \(\mathbf{v}^{(0)}\), so the best fit keeps bin 0 only.`,
+  R`Error \(=\frac1N\sum_{k\neq0}|X[k]|^2\) by Parseval.`],
+'p1-6':[R`Each entry of \(\mathbf{X}\) is a difference of two entries of \(\mathbf{S}\), so the spectrum is shifted. Find the shift from \(X[0]=C-E=S[2]-S[4]\): \(X[k]=S[k+2]-S[k-2]\).`,
+  R`A spectrum shift is a modulation in time: \(\mathbf{F}^m\mathbf{s}\leftrightarrow\mathbf{P}^m\mathbf{S}\).`,
+  R`Combine the exponentials into a sine: \(e^{-j\theta}-e^{j\theta}=-2j\sin\theta\) with \(\theta=2\pi n/3\).`,
+  R`Evaluate \(\sin(2\pi n/3)\) for \(n=0..5\) from the trig table.`],
+'p1-7':[R`Plan two steps: get the DFT of a 4-point vector from \(\mathbf{X}\), then extend it periodically to 12 points.`,
+  R`\(\mathbf{x}\) is \([c\,d\,a\,b]\) zero-padded to 8 (\(M=2\)), so its 4-point DFT is \(X[2k]\).`,
+  R`\([a\,b\,c\,d]\) is \([c\,d\,a\,b]\) shifted by 2, so multiply by \((-1)^k\).`,
+  R`Three copies: multiply by 3 and place the values at every 3rd index.`],
+'p1-8':[R`\(\mathbf{U}\) is made of time samples, so use duality: \(\mathbf{u}=\frac1N\mathbf{R}\,\text{DFT}(\mathbf{U})\).`,
+  R`\(\mathbf{U}=[d\,e\,f\,a\,b\,c]=\mathbf{P}^3\mathbf{s}\), so its DFT is \((-1)^kS[k]\).`,
+  R`Reverse it (keep index 0) and divide by 6.`],
+'p1-9':[R`<span class="mono">ifft(B./H)</span> undoes a product of DFTs, which means it undoes a circular convolution: \(\mathbf{h}\circledast\mathbf{x}=\mathbf{b}\).`,
+  R`Convolution with \(\mathbf{h}\) as a matrix is circulant: first column \(\mathbf{h}\), and each next column shifted down by one.`,
+  R`\(\mathbf{b}\) is the vector in the numerator.`],
+'p1-10':[R`Same pattern as Fall 2019 #4. Labelling the entries gives \((\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\).`,
+  R`Transform each factor: \(\mathbf{R}\mathbf{X}\) (keep the first entry, reverse the rest) and \(\mathbf{F}^{-2}\mathbf{Y}\) (multiply by \((-1)^k\)).`,
+  R`\(\mathbf{S}=\frac14(\mathbf{R}\mathbf{X}\circledast\mathbf{F}^{-2}\mathbf{Y})\). Compute it with a circulant matrix.`],
+'p2-1':[R`Nonzero bins of a real signal come in pairs \(k,\,N-k\): 2 with 18, and 5 with 15.`,
+  R`Bin spacing is \(f_s/N=12\) Hz, so \(f=12k\).`,
+  R`The assumption \(f_s>2f_2\) tells you to use the low half (\(k<N/2\)).`],
+'p2-2':[R`\(N=32\) and the signal is real. DC is \(X[0]/N\).`,
+  R`Each listed \(k\) (other than 0 and 16) gives a cosine with \(A=2|X[k]|/N\) and phase \(\angle X[k]\).`,
+  R`\(\omega=2\pi k/32\): \(3\pi/16\) and \(7\pi/16\).`],
+'p2-3':[R`The weights repeat with period 3: \((2,-1,-1)\). Find a sinusoid that produces them: \(2\cos(2\pi n/3)\).`,
+  R`With \(N=9\), \(2\pi n/3=2\pi\cdot3n/9\), so this is bin 3.`,
+  R`\(2\cos\) is the sum of \(e^{-j}\) and \(e^{+j}\), giving \(X[3]+X[9-3]\).`],
+'p2-4':[R`\(\mathbf{X}\) is \(\mathbf{S}\) plus a fixed pattern \(-(-1)^k\). Find the time signal with that DFT.`,
+  R`\((-1)^k=e^{-j2\pi\cdot4k/8}\), which is the DFT of an impulse at \(n=4\).`,
+  R`By linearity, subtract that impulse from \(\mathbf{s}\).`],
+'p2-5':[R`\([a\,b\,a\,b]\) is a combination of \([1\,1\,1\,1]\) and \([1\,{-1}\,1\,{-1}]\), which are bins 0 and 2.`,
+  R`The error comes from the dropped bins 1 and 3: \(\frac14\sum|X|^2\).`],
+'p2-6':[R`\(X[k]=S[k]-S[k+3]\). With \(N=6\), a shift of 3 is \(N/2\).`,
+  R`\(S[k+3]\leftrightarrow(-1)^n s[n]\).`,
+  R`\(\mathbf{x}=\mathbf{s}-(-1)^n\mathbf{s}\): even entries cancel and odd entries double.`],
+'p2-7':[R`\(\mathbf{x}\) is \([a\,b\,c\,d]\) zero-padded to 12 and then delayed by 6.`,
+  R`Undo the delay by multiplying by \(e^{+j2\pi6k/12}=(-1)^k\).`,
+  R`Zero-pad rule with \(M=3\): the 4-point DFT is every 3rd bin.`,
+  R`Then extend periodically 2×: double the values and place them at even indices.`],
+'p2-8':[R`Read each output entry as shifted copies of \(\mathbf{x}\): entry \(n\) uses \(x[n+1]\) and \(x[n-1]\).`,
+  R`Convolving with an impulse at \(m\) gives \(x[n-m]\). So \(x[n+1]\) means \(m=-1\equiv5\) (weight 1), and \(2x[n-1]\) means \(m=1\) (weight 2).`],
+'p2-9':[R`Find \(\mathbf{h}\) from the <b>first column</b> of the matrix, not the first row. That's the most common mistake on this one.`,
+  R`Then solve with <span class="mono">ifft(fft(b)./fft(h))</span>.`],
+'p2-10':[R`\(\mathbf{s}\) mixes time samples of \(\mathbf{x}\) with spectral values of \(\mathbf{Y}\). Treat \(\mathbf{Y}\) as a time vector.`,
+  R`A product in time becomes \(\frac1N\) times a convolution in frequency. By duality, \(\mathbf{Y}\) as a time vector has DFT \(4\mathbf{R}\mathbf{y}\).`,
+  R`Write \(\mathbf{X}\circledast\mathbf{R}\mathbf{y}\) as a circulant matrix times \(\mathbf{X}\).`],
+'p3-1':[R`Convert to digital frequencies. 30 Hz gives \(2\pi/5\). 100 Hz is above \(f_s/2=75\), so it aliases: \(4\pi/3\equiv-2\pi/3\), which behaves like \(2\pi/3\).`,
+  R`Five bins means DC plus 2 cosines, each landing exactly on a bin.`,
+  R`\(2\pi/5\) needs \(L\) to be a multiple of 5, and \(2\pi/3\) needs a multiple of 3. The least common multiple is 15.`,
+  R`Bins: \(15/5=3\) and \(15/3=5\), mirrors 12 and 10, plus 0.`],
+'p3-2':[R`Real signal with \(N=30\) and no DC.`,
+  R`Amplitudes \(2|X[k]|/30\) are 0.8 and 3. Frequencies \(2\pi k/30\) are \(4\pi/15\) and \(11\pi/15\). Phases come straight from the angles.`],
+'p3-3':[R`List the weights: \(0,\sqrt2,-2,\sqrt2,0,-\sqrt2,2,-\sqrt2\). They're odd-symmetric (\(w[N-n]=-w[n]\)), so think sine.`,
+  R`Guess amplitude 2 and match the frequency: \(2\sin(3\pi n/4)\) fits every \(n\). Check a few with the trig table.`,
+  R`Convert to exponentials: \(2\sin\theta=-j(e^{j\theta}-e^{-j\theta})\). Then \(\sum xe^{-j2\pi3n/8}=X[3]\) and \(\sum xe^{+j2\pi3n/8}=X[5]\).`],
+'p3-4':[R`When \(\mathbf{x}\) and \(\mathbf{y}\) are real, \(j\mathbf{y}=\frac12(\mathbf{s}-\mathbf{s}^*)\).`,
+  R`\(\mathbf{s}^*\leftrightarrow\mathbf{R}\mathbf{S}^*\), and \(\mathbf{S}\) is real, so that's \(\mathbf{R}\mathbf{S}\).`,
+  R`Subtract and halve. Sanity check: the result should be conjugate-antisymmetric.`],
+'p3-5':[R`\(\cos(5\pi n/12)=\cos(2\pi\cdot5n/24)\) splits into \(e^{\pm j2\pi5n/24}\). Each one shifts the spectrum by \(\pm5\) with a factor of \(\frac12\).`,
+  R`Move each spike: 0 goes to 5 and 19. 4 goes to 9 and \(-1\equiv23\). 20 goes to \(25\equiv1\) and 15.`,
+  R`Check that no two land on the same bin. If they did, the magnitudes could add or cancel. Halve all the heights.`],
+'p3-6':[R`A constant keeps bin 0 only.`,
+  R`Error \(=\frac15\sum_{k\ne0}|X[k]|^2\).`],
+'p3-7':[R`Go back to the definition. Only even \(n=2m\) are nonzero, so \(Y[k]=\sum_m s[m]e^{-j2\pi k(2m)/8}\).`,
+  R`\(e^{-j2\pi k\cdot2m/8}=e^{-j2\pi km/4}\), which repeats in \(k\) every 4 steps.`,
+  R`So \(\mathbf{Y}\) is \(\mathbf{S}\) written out twice.`],
+'p3-8':[R`\(\mathbf{x}\) is \([a\,{-b}\,c]\) zero-padded to 12 and delayed by 6. The target has \(+b\), so the sign needs fixing.`,
+  R`After the delay, \(b\) sits at \(n=7\) (odd) while \(a\) and \(c\) are at even \(n\). Multiplying by \((-1)^n=\mathbf{F}^6\) flips only \(b\), and it shifts the spectrum by 6.`,
+  R`Then undo the delay (multiply by \((-1)^k\)) and take every 4th bin (zero-pad rule, \(M=4\)). Combining the index changes gives \(S[k]=X[4k+6]\).`,
+  R`Verify one term directly with the DFT definition so you trust the sign.`],
+'p3-9':[R`Each output entry is \(3\times\) the current sample plus \(2\times\) the sample two back: \(z[n]=3x[n]+2x[n-2]\).`,
+  R`So the kernel is 3 at index 0 and 2 at index 2.`],
+'p3-10':[R`Label the entries: \((\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\), the same as Fall 2019 #4.`,
+  R`The transforms are \(\mathbf{R}\mathbf{X}=[A\,D\,C\,B]\) and \(\mathbf{F}^{-2}\mathbf{Y}=[E\,{-F}\,G\,{-H}]\).`,
+  R`\(\mathbf{S}=\frac14\,\text{circ}(\mathbf{R}\mathbf{X})\,(\mathbf{F}^{-2}\mathbf{Y})\), where \(\text{circ}(\mathbf{R}\mathbf{X})\) is the circulant matrix with first column \(\mathbf{R}\mathbf{X}\).`]
+};
+
+/* ---------------- lessons (from the ENEE222 study guide, explained) ---------------- */
+const LESSONS = [
+{ id:'map', color:'read', kicker:'Start here', title:'What the exam actually asks',
+  key:R`The two past midterms mostly reuse practice problems with new numbers. If you can do these six types, you can do the exam.`,
+  body:R`<section><table class="simple"><tr><th>#</th><th>Problem type</th><th>Lesson</th></tr>
+  <tr><td>1</td><td>Zero-padded vector, find a DFT in terms of \(\mathbf{S}\) (or a sum like \(a+be^{j4\pi/9}+\dots\))</td><td>Zero-padding &amp; periodic</td></tr>
+  <tr><td>2</td><td>Smallest \(N\) so the DFT has exactly 5 (or 6) nonzero entries</td><td>Sampling</td></tr>
+  <tr><td>3</td><td>Real 5-point signal with some \(X[k]\) missing</td><td>Filling in missing values</td></tr>
+  <tr><td>4</td><td>Stem plot: draw the missing stems and write \(s[n]\)</td><td>Old man / star / sun</td></tr>
+  <tr><td>5</td><td>DFT after adding a constant, shifting or flipping</td><td>Spike trick, Shifts</td></tr>
+  <tr><td>6</td><td>Circular convolution, circulant matrices, MATLAB code</td><td>Convolution</td></tr></table></section>
+  <section><h4>How to use these lessons</h4><p>Each lesson explains the idea, works one real exam example, and ends with a quick "check yourself" question. The button at the bottom opens the matching problems on the Problems tab.</p></section>`},
+{ id:'what', color:'inner', topic:'inner', kicker:'Foundation', title:'What a DFT value actually means',
+  key:R`\(X[k]\) answers one question: how much of the sinusoid \(e^{j2\pi kn/N}\) is inside \(\mathbf{x}\)? Every DFT property follows from that.`,
+  body:R`<section><h4>The idea</h4>
+  <p>Write \(\omega_0=2\pi/N\). The Fourier vector \(\mathbf{v}^{(k)}\) has entries \(e^{j\omega_0kn}\), a sinusoid that completes exactly \(k\) cycles in \(N\) samples. The DFT value is an inner product, which measures how strongly \(\mathbf{x}\) lines up with that sinusoid:</p>
+  <p>\[X[k]=\langle\mathbf{v}^{(k)},\mathbf{x}\rangle=\sum_{n=0}^{N-1}x[n]e^{-j\omega_0kn}\]</p>
+  <p>The Fourier vectors are orthogonal (\(\langle\mathbf{v}^{(k)},\mathbf{v}^{(\ell)}\rangle=N\delta_{k\ell}\)), so each \(X[k]\) picks out its own sinusoid without interference from the others. That's why you can rebuild \(\mathbf{x}\) as \(\frac1N\sum_k X[k]\mathbf{v}^{(k)}\).</p></section>
+  <section><h4>Two entries you can read off directly</h4>
+  <ul><li>\(k=0\): the sinusoid is all ones, so \(X[0]=\sum x[n]\). The average of \(\mathbf{x}\) is \(X[0]/N\).</li>
+  <li>\(k=N/2\) (when \(N\) is even): the sinusoid is \((-1)^n\), so \(X[N/2]=\sum(-1)^nx[n]\), the even samples minus the odd samples.</li></ul></section>
+  <section><h4>Energy (Parseval)</h4><p>\(\|\mathbf{x}\|^2=\frac1N\|\mathbf{X}\|^2\). The \(\frac1N\) appears because each Fourier vector has length \(\sqrt N\), not 1.</p></section>`,
+  example:R`<p><b>Practice 1 #3.</b> \(\mathbf{S}=[5,\dots,-11,\dots]\), find \(b+d+f+h\) (the odd samples).</p>
+  <p>\(S[0]\) is the sum of everything. \(S[4]\) is the even samples minus the odd ones. Subtract and halve: \(\frac{5-(-11)}{2}=8\).</p>`,
+  check:{q:R`An 8-point signal has \(X[0]=12\) and \(X[4]=4\). What is the sum of its even-indexed samples?`, a:R`Even + odd = 12 and even − odd = 4, so even = \((12+4)/2=8\).`}},
+{ id:'synth', color:'read', topic:'read', kicker:'Problem type 4', title:'Old man, star, sun: writing a real signal',
+  key:R`For a real signal, the spectrum is mirrored: \(X[N-k]=X[k]^*\). Each mirror pair merges into one real cosine, and the formula has three kinds of terms.`,
+  body:R`<section><h4>Why pairs merge</h4>
+  <p>Bins \(k\) and \(N-k\) hold conjugate values. Their two complex exponentials add up to a real cosine: \(X[k]e^{j\omega n}+X[k]^*e^{-j\omega n}=2|X[k]|\cos(\omega n+\angle X[k])\). That factor of 2 is where the "\(2|X|/N\)" amplitude comes from.</p></section>
+  <section><h4>The three kinds of term</h4>
+  <p>\[x[n]=\underbrace{\frac{X[0]}{N}}_{\text{old man (DC)}}+\sum_{k}\underbrace{\frac{2|X[k]|}{N}\cos\!\Big(\frac{2\pi k}{N}n+\angle X[k]\Big)}_{\text{star: one per mirror pair}}+\underbrace{\frac{X[N/2]}{N}(-1)^n}_{\text{sun (N even only)}}\]</p>
+  <ul><li><b>Old man</b> (\(k=0\)) and <b>sun</b> (\(k=N/2\)) have no mirror partner, so they use \(1/N\), not \(2/N\).</li>
+  <li>Both are real. A phase of \(\pi\) on either one just means the value is negative.</li>
+  <li>Keep \(\omega\in[0,\pi]\) by only using \(k\le N/2\).</li></ul></section>
+  <section><h4>Drawing missing stems</h4><p>Mirror \(k\to N-k\) with the same height and negated phase. Draw every other index as a zero stem and label it, since the exam asks for that.</p></section>`,
+  example:R`<p><b>Spring '25 A (N = 18).</b> \(S[0]=5e^{j\pi}\), \(S[3]=2e^{j3.6}\), \(S[5]=3e^{-j2.5}\), \(S[9]=4\).</p>
+  <p>Missing stems: \(S[15]=2e^{-j3.6}\) and \(S[13]=3e^{+j2.5}\). Then:</p>
+  <p>\[s[n]=-\tfrac{5}{18}+\tfrac29\cos\!\big(\tfrac{\pi}{3}n+3.6\big)+\tfrac13\cos\!\big(\tfrac{5\pi}{9}n-2.5\big)+\tfrac29(-1)^n\]</p>
+  <p>\(S[9]\) is the sun (\(9=18/2\)), so it gets \(4/18\), not \(8/18\).</p>`,
+  check:{q:R`\(N=24\), \(S[12]=5\). What term does it contribute to \(s[n]\)?`, a:R`It's the sun: \(\frac{5}{24}(-1)^n\). Use \(1/N\) because it has no mirror partner.`}},
+{ id:'samp', color:'samp', topic:'samp', kicker:'Problem type 2', title:'Sampling: how many nonzero DFT entries?',
+  key:R`A sampled cosine only shows up as clean spikes if it completes a whole number of cycles in \(N\) samples. Otherwise it leaks into every bin.`,
+  body:R`<section><h4>Recipe</h4><ol>
+  <li>Convert each frequency to <b>cycles per sample</b>: \(f/f_s\). If \(f>f_s/2\), fold it first (subtract a whole number and take the absolute value), because it aliases.</li>
+  <li>Reduce to a fraction \(p/q\). A cosine at \(p/q\) cycles per sample lands on a bin only if \(N\) is a multiple of \(q\). So \(N=\operatorname{lcm}\) of all the \(q\)'s, or a multiple of it if the problem says \(N>\) something.</li>
+  <li>Count: DC gives 1 entry, each cosine gives 2 (at \(k=Nf/f_s\) and \(N-k\)), and a cosine exactly at \(f_s/2\) gives 1.</li></ol></section>
+  <section><h4>Why it works</h4><p>Bin \(k\) is the frequency \(k/N\) cycles per sample. A cosine at \(p/q\) sits exactly on a bin when \(p/q=k/N\), which needs \(q\mid N\). If it falls between bins, the inner products with every Fourier vector are nonzero (leakage).</p></section>`,
+  example:R`<p><b>Spring '25 A.</b> \(a+b\cos(80\pi t+1.5)+c\cos(60\pi t-1.2)\) at \(f_s=120\).</p>
+  <p>40 Hz gives \(40/120=1/3\). 30 Hz gives \(1/4\). So \(N=\operatorname{lcm}(3,4)=12\). The nonzero bins are 0, then 4 and 8, then 3 and 9: five entries.</p>
+  <p><b>Aliasing trap (Practice 3 #1).</b> 100 Hz at \(f_s=150\) is \(2/3\), which folds to \(1/3\). Together with 30 Hz \(=1/5\), that gives \(L=15\).</p>`,
+  check:{q:R`Spring '25 B: cosines at 18 Hz and 15 Hz, \(f_s=90\), plus DC. Smallest \(N\)?`, a:R`\(18/90=1/5\) and \(15/90=1/6\), so \(N=\operatorname{lcm}(5,6)=30\).`}},
+{ id:'fill', color:'sym', topic:'sym', kicker:'Problem type 3', title:'Filling in missing DFT values (the 5-point problem)',
+  key:R`For a real signal, half the spectrum determines the other half. Unknown entries are just conjugates of known ones.`,
+  body:R`<section><h4>Recipe</h4><ol>
+  <li>A sum \(x[0]+\dots+x[N-1]\) is \(X[0]\).</li>
+  <li>Fill each unknown with \(X[k]=X[N-k]^*\).</li>
+  <li>\(|X[k]|=\sqrt{\text{Re}^2+\text{Im}^2}\) and \(\angle X[k]=\arctan(\text{Im}/\text{Re})\). <b>Add \(\pi\) if Re &lt; 0</b>, because arctan only covers the right half-plane.</li>
+  <li>\(N\) odd means no sun term, just \((N-1)/2\) cosines.</li></ol></section>`,
+  example:R`<p><b>Spring '25 A.</b> \(\mathbf{X}=[-4,\ 1{+}2j,\ 2{-}j,\ a_1,\ a_2]\).</p>
+  <p>\(r=X[0]=-4\). \(a_1=X[3]=X[2]^*=2+j\) and \(a_2=X[4]=X[1]^*=1-2j\). Magnitudes are \(4\) and \(\sqrt5\) four times. \(\angle X[0]=\pi\) since it's negative.</p>
+  <p>\[x[n]=-\tfrac45+\tfrac{2\sqrt5}{5}\cos\!\big(\tfrac{2\pi}{5}n+\arctan2\big)+\tfrac{2\sqrt5}{5}\cos\!\big(\tfrac{4\pi}{5}n-\arctan\tfrac12\big)\]</p>`,
+  check:{q:R`Spring '25 B: \(\mathbf{X}=[-5,\ 2{-}j,\ 1{+}j,\ a_1,\ a_2]\). Find \(a_1,a_2\).`, a:R`\(a_1=X[2]^*=1-j\) and \(a_2=X[1]^*=2+j\).`}},
+{ id:'spike', color:'shift', topic:'shift', kicker:'Problem type 5', title:'The spike trick: X ± a constant pattern',
+  key:R`A single spike in one domain is a full sinusoid in the other. So a \(\pm1\) pattern added to a whole spectrum is just one spike in time, and vice versa.`,
+  body:R`<section><h4>Key pairs</h4><ul>
+  <li>Spike at index \(m\) in time, \(\boldsymbol\delta_m\) ⟷ \([e^{-j\omega_0km}]_k\). Special cases: \(\boldsymbol\delta_0\) ⟷ all ones, and \(\boldsymbol\delta_{N/2}\) ⟷ \((-1)^k\).</li>
+  <li>Sinusoid \(\mathbf{v}^{(k_0)}\) in time ⟷ spike of height \(N\) at \(k_0\). Special case: \((-1)^n\) ⟷ height \(N\) at \(k=N/2\).</li></ul>
+  <p>Then use linearity: split the vector into "the original" plus "the pattern", transform each piece, and add.</p></section>`,
+  example:R`<p><b>Spring '25 A.</b> \(\mathbf{U}=[A{-}1,\ B{+}1,\ C{-}1,\ D{+}1,\ E{-}1,\ F{+}1]=\mathbf{S}-[1,-1,1,-1,1,-1]\).</p>
+  <p>With \(N=6\), \([1,-1,\dots]\) is the DFT of \(\boldsymbol\delta_3\). So \(\mathbf{u}=\mathbf{s}-\boldsymbol\delta_3=[a\ b\ c\ d{-}1\ e\ f]^T\).</p>
+  <p><b>Fall '25 A (reverse direction).</b> \(\mathbf{u}=\mathbf{s}-(-1)^n\) with \(N=8\) gives \(\mathbf{U}=\mathbf{S}-8\boldsymbol\delta_4=[A\,B\,C\,D\,E{-}8\,F\,G\,H]\).</p>`,
+  check:{q:R`Spring '25 B: \(\mathbf{U}=[1{-}A,\ {-B}{-}1,\ 1{-}C,\ {-D}{-}1,\ 1{-}E,\ {-F}{-}1]\). Find \(\mathbf{u}\).`, a:R`\(\mathbf{U}=-\mathbf{S}+\text{DFT}(\boldsymbol\delta_3)\), so \(\mathbf{u}=[-a,\ -b,\ -c,\ 1{-}d,\ -e,\ -f]^T\).`}},
+{ id:'shift', color:'shift', topic:'shift', kicker:'Problem type 5', title:'Shifts, modulation, reversal, conjugation',
+  key:R`Moving something in one domain multiplies by a phase in the other. Delaying in time twists the phase of the spectrum. Twisting the phase in time slides the spectrum.`,
+  body:R`<section><h4>Pattern spotting</h4><ul>
+  <li><b>Spectrum entries shifted</b>, like \(S[k+m]\): the time signal was multiplied by \(e^{-j2\pi mn/N}\) (that's \(\mathbf{F}^{-m}\)).</li>
+  <li><b>Time signal delayed</b> by \(m\) (\(\mathbf{P}^m\)): the DFT gets multiplied by \(e^{-j2\pi mk/N}\). Watch the minus sign.</li>
+  <li><b>\(\mathbf{R}\)</b> keeps entry 0 and reverses the rest: \(\mathbf{R}[S_0\,S_1\dots S_{N-1}]=[S_0\,S_{N-1}\dots S_1]\).</li>
+  <li><b>Real and imaginary parts:</b> \(\operatorname{Re}\mathbf{s}\leftrightarrow\frac12(\mathbf{S}+\mathbf{R}\mathbf{S}^*)\) and \(j\operatorname{Im}\mathbf{s}\leftrightarrow\frac12(\mathbf{S}-\mathbf{R}\mathbf{S}^*)\).</li>
+  <li><b>Two shifted copies added</b>, \(x[n+m]+x[n-m]\): multiply \(\mathbf{S}\) by \(2\cos(2\pi mk/N)\).</li></ul></section>
+  <section><h4>Why the delay rule works</h4><p>Delaying \(x\) by \(m\) delays every sinusoid inside it. Delaying \(e^{j\omega_0kn}\) by \(m\) gives \(e^{j\omega_0k(n-m)}\), which is the same sinusoid times the constant \(e^{-j\omega_0km}\). So each \(X[k]\) gets that factor.</p></section>`,
+  example:R`<p><b>Fall '25 #3 (Group A), \(\mathbf{u}=j\mathbf{y}\).</b> \(\mathbf{S}=[12,5,-3,2,3,9,11,1]\) is real, so \(\mathbf{R}\mathbf{S}^*=\mathbf{R}\mathbf{S}=[12,1,11,9,3,2,-3,5]\).</p>
+  <p>\(\mathbf{U}=\frac12(\mathbf{S}-\mathbf{R}\mathbf{S})=[0,\ 2,\ -7,\ -\tfrac72,\ 0,\ \tfrac72,\ 7,\ -2]\)</p>`,
+  check:{q:R`Group B: \(\mathbf{S}=[9,4,-1,5,8,9,10,2]\). Find the DFT of \(j\mathbf{y}\).`, a:R`\(\mathbf{R}\mathbf{S}=[9,2,10,9,8,5,-1,4]\), so \(\mathbf{U}=[0,\ 1,\ -\tfrac{11}2,\ -2,\ 0,\ 2,\ \tfrac{11}2,\ -1]\).`}},
+{ id:'ext', color:'ext', topic:'ext', kicker:'Problem type 1', title:'Zero-padding vs. periodic extension',
+  key:R`Both stretch a length-\(L\) vector to \(N=ML\). Repeating it makes the spectrum sparse (zeros between). Padding with zeros makes the spectrum finer (in-between values filled in).`,
+  body:R`<section><table class="simple"><tr><th></th><th>Periodic \([\mathbf{s};\mathbf{s};\dots]\)</th><th>Zero-pad \([\mathbf{s};\mathbf{0};\dots]\)</th></tr>
+  <tr><td>DFT</td><td>\(X[kM]=M\,S[k]\), zeros elsewhere</td><td>\(Y[kM]=S[k]\), others are interpolated values</td></tr>
+  <tr><td>Going back</td><td>\(S[k]=X[kM]/M\)</td><td>\(S[k]=Y[kM]\)</td></tr></table></section>
+  <section><h4>Why periodic gives zeros</h4><p>Repeating \(\mathbf{s}\) means it's still built only from the \(L\) sinusoids of period \(L\). In the longer DFT, those are bins \(0, M, 2M,\dots\). No other frequencies are present, so every other bin is 0. The factor \(M\) appears because you're summing over \(M\) copies.</p></section>
+  <section><h4>Why zero-padding interpolates</h4><p>Both DFTs evaluate the same sum \(\sum s[n]e^{-j\omega n}\), just at different \(\omega\) spacings. The \(N\)-point grid includes every \(L\)-point frequency, so those values match exactly. The extra points fall in between.</p>
+  <p><b>Upsampling</b> (zeros between samples), like \([a\,0\,b\,0\,c\,0\,d\,0]\), is the opposite: the spectrum repeats, \([\mathbf{S};\mathbf{S}]\).</p></section>`,
+  example:R`<p><b>Fall '25 #6.</b> \(\mathbf{x}=[a\,b\,c\,d]\leftrightarrow[A\,B\,C\,D]\). \(\mathbf{y}=[c\,d\,a\,b\ c\,d\,a\,b\ c\,d\,a\,b]\) is 3 copies of \(\mathbf{P}^2\mathbf{x}\).</p>
+  <p>\(\mathbf{P}^2\mathbf{x}\leftrightarrow[A,-B,C,-D]\). Then 3 copies give \(\mathbf{Y}=3[A,0,0,-B,0,0,C,0,0,-D,0,0]\).</p>`,
+  check:{q:R`\(\mathbf{s}=[a\,b\,c\,0\,0\,0\,0\,0\,0]\) has DFT \(\mathbf{S}\). What is the DFT of \([a\,b\,c]\)?`, a:R`Zero-pad with \(M=3\): \([S_0,\ S_3,\ S_6]\).`}},
+{ id:'conv', color:'conv', topic:'conv', kicker:'Problem type 6', title:'Circular convolution, circulants, MATLAB',
+  key:R`The DFT turns circular convolution into plain multiplication. Circulant matrices are just convolution written as a matrix, which is why <span class="mono">./</span> in MATLAB solves them.`,
+  body:R`<section><h4>Reading a convolution</h4><ul>
+  <li>\((\mathbf{x}\circledast\mathbf{y})[n]=\sum_m x[m]\,y[(n-m)\bmod N]\).</li>
+  <li>To find \(\mathbf{x}\) from a given output, look at entry 0: the coefficient on \(y[(-m)\bmod N]\) is \(x[m]\). Then check entry 1.</li></ul></section>
+  <section><h4>Circulant matrices</h4><p>\(\mathbf{C}_{\mathbf{a}}\) has \(\mathbf{a}\) as its <b>first column</b>, and each next column is the previous one shifted down by one. Then \(\mathbf{C}_{\mathbf{a}}\mathbf{u}=\mathbf{a}\circledast\mathbf{u}\).</p>
+  <p>Why the DFT solves it: \(\mathbf{C}_{\mathbf{a}}\mathbf{u}=\mathbf{b}\) becomes \(A[k]U[k]=B[k]\), so \(U=B./A\). In MATLAB: <span class="mono">u = ifft(fft(b)./fft(a))</span>.</p>
+  <p>Reading code backwards: <span class="mono">x = ifft(DFT2./DFT1)</span> means \(\mathbf{x}_1\circledast\mathbf{x}=\mathbf{x}_2\). So \(\mathbf{A}=\mathbf{C}_{\mathbf{x}_1}\) and \(\mathbf{b}=\mathbf{x}_2\).</p></section>
+  <section><h4>Pointwise products</h4><p>\(\mathbf{s}=\mathbf{x}\odot\mathbf{y}\ \Rightarrow\ \mathbf{S}=\frac1N\mathbf{X}\circledast\mathbf{Y}\). If the letters are scrambled, first write each factor as a shifted or flipped vector (\(\mathbf{P}\mathbf{x}\), \(\mathbf{R}\mathbf{y}\)) and transform those.</p></section>`,
+  example:R`<p><b>Spring '25 A #6 (N = 5).</b> Output \(=[2e{+}b,\ 2a{+}c,\ 2b{+}d,\ 2c{+}e,\ 2d{+}a]\) with \(\mathbf{y}=[a\,b\,c\,d\,e]\).</p>
+  <p>Entry 0 contains \(e=y_4\), so \(x_1=2\), and \(b=y_1\), so \(x_4=1\). That gives \(\mathbf{x}=[0\ 2\ 0\ 0\ 1]^T\). Check entry 1: \(2y_0+y_2=2a+c\). ✓</p>
+  <p><b>Fall '25 #7.</b> <span class="mono">fft([6 3 5 9].')</span> and <span class="mono">fft([4 -1 2 7].')</span> give \(\mathbf{A}=\mathbf{C}_{[6,3,5,9]}\) and \(\mathbf{b}=[4,-1,2,7]^T\).</p>`,
+  check:{q:R`Spring '25 B #6: output \(=[3b{+}d,\ \dots]\) with \(\mathbf{y}=[a\,b\,c\,d\,e]\). Find \(\mathbf{x}\).`, a:R`In entry 0, \(y\) appears as \(y[(-m)\bmod5]\). \(b=y_1\) means \(-m\equiv1\), so \(m=4\) and \(x_4=3\). \(d=y_3\) means \(m=2\), so \(x_2=1\). That gives \(\mathbf{x}=[0\ 0\ 1\ 0\ 3]^T\).`}},
+{ id:'ls', color:'ls', topic:'ls', kicker:'Also tested', title:'Best approximation and its error',
+  key:R`Approximating with a few Fourier vectors is a projection. Keep those DFT values and drop the rest. The error is the energy you dropped.`,
+  body:R`<section><h4>Why it works</h4><p>Projecting \(\mathbf{x}\) onto \(\mathbf{v}^{(k)}\) gives \(\frac{X[k]}{N}\mathbf{v}^{(k)}\). Because the Fourier vectors are orthogonal, projecting onto several of them is just the sum of the individual projections. The error is orthogonal to what you kept, so by Pythagoras:</p>
+  <p>\[\|\mathbf{x}-\hat{\mathbf{x}}\|^2=\frac1N\sum_{k\ \text{dropped}}|X[k]|^2\]</p></section>
+  <section><h4>Common shapes</h4><ul>
+  <li>\([a\,a\,\dots\,a]\) is \(a\,\mathbf{v}^{(0)}\). Best \(a=X[0]/N\) (the mean). Drop every bin except 0.</li>
+  <li>\([a\,b\,a\,b]\) has period 2, so it's spanned by \(\mathbf{v}^{(0)}\) and \(\mathbf{v}^{(2)}\). Drop bins 1 and 3.</li></ul></section>`,
+  example:R`<p><b>Practice 1 #5.</b> \(\mathbf{X}=[5,\ 1{+}3j,\ -2,\ 1{-}3j]\), approximated by a constant.</p>
+  <p>\(a=5/4\). Error \(=\frac14(10+4+10)=6\).</p>`,
+  check:{q:R`\(\mathbf{X}=[1,\ 2{+}j,\ -3,\ 2{-}j]\), approximated by \([a\,b\,a\,b]\). Smallest error?`, a:R`Drop bins 1 and 3: \(\frac14(5+5)=\frac52\).`}},
+{ id:'check', color:'sym', kicker:'Before the exam', title:'Exam-day checklist',
+  key:R`Most lost points come from a handful of slips. Read this list right before you walk in.`,
+  body:R`<section><ul>
+  <li><b>Mirror rule:</b> missing stems have the same magnitude and <i>negated</i> phase. Draw the zeros and label the indices.</li>
+  <li><b>\(2|X|/N\)</b> for stars, <b>\(1/N\)</b> for the old man and the sun. The sun only exists if \(N\) is even.</li>
+  <li><b>Aliasing:</b> fold any \(f>f_s/2\) before taking the lcm. A cosine at \(\omega=\pi\) has just 1 entry.</li>
+  <li>\(\mathbf{P}^m\mathbf{x}\leftrightarrow\mathbf{F}^{-m}\mathbf{X}\) (note the <b>minus</b>), and \(\mathbf{F}^m\mathbf{x}\leftrightarrow\mathbf{P}^m\mathbf{X}\). Shifting to \(S[k+m]\) means \(\mathbf{F}^{-m}\) on \(\mathbf{s}\).</li>
+  <li>\(\mathbf{R}\) never moves entry 0. \(\mathbf{x}^*\leftrightarrow\mathbf{R}\mathbf{X}^*\): conjugate <i>and</i> reverse.</li>
+  <li>Circulant matrices are built from the <b>first column</b>. The rest are circular shifts down.</li>
+  <li>Zero-pad: \(Y[kM]=S[k]\). Periodic: \(X[kM]=M\,S[k]\), zeros elsewhere.</li>
+  <li>arctan is off by \(\pi\) when Re &lt; 0.</li></ul></section>`}
+];
+
+/* ---------- deeper walkthroughs for four lessons ---------- */
+const DEEP = {
+spike: {
+  intro: R`<section><h4>What \(\boldsymbol\delta_m\) is</h4>
+  <p>\(\boldsymbol\delta_m\) is all zeros with a single 1 at index \(m\). For \(N=6\): \(\boldsymbol\delta_0=[1\,0\,0\,0\,0\,0]\) and \(\boldsymbol\delta_3=[0\,0\,0\,1\,0\,0]\).</p></section>
+  <section><h4>Where \(e^{-j2\pi km/N}\) comes from</h4>
+  <p>Put \(\boldsymbol\delta_m\) into the DFT definition \(X[k]=\sum_n x[n]e^{-j2\pi kn/N}\). Every term is multiplied by 0 except the one at \(n=m\), which is multiplied by 1. Only that term survives:</p>
+  <p>\[\text{DFT}(\boldsymbol\delta_m)[k]=e^{-j2\pi km/N}\]</p>
+  <p>That's the whole derivation: the DFT of a spike is the exponential evaluated at the spike's position.</p></section>
+  <section><h4>What that number means</h4>
+  <ul><li>\(e^{-j\theta}\) is a point on the unit circle at angle \(-\theta\). So <b>every entry has size 1</b>: a spike contains every frequency equally.</li>
+  <li>Only the angle changes. Each time \(k\) goes up by 1, the arrow turns by another \(-2\pi m/N\). <b>The spike's position \(m\) is stored entirely in how fast the arrow turns.</b></li>
+  <li>When \(m=N/2\), each step is \(-\pi\), a half turn: \(e^{-j\pi k}=(-1)^k\). That's the alternating \(1,-1,1,-1\) pattern.</li></ul>
+  <p>Press play below and watch the arrow step through \(k=0,1,2,\dots\). Change \(m\) to see the turning speed change.</p></section>
+  <section><h4>Watch it: the turning arrow</h4><div class="widget" data-widget="phasor"></div></section>
+  <section><h4>Why this matters beyond spike problems</h4><ul>
+  <li><b>It's where the shift rule comes from.</b> Any vector is a sum of spikes: \(\mathbf{x}=a\boldsymbol\delta_0+b\boldsymbol\delta_1+\dots\). Delaying \(\mathbf{x}\) by \(m\) moves every spike forward \(m\) places, which multiplies every \(X[k]\) by \(e^{-j2\pi km/N}\). That's \(\mathbf{P}^m\leftrightarrow\mathbf{F}^{-m}\). Example: \([c\,d\,a\,b]\) is a shift by 2 with \(N=4\), so the factor is \(e^{-j\pi k}=(-1)^k\), giving \([A,-B,C,-D]\) (Fall 2020 Q7, Fall '25 #6).</li>
+  <li><b>Two shifts give a cosine.</b> \(x[n]=s[n-2]+s[n+2]\) with \(N=8\) gives \(e^{-j\pi k/2}+e^{j\pi k/2}=2\cos(\pi k/2)\), so \([2A,0,-2C,0,\dots]\) (Fall 2019 #3(i), Fall '25 B #4).</li>
+  <li><b>Convolution kernels are made of spikes.</b> Convolving with \(\boldsymbol\delta_m\) just delays by \(m\), which is why Fall 2020 Q9's answer is \(\mathbf{a}=\boldsymbol\delta_1\). Practice 2 #8's kernel \([0\,2\,0\,0\,0\,1]\) is \(2\boldsymbol\delta_1+\boldsymbol\delta_5\).</li>
+  <li><b>The flip side:</b> a sinusoid in time gives a spike in frequency, with height \(N\). For example \((-1)^n\leftrightarrow N\boldsymbol\delta_{N/2}\). That's why Fall '25 A gives \(E-8\).</li></ul>
+  <p class="note-guide"><b>Self-check:</b> with \(N=8\) and \(m=2\), what is \(X[3]\)? Set the animation to those values and stop at \(k=3\). (Answer: \(e^{-j3\pi/2}=j\).)</p></section>`,
+  table: R`<table class="simple"><tr><th>Time domain</th><th></th><th>Frequency domain</th><th>In words</th></tr>
+  <tr><td>\(\boldsymbol\delta_0=[1\,0\,0\dots]\)</td><td>⟷</td><td>\([1\,1\,1\dots]\)</td><td>A spike at 0 contains every frequency equally.</td></tr>
+  <tr><td>\(\boldsymbol\delta_{N/2}\)</td><td>⟷</td><td>\([1\,{-1}\,1\,{-1}\dots]=(-1)^k\)</td><td>Spike in the middle gives an alternating pattern.</td></tr>
+  <tr><td>\(\boldsymbol\delta_m\)</td><td>⟷</td><td>\(e^{-j2\pi km/N}\)</td><td>The general rule. Try it in the explorer below.</td></tr>
+  <tr><td>\([1\,1\,1\dots]\)</td><td>⟷</td><td>\(N\boldsymbol\delta_0\)</td><td>A constant is one frequency (DC), with height \(N\).</td></tr>
+  <tr><td>\((-1)^n\)</td><td>⟷</td><td>\(N\boldsymbol\delta_{N/2}\)</td><td>Fastest sinusoid, one spike at \(N/2\), height \(N\).</td></tr></table>
+  <p class="note-guide">Spike in <b>time</b>: the frequency pattern has height 1. Sinusoid in <b>time</b>: the frequency spike has height \(N\). That \(N\) comes from the \(\sum_n\) in the DFT adding up \(N\) ones.</p>`,
+  walks: [
+   { t:R`Example 1 · Spring '25 A (frequency → time), N = 6`, q:R`\(\mathbf{U}=[A{-}1,\ B{+}1,\ C{-}1,\ D{+}1,\ E{-}1,\ F{+}1]\). Find \(\mathbf{u}\).`,
+     s:[R`<b>Separate letters from numbers.</b> \(\mathbf{U}=[A\,B\,C\,D\,E\,F]+[-1,+1,-1,+1,-1,+1]=\mathbf{S}-[1,-1,1,-1,1,-1]\).`,
+        R`<b>Name the number pattern.</b> \([1,-1,1,-1,1,-1]\) alternates in \(k\), so it's \((-1)^k=e^{-j\pi k}=e^{-j2\pi k\cdot3/6}\). That matches \(\boldsymbol\delta_m\leftrightarrow e^{-j2\pi km/N}\) with \(m=3\).`,
+        R`<b>So the pattern is the DFT of \(\boldsymbol\delta_3\)</b>, a single 1 at index 3: \([0\,0\,0\,1\,0\,0]\).`,
+        R`<b>Use linearity.</b> \(\mathbf{U}=\mathbf{S}-\text{DFT}(\boldsymbol\delta_3)\), so \(\mathbf{u}=\mathbf{s}-\boldsymbol\delta_3\). Only entry 3 changes.`,
+        R`<b>Answer:</b> \(\mathbf{u}=[a\ \ b\ \ c\ \ d{-}1\ \ e\ \ f]^T\).`] },
+   { t:R`Example 2 · Fall '25 A (time → frequency), N = 8`, q:R`\(\mathbf{u}=[a{-}1,\ b{+}1,\ c{-}1,\ \dots,\ h{+}1]\). Find \(\mathbf{U}\).`,
+     s:[R`<b>Separate.</b> \(\mathbf{u}=\mathbf{s}+[-1,1,-1,1,\dots]=\mathbf{s}-(-1)^n\).`,
+        R`<b>Name the pattern.</b> \((-1)^n=e^{j\pi n}=e^{j2\pi\cdot4n/8}\), the Fourier sinusoid \(\mathbf{v}^{(4)}\). It's a sinusoid in time this time, not a spike.`,
+        R`<b>Transform it.</b> A Fourier sinusoid has a DFT that's a single spike of height \(N\) at its own \(k\). \(\text{DFT}((-1)^n)=8\boldsymbol\delta_4\).`,
+        R`<b>Answer:</b> \(\mathbf{U}=\mathbf{S}-8\boldsymbol\delta_4=[A\,B\,C\,D\,E{-}8\,F\,G\,H]\). Don't forget the 8.`] },
+   { t:R`Example 3 · Spring '25 B (a minus sign on S)`, q:R`\(\mathbf{U}=[1{-}A,\ {-B}{-}1,\ 1{-}C,\ {-D}{-}1,\ 1{-}E,\ {-F}{-}1]\), N = 6.`,
+     s:[R`<b>Pull out the letters with their sign.</b> \(\mathbf{U}=-\mathbf{S}+[1,-1,1,-1,1,-1]\).`,
+        R`Same pattern as Example 1: \(\text{DFT}(\boldsymbol\delta_3)\).`,
+        R`<b>Answer:</b> \(\mathbf{u}=-\mathbf{s}+\boldsymbol\delta_3=[-a,\ -b,\ -c,\ 1{-}d,\ -e,\ -f]^T\).`] }],
+  mistakes:[R`Forgetting the factor \(N\) when a sinusoid in time becomes a spike in frequency.`,
+    R`Matching the pattern to the wrong spike. If it starts \(+1\) at \(k=0\) and alternates, it's \(\boldsymbol\delta_{N/2}\). If it's all \(+1\)'s, it's \(\boldsymbol\delta_0\) (which adds 1 to \(x[0]\)).`,
+    R`Flipping the sign: \(\mathbf{S}-\text{pattern}\) means \(\mathbf{s}-\text{spike}\).`],
+  widget:'spike' },
+shift: {
+  table: R`<table class="simple"><tr><th>What you see</th><th>What it is</th><th>What happens in the other domain</th></tr>
+  <tr><td>Time letters <b>rotated</b>: \([h\,a\,b\,c\dots]\)</td><td>Delay \(\mathbf{P}^m\mathbf{x}\)</td><td>Spectrum letters stay put but each gets a factor \(e^{-j2\pi km/N}\)</td></tr>
+  <tr><td>Time letters <b>multiplied by position-dependent numbers</b></td><td>Modulation \(\mathbf{F}^m\mathbf{x}\)</td><td>Spectrum letters <b>rotate</b> by \(m\): \(\mathbf{P}^m\mathbf{X}\)</td></tr>
+  <tr><td>Spectrum letters rotated: \(S[k+m]\)</td><td>\(\mathbf{P}^{-m}\mathbf{S}\)</td><td>Time gets factors \(e^{-j2\pi mn/N}\) (\(\mathbf{F}^{-m}\mathbf{s}\))</td></tr>
+  <tr><td>Order reversed, entry 0 kept</td><td>\(\mathbf{R}\)</td><td>Also reversed: \(\mathbf{R}\mathbf{X}\)</td></tr>
+  <tr><td>Conjugated</td><td>\(\mathbf{x}^*\)</td><td>Conjugated <b>and</b> reversed: \(\mathbf{R}\mathbf{X}^*\)</td></tr></table>
+  <p class="note-guide">The one sentence to remember: <b>rotating in one domain means phase factors in the other.</b> When \(m=N/2\), the factors are just \(\pm1\): \((-1)^k\) or \((-1)^n\).</p>`,
+  walks: [
+   { t:R`Example 1 · Practice 2 #6 (rotated spectrum), N = 6`, q:R`\(\mathbf{X}=[A{-}D,\ B{-}E,\ C{-}F,\ D{-}A,\ E{-}B,\ F{-}C]\). Find \(\mathbf{x}\).`,
+     s:[R`<b>Split into pieces.</b> \(\mathbf{X}=[A\,B\,C\,D\,E\,F]-[D\,E\,F\,A\,B\,C]=\mathbf{S}-(\text{rotated }\mathbf{S})\).`,
+        R`<b>How far is it rotated?</b> Entry 0 holds \(D=S[3]\), so entry \(k\) holds \(S[k+3]\). The spectrum moved by 3.`,
+        R`<b>Rotation in frequency means factors in time.</b> \(S[k+3]\) comes from multiplying \(s[n]\) by \(e^{-j2\pi\cdot3n/6}=e^{-j\pi n}=(-1)^n\).`,
+        R`<b>Combine.</b> \(x[n]=s[n]-(-1)^ns[n]=(1-(-1)^n)s[n]\). That factor is 0 for even \(n\) and 2 for odd \(n\).`,
+        R`<b>Answer:</b> \(\mathbf{x}=[0,\ 2b,\ 0,\ 2d,\ 0,\ 2f]^T\).`] },
+   { t:R`Example 2 · Fall '25 B #4 / Fall 2019 #3(i) (rotated time), N = 8`, q:R`\(\mathbf{x}=[c{+}g,\ d{+}h,\ e{+}a,\ f{+}b,\ g{+}c,\ h{+}d,\ a{+}e,\ b{+}f]\). Find \(\mathbf{X}\).`,
+     s:[R`<b>Read entry 0.</b> \(c+g=s[2]+s[6]\). Since \(6\equiv-2\), that's \(s[0+2]+s[0-2]\). Every entry follows \(x[n]=s[n+2]+s[n-2]\).`,
+        R`<b>Name the operators.</b> \(s[n-2]\) is a delay by 2 (\(\mathbf{P}^2\mathbf{s}\)), and \(s[n+2]\) is an advance (\(\mathbf{P}^{-2}\mathbf{s}\)).`,
+        R`<b>Rotation in time means factors in frequency.</b> \(\mathbf{P}^2\to e^{-j2\pi\cdot2k/8}=e^{-j\pi k/2}\), and \(\mathbf{P}^{-2}\to e^{+j\pi k/2}\).`,
+        R`<b>Add them.</b> \(e^{-j\pi k/2}+e^{j\pi k/2}=2\cos(\pi k/2)\). For \(k=0..7\) that's \(2,0,-2,0,2,0,-2,0\).`,
+        R`<b>Answer:</b> \(\mathbf{X}=[2A,\ 0,\ -2C,\ 0,\ 2E,\ 0,\ -2G,\ 0]\).`] },
+   { t:R`Example 3 · Practice 1 #6 (rotation that isn't N/2), N = 6`, q:R`\(\mathbf{X}=[C{-}E,\ D{-}F,\ E{-}A,\ F{-}B,\ A{-}C,\ B{-}D]\).`,
+     s:[R`<b>Find both rotations.</b> \(X[0]=C-E=S[2]-S[4]\), and \(S[4]=S[-2]\). So \(X[k]=S[k+2]-S[k-2]\).`,
+        R`<b>Convert each.</b> \(S[k+2]\to e^{-j2\pi\cdot2n/6}s[n]\) and \(S[k-2]\to e^{+j2\pi\cdot2n/6}s[n]\).`,
+        R`<b>Combine.</b> \(e^{-j\theta}-e^{j\theta}=-2j\sin\theta\) with \(\theta=2\pi n/3\).`,
+        R`<b>Evaluate.</b> \(\sin(2\pi n/3)=0,\tfrac{\sqrt3}2,-\tfrac{\sqrt3}2,0,\tfrac{\sqrt3}2,-\tfrac{\sqrt3}2\).`,
+        R`<b>Answer:</b> \(\mathbf{x}=j\sqrt3\,[0,\ -b,\ c,\ 0,\ -e,\ f]^T\).`] }],
+  mistakes:[R`Sign of the exponent: a <b>delay</b> gives \(e^{-j\dots}\) (minus). \(\mathbf{P}^m\leftrightarrow\mathbf{F}^{-m}\).`,
+    R`Moving entry 0 when reversing. \(\mathbf{R}\) always keeps index 0 in place.`,
+    R`Forgetting to reverse when conjugating: \(\mathbf{x}^*\leftrightarrow\mathbf{R}\mathbf{X}^*\), not just \(\mathbf{X}^*\).`],
+  widget:'shift' },
+ext: {
+  walks: [
+   { t:R`Example 1 · Fall '25 #6 (periodic, with a shift)`, q:R`\(\mathbf{x}=[a\,b\,c\,d]\leftrightarrow[A\,B\,C\,D]\). Find the DFT of \(\mathbf{y}=[c\,d\,a\,b\ \ c\,d\,a\,b\ \ c\,d\,a\,b]\).`,
+     s:[R`<b>Find the repeating block.</b> \([c\,d\,a\,b]\), so \(L=4\). The length is 12, so \(M=3\) copies.`,
+        R`<b>Relate the block to \(\mathbf{x}\).</b> \([c\,d\,a\,b]\) is \(\mathbf{x}\) rotated by 2: \(\mathbf{P}^2\mathbf{x}\). Check entry 0: \(x[0-2]=x[2]=c\). ✓`,
+        R`<b>DFT of the block.</b> A rotation in time gives factors \(e^{-j2\pi\cdot2k/4}=(-1)^k\), so the block's DFT is \([A,\ -B,\ C,\ -D]\).`,
+        R`<b>Apply the periodic rule.</b> \(Y[3k]=3\times\)(block DFT)\([k]\), and every other bin is 0.`,
+        R`<b>Answer:</b> \(\mathbf{Y}=[3A,0,0,-3B,0,0,3C,0,0,-3D,0,0]\).`,
+        R`<b>Why the zeros?</b> \(\mathbf{y}\) is built only from sinusoids that repeat every 4 samples. In a 12-point DFT, those are bins 0, 3, 6, 9. Nothing else is present.`] },
+   { t:R`Example 2 · Practice 1 #7 (zero-pad, then periodic)`, q:R`\(\mathbf{x}=[c\,d\,a\,b\,0\,0\,0\,0]\) has DFT \([X_0\dots X_7]\). Find the DFT of \(\mathbf{s}=[a\,b\,c\,d]\) repeated 3 times.`,
+     s:[R`<b>Spot the zero-padding.</b> \(\mathbf{x}\) is \([c\,d\,a\,b]\) followed by 4 zeros: \(L=4\), \(N=8\), \(M=2\).`,
+        R`<b>Zero-pad rule (going back to the short one).</b> DFT\(([c\,d\,a\,b])[k]=X[2k]\), which is \([X_0,\ X_2,\ X_4,\ X_6]\). No factor of \(M\) here.`,
+        R`<b>Undo the rotation.</b> \([a\,b\,c\,d]\) is \([c\,d\,a\,b]\) rotated by 2, so multiply by \((-1)^k\): \([X_0,\ -X_2,\ X_4,\ -X_6]\).`,
+        R`<b>Periodic rule (3 copies).</b> Multiply by 3 and place the values at every 3rd bin.`,
+        R`<b>Answer:</b> \(\mathbf{S}=3[X_0,0,0,-X_2,0,0,X_4,0,0,-X_6,0,0]\).`] }],
+  mistakes:[R`Mixing up the factor: <b>periodic</b> multiplies by \(M\). <b>Zero-pad</b> doesn't.`,
+    R`For zero-padding, the bins between multiples of \(M\) are <i>not</i> zero. They just have no simple formula.`,
+    R`Forgetting to check whether the block is a rotated version of the vector you know.`],
+  widget:'ext' },
+conv: {
+  walks: [
+   { t:R`Example 1 · Building and reading a circulant matrix`, q:R`Write \(\mathbf{C}_{\mathbf{a}}\) for \(\mathbf{a}=[6\ 3\ 5\ 9]\).`,
+     s:[R`<b>Column 0 is \(\mathbf{a}\) itself:</b> \([6,3,5,9]^T\).`,
+        R`<b>Each next column is the previous one shifted down by 1</b>, with the bottom wrapping to the top. Column 1 is \([9,6,3,5]^T\), column 2 is \([5,9,6,3]^T\), column 3 is \([3,5,9,6]^T\).`,
+        R`\[\mathbf{C}_{\mathbf{a}}=\begin{bmatrix}6&9&5&3\\3&6&9&5\\5&3&6&9\\9&5&3&6\end{bmatrix}\]`,
+        R`<b>Reading it back:</b> always take the <b>first column</b>. The first row is \([6,9,5,3]=\mathbf{R}\mathbf{a}\), which is the trap.`] },
+   { t:R`Example 2 · Fall '25 #7 (MATLAB code → A, b)`, q:R`<span class="mono">x = ifft( fft([4 -1 2 7].') ./ fft([6 3 5 9].') )</span> solves \(\mathbf{A}\mathbf{x}=\mathbf{b}\). Find \(\mathbf{A}\) and \(\mathbf{b}\).`,
+     s:[R`<b>Write what the code says in the frequency domain.</b> \(\text{DFT}(\mathbf{x})=\mathbf{B}./\mathbf{A}\), with \(\mathbf{b}=[4,-1,2,7]\) and \(\mathbf{a}=[6,3,5,9]\).`,
+        R`<b>Multiply both sides by \(A[k]\).</b> \(A[k]X[k]=B[k]\).`,
+        R`<b>Product of DFTs means convolution in time.</b> \(\mathbf{a}\circledast\mathbf{x}=\mathbf{b}\).`,
+        R`<b>Write the convolution as a matrix.</b> \(\mathbf{C}_{\mathbf{a}}\mathbf{x}=\mathbf{b}\). So \(\mathbf{A}\) is the circulant from Example 1, and \(\mathbf{b}=[4,-1,2,7]^T\).`] },
+   { t:R`Example 3 · Spring '25 A #6 (find x from x ⊛ y), N = 5`, q:R`\(\mathbf{x}\circledast\mathbf{y}=[2e{+}b,\ 2a{+}c,\ 2b{+}d,\ 2c{+}e,\ 2d{+}a]\) with \(\mathbf{y}=[a\,b\,c\,d\,e]\).`,
+     s:[R`<b>Write entry 0 generally.</b> \(\text{out}[0]=\sum_m x[m]\,y[-m]=x_0y_0+x_1y_4+x_2y_3+x_3y_2+x_4y_1\). The indices always add to 0 (mod 5).`,
+        R`<b>Match it to the given entry.</b> \(2e+b=2y_4+1\cdot y_1\). So \(x_1=2\), \(x_4=1\), and everything else is 0.`,
+        R`<b>Check with entry 1.</b> \(\text{out}[1]=x_0y_1+x_1y_0+x_2y_4+x_3y_3+x_4y_2=2a+c\). ✓`,
+        R`<b>Answer:</b> \(\mathbf{x}=[0\ 2\ 0\ 0\ 1]^T\).`] },
+   { t:R`Example 4 · Fall '25 #5 (scrambled pointwise product)`, q:R`\(\mathbf{s}=[de\ \ ah\ \ bg\ \ cf]\), where \(\mathbf{x}=[a\,b\,c\,d]\) and \(\mathbf{y}=[e\,f\,g\,h]\).`,
+     s:[R`<b>Split each product into two factors.</b> The first factors are \(d,a,b,c\) and the second are \(e,h,g,f\).`,
+        R`<b>Name them.</b> \([d\,a\,b\,c]=\mathbf{P}\mathbf{x}\) (delay by 1). \([e\,h\,g\,f]=\mathbf{R}\mathbf{y}\).`,
+        R`<b>Transform each.</b> \(\mathbf{P}\mathbf{x}\leftrightarrow\mathbf{F}^{-1}\mathbf{X}\) and \(\mathbf{R}\mathbf{y}\leftrightarrow\mathbf{R}\mathbf{Y}\).`,
+        R`<b>A product in time is \(\frac1N\) times a convolution in frequency.</b> \(\mathbf{S}=\frac14(\mathbf{F}^{-1}\mathbf{X})\circledast(\mathbf{R}\mathbf{Y})\).`] }],
+  mistakes:[R`Reading \(\mathbf{h}\) from the first <b>row</b> instead of the first column.`,
+    R`Forgetting the \(\frac1N\) in the product rule \(\mathbf{x}\odot\mathbf{y}\leftrightarrow\frac1N\mathbf{X}\circledast\mathbf{Y}\).`,
+    R`Index arithmetic: \(y[n-m]\) is taken mod \(N\), so \(y[-1]=y[N-1]\).`],
+  widget:'conv' }
+};
+
+/* ---------- lesson widgets ---------- */
+let phasorTimer = null;
+const WIDGETS = {
+phasor(el) {
+  el.innerHTML = `<div class="phasor-wrap">
+    <svg viewBox="-130 -130 260 260" class="phasor-svg" role="img" aria-label="Unit circle showing the DFT value as an arrow">
+      <circle r="100" fill="none" stroke="var(--line)" stroke-width="2"/>
+      <line x1="-118" y1="0" x2="118" y2="0" stroke="var(--muted)" stroke-opacity=".4"/>
+      <line x1="0" y1="-118" x2="0" y2="118" stroke="var(--muted)" stroke-opacity=".4"/>
+      <text x="108" y="-6" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">1</text>
+      <text x="-124" y="-6" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">−1</text>
+      <text x="5" y="-106" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">j</text>
+      <text x="5" y="116" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">−j</text>
+      <g id="phTrail"></g>
+      <path id="phArc" fill="none" stroke="var(--t-shift)" stroke-width="2" stroke-dasharray="4 3"/>
+      <line id="phArrow" x1="0" y1="0" x2="100" y2="0" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
+      <circle id="phTip" cx="100" cy="0" r="7" fill="var(--accent)"/>
+    </svg>
+    <div class="phasor-side">
+      <div class="row2"><div class="form-row"><label for="phN">Length N</label><select id="phN"><option>4</option><option>6</option><option selected>8</option></select></div>
+      <div class="form-row"><label for="phM">Spike position m</label><select id="phM"></select></div></div>
+      <div class="actions" style="margin-top:0">
+        <button type="button" class="btn primary" id="phPlay">▶ Play</button>
+        <button type="button" class="btn" id="phStep">Step k + 1</button>
+        <button type="button" class="btn" id="phReset">Back to k = 0</button>
+      </div>
+      <div class="phasor-read" id="phRead"></div>
+      <div class="scroll-x"><table class="out widget-table" id="phRow"></table></div>
+    </div></div>`;
+  const N = el.querySelector('#phN'), M = el.querySelector('#phM'), play = el.querySelector('#phPlay');
+  let k = 0;
+  const fillM = () => { const n = +N.value, cur = Math.min(+M.value || 2, n - 1); M.innerHTML = Array.from({ length: n }, (_, i) => `<option ${i === cur ? 'selected' : ''}>${i}</option>`).join(''); };
+  const pt = (kk, n, m, r = 100) => { const a = -2 * Math.PI * kk * m / n; return [r * Math.cos(a), -r * Math.sin(a)]; }; // svg y is flipped
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let curA = 0, raf = null;
+  const setArrow = a => {
+    const x = 100 * Math.cos(a), y = -100 * Math.sin(a);
+    el.querySelector('#phArrow').setAttribute('x2', x); el.querySelector('#phArrow').setAttribute('y2', y);
+    el.querySelector('#phTip').setAttribute('cx', x); el.querySelector('#phTip').setAttribute('cy', y);
+  };
+  const turnTo = (target, animate) => {
+    if (raf) cancelAnimationFrame(raf);
+    if (!animate || reduce) { curA = target; setArrow(curA); return; }
+    const from = curA, t0 = performance.now(), dur = 650;
+    const tick = now => { const t = Math.min(1, (now - t0) / dur), e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      curA = from + (target - from) * e; setArrow(curA); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  };
+  const draw = (animate) => {
+    const n = +N.value, m = +M.value;
+    if (animate && k > 0) turnTo(curA - 2 * Math.PI * m / n, true); else turnTo(-2 * Math.PI * k * m / n, false);
+    let trail = '';
+    for (let i = 0; i < k; i++) { const [tx, ty] = pt(i, n, m); trail += `<circle cx="${tx}" cy="${ty}" r="5" fill="var(--accent)" fill-opacity="${0.15 + 0.5 * (i + 1) / Math.max(k, 1)}"/><text x="${tx * 0.78}" y="${ty * 0.78 + 4}" font-size="10" text-anchor="middle" fill="var(--muted)" font-family="IBM Plex Mono, monospace">k${i}</text>`; }
+    el.querySelector('#phTrail').innerHTML = trail;
+    // arc showing one step of turning (from k-1 to k)
+    if (k > 0 && m % n !== 0) {
+      const [ax, ay] = pt(k - 1, n, m, 38), [bx, by] = pt(k, n, m, 38);
+      const sweepAngle = (2 * Math.PI * m / n) % (2 * Math.PI);
+      el.querySelector('#phArc').setAttribute('d', `M ${ax} ${ay} A 38 38 0 ${sweepAngle > Math.PI ? 1 : 0} 1 ${bx} ${by}`);
+    } else el.querySelector('#phArc').setAttribute('d', '');
+    const val = phaseTeX(-2 * k * m, n);
+    el.querySelector('#phRead').innerHTML = `<div class="ph-k">k = ${k}</div><div>\\(X[${k}]=e^{-j2\\pi\\cdot${k}\\cdot${m}/${n}}=${val}\\)</div>
+      <div class="note-guide" style="margin-top:6px">Each step turns the arrow clockwise by \\(2\\pi\\cdot${m}/${n}\\)${2 * m === n ? ', a half turn, so the values alternate 1, −1' : m === 0 ? ', which is no turn at all, so every value is 1' : ''}. The arrow's length never changes: \\(|X[k]|=1\\).</div>`;
+    el.querySelector('#phRow').innerHTML = `<tr><th>k</th>${Array.from({ length: n }, (_, i) => `<th>${i}</th>`).join('')}</tr><tr><td>X[k]</td>${Array.from({ length: n }, (_, i) => `<td class="${i === k ? 'hot' : ''}">${i <= k ? `\\(${phaseTeX(-2 * i * m, n)}\\)` : '·'}</td>`).join('')}</tr>`;
+    typeset(el.querySelector('#phRead')); typeset(el.querySelector('#phRow'));
+  };
+  const stop = () => { if (phasorTimer) clearInterval(phasorTimer); phasorTimer = null; play.textContent = '▶ Play'; };
+  const step = () => { k = (k + 1) % (+N.value); draw(k > 0); };
+  play.onclick = () => {
+    if (phasorTimer) { stop(); return; }
+    play.textContent = '❚❚ Pause';
+    phasorTimer = setInterval(step, 1100);
+  };
+  el.querySelector('#phStep').onclick = () => { stop(); step(); };
+  el.querySelector('#phReset').onclick = () => { stop(); k = 0; draw(); };
+  N.onchange = () => { stop(); fillM(); k = 0; draw(); };
+  M.onchange = () => { stop(); k = 0; draw(); };
+  fillM(); draw();
+},
+spike(el) {
+  el.innerHTML = `<div class="row2" style="max-width:360px"><div class="form-row"><label for="wsN">Length N</label><select id="wsN"><option>4</option><option selected>6</option><option>8</option></select></div>
+    <div class="form-row"><label for="wsM">Spike position m</label><select id="wsM"></select></div></div><div id="wsOut"></div>`;
+  const N = el.querySelector('#wsN'), M = el.querySelector('#wsM'), out = el.querySelector('#wsOut');
+  const fill = () => { const n = +N.value, cur = Math.min(+M.value || n / 2, n - 1); M.innerHTML = Array.from({ length: n }, (_, i) => `<option ${i === cur ? 'selected' : ''}>${i}</option>`).join(''); };
+  const draw = () => {
+    const n = +N.value, m = +M.value;
+    const time = Array.from({ length: n }, (_, i) => i === m ? 1 : 0);
+    const cells = Array.from({ length: n }, (_, k) => phaseTeX(-2 * k * m, n));
+    out.innerHTML = `<div class="scroll-x"><table class="out widget-table"><tr><th>index</th>${time.map((_, i) => `<th>${i}</th>`).join('')}</tr>
+      <tr><td>time \\(\\boldsymbol\\delta_{${m}}\\)</td>${time.map(v => `<td class="${v ? 'hot' : ''}">${v}</td>`).join('')}</tr>
+      <tr><td>DFT</td>${cells.map(c => `<td>\\(${c}\\)</td>`).join('')}</tr></table></div>
+      <p class="note-guide">${m === 0 ? 'm = 0: the DFT is all ones.' : 2 * m === n ? `m = N/2: the DFT is the alternating pattern \\((-1)^k\\). This is the one the exam uses.` : `Each entry is \\(e^{-j2\\pi k\\cdot${m}/${n}}\\). The phase steps by \\(-2\\pi\\cdot${m}/${n}\\) each time k goes up by 1.`}</p>`;
+    typeset(out);
+  };
+  N.onchange = () => { fill(); draw(); }; M.onchange = draw; fill(); draw();
+},
+shift(el) {
+  const L = 'abcdefgh'.split(''), U = 'ABCDEFGH'.split('');
+  el.innerHTML = `<div class="row2" style="max-width:480px"><div class="form-row"><label for="wfOp">Operation on x (N = 8)</label><select id="wfOp">
+    <option value="P">Delay: Pᵐx</option><option value="F">Modulate: Fᵐx</option><option value="R">Reverse: Rx</option><option value="C">Conjugate: x*</option></select></div>
+    <div class="form-row"><label for="wfM">m</label><select id="wfM">${[1,2,3,4,5,6,7].map(i => `<option ${i === 2 ? 'selected' : ''}>${i}</option>`).join('')}</select></div></div><div id="wfOut"></div>`;
+  const op = el.querySelector('#wfOp'), M = el.querySelector('#wfM'), out = el.querySelector('#wfOut');
+  const draw = () => {
+    const m = +M.value, o = op.value; M.disabled = (o === 'R' || o === 'C');
+    let t, f, rule;
+    if (o === 'P') { t = L.map((_, n) => L[((n - m) % 8 + 8) % 8]); f = U.map((X, k) => fac(X, -2 * k * m, 8)); rule = `Time letters rotate down by ${m}. Spectrum letters stay put and pick up \\(e^{-j2\\pi k\\cdot${m}/8}\\).`; }
+    else if (o === 'F') { t = L.map((x, n) => fac(x, 2 * n * m, 8)); f = U.map((_, k) => U[((k - m) % 8 + 8) % 8]); rule = `Time letters stay put and pick up \\(e^{+j2\\pi n\\cdot${m}/8}\\). Spectrum letters rotate down by ${m}.`; }
+    else if (o === 'R') { t = L.map((_, n) => L[(8 - n) % 8]); f = U.map((_, k) => U[(8 - k) % 8]); rule = `Both domains reverse, and entry 0 stays put.`; }
+    else { t = L.map(x => x + '^*'); f = U.map((_, k) => U[(8 - k) % 8] + '^*'); rule = `Conjugate in time means conjugate <b>and</b> reverse in frequency.`; }
+    out.innerHTML = `<div class="scroll-x"><table class="out widget-table"><tr><th>n or k</th>${L.map((_, i) => `<th>${i}</th>`).join('')}</tr>
+      <tr><td>x (before)</td>${L.map(x => `<td>\\(${x}\\)</td>`).join('')}</tr>
+      <tr><td><b>after, time</b></td>${t.map(x => `<td class="hot">\\(${x}\\)</td>`).join('')}</tr>
+      <tr><td><b>after, DFT</b></td>${f.map(x => `<td class="hot2">\\(${x}\\)</td>`).join('')}</tr></table></div><p class="note-guide">${rule}${m === 4 && (o === 'P' || o === 'F') ? ' With m = 4 = N/2, every factor is just ±1.' : ''}</p>`;
+    typeset(out);
+  };
+  op.onchange = draw; M.onchange = draw; draw();
+},
+ext(el) {
+  el.innerHTML = `<div class="row2" style="max-width:560px"><div class="form-row"><label for="weS">Short vector s (length L)</label><input type="text" id="weS" value="3, 1, 2"></div>
+    <div class="form-row"><label for="weM">Copies / stretch factor M</label><select id="weM"><option>2</option><option selected>3</option><option>4</option></select></div></div>
+    <div class="chips" style="margin-bottom:10px" id="weMode"><button type="button" class="chip" data-m="per" aria-pressed="true" style="--tc:var(--t-ext)">Periodic [s; s; …]</button><button type="button" class="chip" data-m="zp" aria-pressed="false" style="--tc:var(--t-ext)">Zero-pad [s; 0; …]</button></div>
+    <div id="weOut"></div>`;
+  let mode = 'per';
+  const out = el.querySelector('#weOut');
+  const draw = () => {
+    let s; try { s = parseVec(el.querySelector('#weS').value); } catch (e) { out.innerHTML = `<p class="err">Enter numbers separated by commas, like 3, 1, 2.</p>`; return; }
+    if (!s.length || s.length > 8) { out.innerHTML = `<p class="err">Use between 1 and 8 numbers.</p>`; return; }
+    const Mv = +el.querySelector('#weM').value, Lv = s.length, Nv = Mv * Lv;
+    const long = mode === 'per' ? Array.from({ length: Nv }, (_, i) => s[i % Lv]) : Array.from({ length: Nv }, (_, i) => i < Lv ? s[i] : [0, 0]);
+    const S = dft(s, false), X = dft(long, false), mag = v => Math.hypot(v[0], v[1]);
+    const ptsS = {}, ptsX = {};
+    S.forEach((v, k) => { ptsS[k] = [mag(v), fmt(mag(v)), 'var(--t-ext)']; });
+    X.forEach((v, k) => { const a = mag(v); if (a > 1e-9 || k % Mv === 0) ptsX[k] = [a, k % Mv === 0 ? fmt(a) : '', k % Mv === 0 ? 'var(--t-ext)' : 'var(--muted)']; });
+    const ticksX = Array.from({ length: Lv }, (_, k) => k * Mv).concat([Nv - 1]);
+    out.innerHTML = `<p class="mono" style="margin:0 0 6px">${mode === 'per' ? 'x' : 'y'} = [${long.map(v => fmt(v[0]) + (Math.abs(v[1]) > 1e-9 ? (v[1] > 0 ? '+' : '') + fmt(v[1]) + 'j' : '')).join(', ')}]   (N = ${Nv})</p>
+      <div class="plots">${stem({ maxK: Math.max(Lv - 1, 1), pts: ptsS, ticks: Array.from({ length: Lv }, (_, k) => k), title: `|S[k]|, ${Lv}-point` })}${stem({ maxK: Nv - 1, pts: ptsX, ticks: ticksX, title: `|${mode === 'per' ? 'X' : 'Y'}[k]|, ${Nv}-point` })}</div>
+      <p class="note-guide">${mode === 'per' ? `Orange bins 0, ${Mv}, ${2 * Mv}, … equal ${Mv} × S[k]. Every other bin is exactly 0.` : `Orange bins 0, ${Mv}, ${2 * Mv}, … equal S[k] exactly (no factor). The gray bins between are interpolated values, usually not 0.`}</p>`;
+  };
+  el.querySelector('#weMode').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; mode = b.dataset.m; el.querySelectorAll('#weMode .chip').forEach(c => c.setAttribute('aria-pressed', c === b)); draw(); };
+  el.querySelector('#weS').oninput = draw; el.querySelector('#weM').onchange = draw; draw();
+},
+conv(el) {
+  el.innerHTML = `<div class="row2" style="max-width:560px"><div class="form-row"><label for="wcA">First column a</label><input type="text" id="wcA" value="6, 3, 5, 9"></div>
+    <div class="form-row"><label for="wcB">Right-hand side b</label><input type="text" id="wcB" value="4, -1, 2, 7"></div></div><div id="wcOut"></div>`;
+  const out = el.querySelector('#wcOut');
+  const cols = ['--t-read', '--t-samp', '--t-ext', '--t-sym', '--t-inner', '--t-shift', '--t-ls', '--t-conv'];
+  const draw = () => {
+    let a, b; try { a = parseVec(el.querySelector('#wcA').value); b = parseVec(el.querySelector('#wcB').value); } catch (e) { out.innerHTML = `<p class="err">Enter numbers separated by commas.</p>`; return; }
+    const N = a.length;
+    if (N < 2 || N > 8) { out.innerHTML = `<p class="err">Use 2 to 8 numbers for a.</p>`; return; }
+    const num = v => fmt(v[0]) + (Math.abs(v[1]) > 1e-9 ? (v[1] > 0 ? '+' : '') + fmt(v[1]) + 'j' : '');
+    let rows = '';
+    for (let r = 0; r < N; r++) { rows += '<tr>'; for (let c = 0; c < N; c++) { const i = ((r - c) % N + N) % N; rows += `<td style="background:color-mix(in srgb, var(${cols[i % 8]}) 16%, white);color:var(${cols[i % 8]});font-weight:600">${num(a[i])}</td>`; } rows += '</tr>'; }
+    let solve = '';
+    if (b.length === N) {
+      const A = dft(a, false), B = dft(b, false);
+      if (A.some(v => Math.hypot(v[0], v[1]) < 1e-9)) solve = `<p class="err">fft(a) has a zero entry, so this matrix can't be inverted.</p>`;
+      else { const U = A.map((v, k) => { const d = v[0] ** 2 + v[1] ** 2, [p, q] = B[k]; return [(p * v[0] + q * v[1]) / d, (q * v[0] - p * v[1]) / d]; }); const u = dft(U, true);
+        solve = `<p style="margin:10px 0 4px">MATLAB: <span class="mono">u = ifft(fft([${b.map(num).join(' ')}].') ./ fft([${a.map(num).join(' ')}].'))</span></p><p class="mono" style="margin:0">u = [${u.map(num).join(', ')}]</p>`; }
+    } else solve = `<p class="note-guide">Give b the same length as a to see the solution.</p>`;
+    out.innerHTML = `<div class="scroll-x"><table class="out widget-table circ"><tbody>${rows}</tbody></table></div>
+      <p class="note-guide">Each color is one entry of a. Follow a color down-and-right: every column is the previous one shifted down by 1. The first row reads [${[0, ...Array.from({ length: N - 1 }, (_, i) => N - 1 - i)].map(i => num(a[i])).join(', ')}], which is Ra, not a.</p>${solve}`;
+  };
+  el.querySelector('#wcA').oninput = draw; el.querySelector('#wcB').oninput = draw; draw();
+}
+};
+// phase factor e^{j*pi*t/(N/2)} written nicely, where the angle is pi*t*2/N... t is the numerator of 2*pi*t/(2N)
+function phaseTeX(num, N) {
+  // angle = pi * num / N  (num = -2km for e^{-j2pi km/N})
+  let p = ((num % (2 * N)) + 2 * N) % (2 * N); if (p > N) p -= 2 * N; // angle = pi*p/N in (-pi, pi]
+  if (p === 0) return '1'; if (p === N) return '-1'; if (2 * p === N) return 'j'; if (2 * p === -N) return '-j';
+  const g = (x, y) => y ? g(y, x % y) : x; const d = g(Math.abs(p), N); const a = Math.abs(p) / d, b = N / d;
+  return `e^{${p < 0 ? '-' : ''}j${a === 1 ? '' : a}\\pi/${b}}`;
+}
+function fac(letter, num, N) { const f = phaseTeX(num, N); return f === '1' ? letter : f === '-1' ? '-' + letter : f === 'j' ? 'j' + letter : f === '-j' ? '-j' + letter : letter + f; }
+
+let lessonIdx = 0;
+try { lessonIdx = Math.min(LESSONS.length - 1, Math.max(0, +(localStorage.getItem('dft2-lesson') || 0))); } catch {}
+function renderLesson() {
+  const L = LESSONS[lessonIdx];
+  const toc = document.getElementById('toc');
+  toc.innerHTML = LESSONS.map((l, i) => `<button type="button" data-i="${i}" style="--tc:var(--t-${l.color})" aria-current="${i === lessonIdx}"><span class="n">${i === 0 ? '★' : i}</span><span>${l.title}</span></button>`).join('');
+  toc.onclick = e => { const b = e.target.closest('button'); if (!b) return; lessonIdx = +b.dataset.i; renderLesson(); document.getElementById('view-learn').scrollIntoView({ block: 'start' }); };
+  const prev = LESSONS[lessonIdx - 1], next = LESSONS[lessonIdx + 1];
+  document.getElementById('lessonBox').innerHTML = `<article class="lesson" style="--tc:var(--t-${L.color})">
+    <div class="kicker">${L.kicker}</div><h2>${L.title}</h2>
+    <div class="keyidea"><span class="lbl">Key idea</span>${L.key}</div>
+    ${L.body}
+    ${DEEP[L.id] ? deepHTML(DEEP[L.id]) : ''}
+    ${L.example && !DEEP[L.id] ? `<section><h4>Worked example from your exams</h4><div class="worked">${L.example}</div></section>` : ''}
+    ${L.check ? `<section><h4>Check yourself</h4><p>${L.check.q}</p>
+      <div class="actions" style="margin-top:4px"><button type="button" class="btn" id="checkBtn">Show answer</button></div>
+      <div class="reveal" id="checkAns" hidden><span class="lbl">Answer</span>${L.check.a}</div></section>` : ''}
+    <div class="lesson-nav">
+      <div>${prev ? `<button type="button" class="btn" data-go="${lessonIdx - 1}">← ${prev.title}</button>` : ''}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${L.topic ? `<button type="button" class="btn" data-practice="${L.topic}">Practice these problems</button>` : ''}
+        ${next ? `<button type="button" class="btn primary" data-go="${lessonIdx + 1}">Next: ${next.title} →</button>` : `<a class="btn primary" href="#problems" style="text-decoration:none">Go to problems →</a>`}
+      </div>
+    </div></article>`;
+  const box = document.getElementById('lessonBox');
+  box.onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'checkBtn') { const a = document.getElementById('checkAns'); a.hidden = !a.hidden; b.textContent = a.hidden ? 'Show answer' : 'Hide answer'; }
+    else if (b.dataset.go) { lessonIdx = +b.dataset.go; renderLesson(); document.getElementById('view-learn').scrollIntoView({ block: 'start' }); }
+    else if (b.dataset.practice) {
+      activeTopics = new Set([b.dataset.practice]); srcFilter = 'all'; onlyMiss = false;
+      store.set('dft2-topics', [...activeTopics]); store.set('dft2-src', 'all');
+      renderFilters(); renderCards(); location.hash = '#problems';
+    }
+  };
+  try { localStorage.setItem('dft2-lesson', lessonIdx); } catch {}
+  typeset(document.getElementById('view-learn'));
+  if (phasorTimer) { clearInterval(phasorTimer); phasorTimer = null; }
+  box.querySelectorAll('[data-widget]').forEach(w => { if (WIDGETS[w.dataset.widget]) WIDGETS[w.dataset.widget](w); });
+}
+function deepHTML(d) {
+  const titles = { spike: 'Spike explorer', shift: 'Shift & modulation explorer', ext: 'Extension explorer', conv: 'Circulant matrix builder' };
+  const hints = { spike: 'Pick N and where the spike goes. Watch the DFT row.', shift: 'Pick an operation on x = [a b c d e f g h]. See what happens to the time vector and to its DFT [A B C D E F G H].', ext: 'Type a short vector, then switch between periodic and zero-pad to compare the two spectra.', conv: 'Type a first column. The page builds the circulant matrix and solves A·u = b the FFT way.' };
+  return `${d.intro || ''}${d.table ? `<section><h4>The cheat table</h4>${d.table}</section>` : ''}
+    <section><h4>Try it: ${titles[d.widget]}</h4><p style="color:var(--muted)">${hints[d.widget]}</p><div class="widget" data-widget="${d.widget}"></div></section>
+    <section><h4>Step-by-step walkthroughs</h4><div class="walks">${d.walks.map(w => `<div class="walk"><div class="walk-title">${w.t}</div><p class="walk-q">${w.q}</p><ol class="steps">${w.s.map(s => `<li>${s}</li>`).join('')}</ol></div>`).join('')}</div></section>
+    <section><h4>Mistakes people make</h4><ul class="mistakes">${d.mistakes.map(m => `<li>${m}</li>`).join('')}</ul></section>`;
+}
+
+/* ---------------- state ---------------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+let marks = store.get('dft2-marks', {});
+let activeTopics = new Set(store.get('dft2-topics', Object.keys(TOPICS)));
+let srcFilter = store.get('dft2-src', 'all');
+let onlyMiss = false;
+
+// MathJax keeps references to nodes it has already rendered. When we replace a list with innerHTML,
+// those nodes are gone, so clear its record first and run renders one at a time.
+let mjQueue = (window.MathJax && MathJax.startup && MathJax.startup.promise) || Promise.resolve();
+function typeset(el) {
+  mjQueue = mjQueue.then(() => {
+    if (!(window.MathJax && MathJax.typesetPromise)) return;
+    MathJax.typesetClear();
+    return MathJax.typesetPromise([el]);
+  }).catch(e => console.warn('math render', e));
+}
+
+/* ---------------- card rendering ---------------- */
+function cardHTML(p, opts = {}) {
+  const m = marks[p.id];
+  const plots = p.plots ? `<div class="plots">${p.plots.map(stem).join('')}</div>` : '';
+  const solPlots = p.solPlots ? `<div class="plots">${p.solPlots.map(stem).join('')}</div>` : '';
+  const choices = p.choices ? `<div class="choices">${p.choices.map((c, i) => `<button type="button" class="choice" data-i="${i}">${c}</button>`).join('')}</div>` : '';
+  return `<article class="card ${m || ''}" data-id="${p.id}" style="--tc:var(--t-${p.topic})">
+    <div class="card-head"><span class="card-title">${p.title}</span><span class="src">${SOURCES[p.src]} · ${p.num} <span class="topic-pill">${TOPICS[p.topic]}</span></span></div>
+    <div class="q">${p.q}${plots}${choices}</div>
+    ${THINK[p.id] ? `<details class="think"><summary>How to think about this one</summary>
+      <ol>${THINK[p.id].map(s => `<li>${s}</li>`).join('')}</ol>
+      <button type="button" class="btn" data-act="closethink">Close</button></details>` : ''}
+    <div class="actions">
+      <button type="button" class="btn" data-act="hint">Show hint</button>
+      <button type="button" class="btn primary" data-act="sol">Show solution</button>
+      <button type="button" class="btn good" data-act="got" aria-pressed="${m === 'got'}">Got it</button>
+      <button type="button" class="btn bad" data-act="miss" aria-pressed="${m === 'miss'}">Review again</button>
+    </div>
+    <div class="reveal hint" data-part="hint" hidden><span class="lbl">Hint</span>${p.hint}</div>
+    <div class="reveal sol" data-part="sol" hidden><span class="lbl">Solution</span>${p.sol}${solPlots}</div>
+  </article>`;
+}
+
+function wireCard(el, onMark) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const id = el.dataset.id, p = P.find(x => x.id === id);
+    if (b.classList.contains('choice')) {
+      const i = +b.dataset.i;
+      el.querySelectorAll('.choice').forEach(c => c.classList.remove('right', 'wrong'));
+      b.classList.add(i === p.correct ? 'right' : 'wrong');
+      if (i !== p.correct) el.querySelector(`.choice[data-i="${p.correct}"]`).classList.add('right');
+      return;
+    }
+    const act = b.dataset.act;
+    if (act === 'closethink') { const d = b.closest('details'); d.open = false; d.querySelector('summary').focus(); return; }
+    if (act === 'hint' || act === 'sol') {
+      const part = el.querySelector(`[data-part="${act}"]`);
+      part.hidden = !part.hidden;
+      b.textContent = (part.hidden ? 'Show ' : 'Hide ') + (act === 'hint' ? 'hint' : 'solution');
+    } else if (act === 'got' || act === 'miss') {
+      if (marks[id] === act) delete marks[id]; else marks[id] = act;
+      store.set('dft2-marks', marks);
+      el.classList.remove('got', 'miss'); if (marks[id]) el.classList.add(marks[id]);
+      el.querySelector('[data-act="got"]').setAttribute('aria-pressed', marks[id] === 'got');
+      el.querySelector('[data-act="miss"]').setAttribute('aria-pressed', marks[id] === 'miss');
+      renderStats(); if (onMark) onMark(act);
+    }
+  });
+}
+
+function pool() {
+  return P.filter(p => activeTopics.has(p.topic) && (srcFilter === 'all' || String(p.src) === srcFilter));
+}
+
+function renderCards() {
+  const list = pool().filter(p => !onlyMiss || marks[p.id] === 'miss');
+  const box = document.getElementById('cards');
+  document.getElementById('probCount').textContent = `${list.length} problem${list.length === 1 ? '' : 's'}`;
+  if (!list.length) {
+    box.innerHTML = `<div class="empty">${onlyMiss ? 'Nothing is marked "review again" for these filters.' : 'No problems match. Turn on a topic or pick a different source.'}</div>`;
+    return;
+  }
+  box.innerHTML = list.map(p => cardHTML(p)).join('');
+  box.querySelectorAll('.card').forEach(c => wireCard(c));
+  typeset(box);
+}
+
+function renderStats() {
+  const total = P.length, got = P.filter(p => marks[p.id] === 'got').length, miss = P.filter(p => marks[p.id] === 'miss').length;
+  document.getElementById('stats').innerHTML = `<span>${got} got it · ${miss} to review · ${total - got - miss} untouched</span>
+    <div class="bar"><span class="g" style="width:${100 * got / total}%"></span><span class="b" style="width:${100 * miss / total}%"></span></div>`;
+}
+
+function renderFilters() {
+  const chips = document.getElementById('topicChips');
+  chips.innerHTML = Object.entries(TOPICS).map(([k, v]) => {
+    const n = P.filter(p => p.topic === k).length;
+    return `<button type="button" class="chip" data-t="${k}" style="--tc:var(--t-${k})" aria-pressed="${activeTopics.has(k)}">${v} (${n})</button>`;
+  }).join('');
+  chips.onclick = e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    const t = b.dataset.t;
+    activeTopics.has(t) ? activeTopics.delete(t) : activeTopics.add(t);
+    b.setAttribute('aria-pressed', activeTopics.has(t));
+    store.set('dft2-topics', [...activeTopics]);
+    renderCards();
+  };
+  const sel = document.getElementById('srcSel');
+  sel.innerHTML = `<option value="all">All sources (${P.length})</option>` + SOURCES.map((s, i) => `<option value="${i}">${s}</option>`).join('');
+  sel.value = srcFilter;
+  sel.onchange = () => { srcFilter = sel.value; store.set('dft2-src', srcFilter); renderCards(); };
+  document.getElementById('onlyMiss').onchange = e => { onlyMiss = e.target.checked; renderCards(); };
+  const conf = document.getElementById('resetConfirm');
+  document.getElementById('resetProg').onclick = () => { conf.hidden = false; };
+  document.getElementById('resetNo').onclick = () => { conf.hidden = true; };
+  document.getElementById('resetYes').onclick = () => { marks = {}; store.set('dft2-marks', marks); conf.hidden = true; renderStats(); renderCards(); };
+}
+
+/* ---------------- drill ---------------- */
+let drillCur = null, drillSeen = 0, drillGot = 0;
+function nextDrill() {
+  const pl = pool();
+  const box = document.getElementById('drillCard');
+  if (!pl.length) { box.innerHTML = `<div class="empty">No topics are selected. Turn some on in the Problems tab.</div>`; return; }
+  const weighted = [];
+  pl.forEach(p => { const w = marks[p.id] === 'miss' ? 4 : marks[p.id] === 'got' ? 1 : 2; for (let i = 0; i < w; i++) weighted.push(p); });
+  let pick; let tries = 0;
+  do { pick = weighted[Math.floor(Math.random() * weighted.length)]; } while (pl.length > 1 && drillCur && pick.id === drillCur.id && ++tries < 20);
+  drillCur = pick;
+  box.innerHTML = cardHTML(pick);
+  wireCard(box.firstElementChild, act => { drillSeen++; if (act === 'got') drillGot++; renderScore(); });
+  typeset(box);
+}
+function renderScore() { document.getElementById('drillScore').textContent = drillSeen ? `This session: ${drillGot}/${drillSeen} marked got it` : 'Mark each problem to keep score'; }
+document.getElementById('nextBtn').onclick = () => { nextDrill(); window.scrollTo({ top: 0 }); };
+
+/* ---------------- tools ---------------- */
+function parseComplex(tok) {
+  const s = tok.replace(/\s+/g, '').replace(/i/g, 'j');
+  if (!s) throw new Error('empty entry');
+  if (!s.includes('j')) { const v = Number(s); if (isNaN(v)) throw new Error(`can't read "${tok.trim()}"`); return [v, 0]; }
+  const m = s.match(/^(.*?)([+-]?[\d.]*(?:e[+-]?\d+)?)\*?j$/);
+  if (!m) throw new Error(`can't read "${tok.trim()}"`);
+  const re = m[1] === '' ? 0 : Number(m[1]);
+  const imS = m[2];
+  const im = imS === '' || imS === '+' ? 1 : imS === '-' ? -1 : Number(imS);
+  if (isNaN(re) || isNaN(im)) throw new Error(`can't read "${tok.trim()}"`);
+  return [re, im];
+}
+function parseVec(str) {
+  const parts = str.includes(',') || str.includes(';') ? str.split(/[,;]/) : str.trim().split(/\s+/);
+  return parts.filter(t => t.trim() !== '').map(parseComplex);
+}
+function dft(v, inv) {
+  const N = v.length, out = [];
+  for (let k = 0; k < N; k++) {
+    let re = 0, im = 0;
+    for (let n = 0; n < N; n++) {
+      const a = (inv ? 1 : -1) * 2 * Math.PI * k * n / N, c = Math.cos(a), s = Math.sin(a);
+      re += v[n][0] * c - v[n][1] * s; im += v[n][0] * s + v[n][1] * c;
+    }
+    out.push(inv ? [re / N, im / N] : [re, im]);
+  }
+  return out;
+}
+const fmt = x => { const r = Math.abs(x) < 1e-9 ? 0 : x; return (Math.round(r * 10000) / 10000).toString(); };
+function runDFT(inv) {
+  const out = document.getElementById('dftOut');
+  try {
+    const v = parseVec(document.getElementById('dftIn').value);
+    if (!v.length) throw new Error('enter at least one value');
+    const r = dft(v, inv), idx = inv ? 'n' : 'k';
+    out.innerHTML = `<table class="out"><tr><th>${idx}</th><th>real</th><th>imag</th><th>magnitude</th><th>phase / π</th></tr>` +
+      r.map(([re, im], k) => { const mag = Math.hypot(re, im); return `<tr><td>${k}</td><td>${fmt(re)}</td><td>${fmt(im)}</td><td>${fmt(mag)}</td><td>${mag < 1e-9 ? '–' : fmt(Math.atan2(im, re) / Math.PI)}</td></tr>`; }).join('') + `</table>`;
+  } catch (e) { out.innerHTML = `<p class="err">Check the input: ${e.message}. Use commas between values, like 1, 2-3j, -j.</p>`; }
+}
+document.getElementById('doFFT').onclick = () => runDFT(false);
+document.getElementById('doIFFT').onclick = () => runDFT(true);
+
+function runBins() {
+  const out = document.getElementById('binOut');
+  const fs = Number(document.getElementById('fsIn').value);
+  const minN = Math.floor(Number(document.getElementById('minN').value) || 0);
+  const dc = document.getElementById('dcIn').checked;
+  let freqs;
+  try { freqs = document.getElementById('freqIn').value.split(',').map(s => s.trim()).filter(Boolean).map(Number); } catch { freqs = []; }
+  if (!(fs > 0) || freqs.some(isNaN) || (!freqs.length && !dc)) { out.innerHTML = `<p class="err">Enter a positive sample rate and at least one frequency, separated by commas.</p>`; return; }
+  for (let N = Math.max(1, minN + 1); N <= 5000; N++) {
+    const bins = new Set(dc ? [0] : []); let ok = true; const rows = [];
+    for (const f of freqs) {
+      const q = f * N / fs;
+      if (Math.abs(q - Math.round(q)) > 1e-7) { ok = false; break; }
+      const k = ((Math.round(q) % N) + N) % N; const k2 = (N - k) % N;
+      bins.add(k); bins.add(k2);
+      const kk = Math.min(k, k2);
+      rows.push(`${f} Hz → ω = ${fmt(2 * kk / N)}π → bins ${k === k2 ? k : `${kk} and ${N - kk}`}`);
+    }
+    if (ok) {
+      const list = [...bins].sort((a, b) => a - b);
+      out.innerHTML = `<p style="margin:0 0 6px"><b>Smallest N = ${N}</b>, with ${list.length} nonzero bins: <span class="mono">k = ${list.join(', ')}</span></p><p class="mono" style="margin:0;color:var(--muted)">${rows.join('<br>')}</p><p class="note" style="color:var(--muted);margin:8px 0 0">If two frequencies land on the same bin pair (aliasing), you get fewer bins than 2 per sinusoid. Compare this count with the K in the question.</p>`;
+      return;
+    }
+  }
+  out.innerHTML = `<p class="err">No N up to 5000 puts every frequency exactly on a bin. Check the frequencies.</p>`;
+}
+document.getElementById('doBins').onclick = runBins;
+
+/* ---------------- routing ---------------- */
+const VIEWS = ['learn', 'formulas', 'problems', 'drill', 'tools'];
+function route() {
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'learn';
+  document.querySelectorAll('[data-view-panel]').forEach(s => s.hidden = s.dataset.viewPanel !== v);
+  document.querySelectorAll('nav.tabs a').forEach(a => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  if (v === 'drill' && !drillCur) nextDrill();
+  typeset(document.getElementById('view-' + v));
+}
+window.addEventListener('hashchange', route);
+
+renderLesson(); renderFilters(); renderStats(); renderCards(); renderScore();
+runDFT(false); runBins();
+route();
+typeset(document.body);
+</script>
