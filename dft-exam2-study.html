@@ -345,6 +345,7 @@ ul.mistakes li::before { content: "✕"; position: absolute; left: 4px; top: 0; 
         <li><span class="tag">Cosine mod</span> \(y[n]=x[n]\cos(2\pi mn/N)\ \Rightarrow\ Y[k]=\tfrac12(X[k-m]+X[k+m])\). Check whether the shifted copies overlap.</li>
         <li><span class="tag">Duality</span> To find \(\mathbf{u}\) whose DFT equals a given vector \(\mathbf{w}\): \(\mathbf{u}=\frac1N\mathbf{R}\,\text{DFT}(\mathbf{w})\).</li>
         <li><span class="tag">Circulant</span> A matrix whose first column is \(\mathbf{h}\) and whose next columns shift it down one each time computes \(\mathbf{h}\circledast\mathbf{u}\). So to solve \(\mathbf{A}\mathbf{u}=\mathbf{b}\): <span class="mono">u = ifft(fft(b)./fft(h))</span>.</li>
+        <li><span class="tag">Impulse rule</span> If the vector is \(\mathbf{s}\) <i>plus</i> a pattern, transform the pattern alone. Constant \(c\) in time \(\to\) \(+Nc\) at \(k=0\). \(c(-1)^n\) \(\to\) \(+Nc\) at \(k=N/2\). \(c\,e^{j2\pi mn/N}\) \(\to\) \(+Nc\) at \(k=m\). Constant \(c\) added to the DFT \(\to\) \(+c\) at \(x[0]\) (no \(N\)). <b>Only when the pattern is added</b> and is a whole number of cycles over \(N\). If it <i>multiplies</i> (\(\mathbf{s}\odot(-1)^n\)) the DFT shifts instead, \(Y[k]=S[k-N/2]\). If it's a partial block or a non-integer frequency, it leaks and the rule fails.</li>
         <li><span class="tag">Index puzzles</span> Write the target vector as an operator (\(\mathbf{P}^m\), \(\mathbf{R}\), \(\mathbf{F}^m\)) applied to a known vector. Pattern \([ag\ dh\ ce\ bf]\) is \((\mathbf{R}\mathbf{x})\odot(\mathbf{P}^2\mathbf{y})\), so \(\mathbf{S}=\frac14(\mathbf{R}\mathbf{X})\circledast(\mathbf{F}^{-2}\mathbf{Y})\).</li>
       </ul>
     </div>
@@ -1021,7 +1022,31 @@ spike: {
   <li><b>Two shifts give a cosine.</b> \(x[n]=s[n-2]+s[n+2]\) with \(N=8\) gives \(e^{-j\pi k/2}+e^{j\pi k/2}=2\cos(\pi k/2)\), so \([2A,0,-2C,0,\dots]\) (Fall 2019 #3(i), Fall '25 B #4).</li>
   <li><b>Convolution kernels are made of spikes.</b> Convolving with \(\boldsymbol\delta_m\) just delays by \(m\), which is why Fall 2020 Q9's answer is \(\mathbf{a}=\boldsymbol\delta_1\). Practice 2 #8's kernel \([0\,2\,0\,0\,0\,1]\) is \(2\boldsymbol\delta_1+\boldsymbol\delta_5\).</li>
   <li><b>The flip side:</b> a sinusoid in time gives a spike in frequency, with height \(N\). For example \((-1)^n\leftrightarrow N\boldsymbol\delta_{N/2}\). That's why Fall '25 A gives \(E-8\).</li></ul>
-  <p class="note-guide"><b>Self-check:</b> with \(N=8\) and \(m=2\), what is \(X[3]\)? Set the animation to those values and stop at \(k=3\). (Answer: \(e^{-j3\pi/2}=j\).)</p></section>`,
+  <p class="note-guide"><b>Self-check:</b> with \(N=8\) and \(m=2\), what is \(X[3]\)? Set the animation to those values and stop at \(k=3\). (Answer: \(e^{-j3\pi/2}=j\).)</p></section>
+  <section><h4>The impulse rule: when to subtract a spike</h4>
+  <p>The DFT is linear: \(\text{DFT}(\mathbf{s}+\mathbf{p})=\mathbf{S}+\text{DFT}(\mathbf{p})\). So if the vector you're given is "something you know" plus "a simple extra pattern", you transform the pattern separately. The extra pattern becomes a clean impulse only for these:</p>
+  <table class="simple"><tr><th>Extra piece added</th><th>Its DFT</th><th>What you do to the answer</th></tr>
+  <tr><td>Same number \(c\) added to every time entry</td><td>\(Nc\,\boldsymbol\delta_0\)</td><td>Add \(Nc\) to \(X[0]\)</td></tr>
+  <tr><td>\(c(-1)^n\) added in time (\(+c,-c,+c,\dots\))</td><td>\(Nc\,\boldsymbol\delta_{N/2}\)</td><td>Add \(Nc\) to \(X[N/2]\)</td></tr>
+  <tr><td>\(c\,e^{j2\pi mn/N}\) added in time</td><td>\(Nc\,\boldsymbol\delta_m\)</td><td>Add \(Nc\) to \(X[m]\)</td></tr>
+  <tr><td>\(c\cos(2\pi mn/N)\) added in time</td><td>\(\tfrac{Nc}{2}\) at \(m\) and at \(N-m\)</td><td>Two spikes, one at each mirror bin</td></tr>
+  <tr><td>Same number \(c\) added to every <b>DFT</b> entry</td><td>\(c\,\boldsymbol\delta_0\) in time</td><td>Add \(c\) to \(x[0]\). No factor \(N\) in this direction.</td></tr>
+  <tr><td>\(c(-1)^k\) added to the DFT</td><td>\(c\,\boldsymbol\delta_{N/2}\) in time</td><td>Add \(c\) to \(x[N/2]\)</td></tr></table>
+  <p class="note-guide">Subtracting the pattern means subtracting the spike. A "\(-1\)" on every other entry is \(-(-1)^n\), so it's \(-N\) at \(k=N/2\).</p>
+  <h4>Three questions before you use it</h4>
+  <ol class="steps">
+  <li><b>Is it added, not multiplied?</b> Linearity only covers sums and constant multiples.</li>
+  <li><b>Is the pattern one single spike, or exactly a whole number of cycles in \(N\) entries?</b> Only a Fourier sinusoid \(e^{j2\pi mn/N}\) with integer \(m\) lands on one bin.</li>
+  <li><b>Is the pattern the same length \(N\) as the vector?</b> A pattern on only some of the entries is not periodic over \(N\).</li></ol>
+  <p>If all three are yes, subtract (or add) the spike. If any is no, the rule doesn't apply. Here is why in each case:</p>
+  <h4>When you cannot use it, and why</h4>
+  <ul class="mistakes">
+  <li><b>The pattern multiplies instead of adds.</b> \(\mathbf{y}=[a,-b,c,-d,\dots]=\mathbf{s}\odot(-1)^n\) is not \(\mathbf{s}\) plus anything. Multiplying in time is <i>convolving</i> in frequency, and convolving with a spike just <b>shifts</b>: \(Y[k]=S[k-N/2]\). For \(N=8\) that is \([E,F,G,H,A,B,C,D]\). Compare \(\mathbf{s}+(-1)^n\), which only changes \(E\) to \(E+8\).</li>
+  <li><b>The pattern is not a whole number of cycles in \(N\).</b> A cosine like \(\cos(n)\) with \(N=8\) would need \(k=8/2\pi\approx1.27\), not an integer bin. It doesn't sit on one bin, so it <b>leaks</b> into every entry. Likewise an arbitrary extra vector such as \([1,2,3,4]\) needs a real DFT computation.</li>
+  <li><b>The extra piece only covers some entries.</b> A "+1" on just \(n=0,1,2\) in a 9-point vector is a block of ones, not a constant. Its DFT is spread over every bin (a sum of \(e^{-j2\pi kn/9}\) terms), not one spike.</li>
+  <li><b>A nonlinear step is involved.</b> \(|\cdot|\), squaring, \(1/s[n]\) and clipping don't split into "known plus pattern". Squaring entries, \(\mathbf{s}\odot\mathbf{s}\), becomes \(\tfrac1N\mathbf{S}\circledast\mathbf{S}\), not \(\mathbf{S}\odot\mathbf{S}\).</li>
+  <li><b>You've got the direction wrong.</b> A spike in <i>time</i> does not give a spike in frequency. It gives \(e^{-j2\pi km/N}\), which has size 1 in every bin. So "subtract 1 from one time entry" means subtracting that exponential from every bin, not a single entry. The spike-to-spike rules only go sinusoid → spike.</li></ul>
+  <p class="note-guide"><b>Why it comes down to one idea:</b> a single bin is one Fourier column \(\mathbf{v}^{(m)}\). Only a pattern that is exactly that column (a whole number of cycles over \(N\) entries) has nothing in any other bin. Everything else has to be built from several columns, so it can't be one impulse.</p></section>`,
   table: R`<table class="simple"><tr><th>Time domain</th><th></th><th>Frequency domain</th><th>In words</th></tr>
   <tr><td>\(\boldsymbol\delta_0=[1\,0\,0\dots]\)</td><td>⟷</td><td>\([1\,1\,1\dots]\)</td><td>A spike at 0 contains every frequency equally.</td></tr>
   <tr><td>\(\boldsymbol\delta_{N/2}\)</td><td>⟷</td><td>\([1\,{-1}\,1\,{-1}\dots]=(-1)^k\)</td><td>Spike in the middle gives an alternating pattern.</td></tr>
@@ -1047,7 +1072,8 @@ spike: {
         R`<b>Answer:</b> \(\mathbf{u}=-\mathbf{s}+\boldsymbol\delta_3=[-a,\ -b,\ -c,\ 1{-}d,\ -e,\ -f]^T\).`] }],
   mistakes:[R`Forgetting the factor \(N\) when a sinusoid in time becomes a spike in frequency.`,
     R`Matching the pattern to the wrong spike. If it starts \(+1\) at \(k=0\) and alternates, it's \(\boldsymbol\delta_{N/2}\). If it's all \(+1\)'s, it's \(\boldsymbol\delta_0\) (which adds 1 to \(x[0]\)).`,
-    R`Flipping the sign: \(\mathbf{S}-\text{pattern}\) means \(\mathbf{s}-\text{spike}\).`],
+    R`Flipping the sign: \(\mathbf{S}-\text{pattern}\) means \(\mathbf{s}-\text{spike}\).`,
+    R`Using the impulse rule when the pattern <b>multiplies</b> (\([a,-b,c,-d]\)) instead of adds (\([a-1,b+1,c-1,d+1]\)). Multiplying by \((-1)^n\) shifts the DFT by \(N/2\), it doesn't subtract a spike.`],
   widget:'spike' },
 shift: {
   table: R`<table class="simple"><tr><th>What you see</th><th>What it is</th><th>What happens in the other domain</th></tr>
