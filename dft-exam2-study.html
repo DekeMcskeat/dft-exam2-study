@@ -33,6 +33,7 @@ window.MathJax = {
   --callout-line: #F2C94C;
   --t-samp: #0E9F6E; --t-read: #2F6FEB; --t-inner: #8B5CF6; --t-sym: #DB2777;
   --t-ls: #D97706; --t-shift: #0891B2; --t-ext: #EA580C; --t-conv: #4F46E5;
+  --t-proj: #4D7C0F; --t-rep: #0D9488; --t-supp: #BE123C;
   --shadow: 0 1px 2px rgba(26, 34, 51, .05), 0 4px 14px rgba(47, 111, 235, .06);
   --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -225,6 +226,10 @@ table.circ td { width: 52px; height: 36px; text-align: center; border: 2px solid
 .phasor-svg { width: 100%; height: auto; background: var(--surface); border-radius: 50%; }
 .phasor-read { margin: 12px 0; font-size: 16px; }
 .ph-k { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+.supp-grid { display: grid; gap: 3px; margin: 6px 0; max-width: 640px; }
+.supp-cell { font-family: var(--font-mono); font-size: 11px; text-align: center; padding: 5px 0; border-radius: 4px; }
+.supp-cell.on { background: var(--t-supp); color: #fff; }
+.supp-cell.off { background: var(--line); color: var(--muted); }
 .walks { display: grid; gap: 14px; }
 .walk { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
 .walk-title { font-family: var(--font-display); font-weight: 600; font-size: 15.5px; color: var(--tc, var(--accent)); margin-bottom: 4px; }
@@ -255,7 +260,7 @@ ul.mistakes li::before { content: "✕"; position: absolute; left: 4px; top: 0; 
   <div class="wrap">
     <div class="eyebrow">ENEE222 · Exam 2 · DFT</div>
     <h1>DFT Exam 2 <span class="accent">Prep</span></h1>
-    <p class="sub">Start with the lessons to learn how each idea works. Then practice on all 44 past-exam and practice problems, which come with hints, walkthroughs and checked solutions.</p>
+    <p class="sub">Start with the lessons to learn how each idea works. Then practice on all 61 past-exam, practice and homework problems, which come with hints, walkthroughs and checked solutions.</p>
   </div>
 </header>
 <nav class="tabs" aria-label="Sections">
@@ -368,7 +373,7 @@ ul.mistakes li::before { content: "✕"; position: absolute; left: 4px; top: 0; 
     </aside>
     <div>
       <h2 id="probCount">Problems</h2>
-      <p class="lede">Try each problem before you open the hint or solution. Mark it so the drill knows what to bring back. Answers to the Fall 2020 exam and the practice sets are my own, each checked numerically.</p>
+      <p class="lede">Try each problem before you open the hint or solution. Mark it so the drill knows what to bring back. Answers to the Fall 2020 exam and the practice sets are my own, each checked numerically. The Homework 11–19 problems are rebuilt from your solutions PDF, so the wording may differ from your assignment sheet. The numbers and answers match the PDF, and I rechecked them numerically.</p>
       <div class="cards" id="cards"></div>
     </div>
   </div>
@@ -777,7 +782,7 @@ const THINK = {
   R`Six nonzero bins means 3 cosines × 2 bins and no DC. That needs all three exactly on bins.`,
   R`Bin condition \(k=\omega L/2\pi\) must be an integer: \(L/6\), \(L/4\) and \(7L/24\). The 35 Hz term forces \(L\) to be a multiple of 24.`,
   R`Read off the bins \(L\omega/2\pi\) = 4, 6, 7 and their mirrors \(24-k\).`],
-'p1-2':[R`The plot shows half the spectrum of a real signal. Each spike at \(0<k<N/2\) pairs with \(N-k\) to make one cosine.`,
+'p1-2':[R`The plot shows half the spectrum of a real signal. Each spike at \(0\lt k\lt N/2\) pairs with \(N-k\) to make one cosine.`,
   R`\(A=2|S[k]|/N\) gives \(2\) and \(2/3\). \(\omega=2\pi k/N\) gives \(4\pi/15\) and \(11\pi/15\).`,
   R`\(S[0]=0\), so there's no DC term.`],
 'p1-3':[R`\(r\) is a weighted sum of samples with weights \((0,1,0,1,\dots)\). Express the weights using Fourier sinusoids.`,
@@ -807,7 +812,7 @@ const THINK = {
   R`\(\mathbf{S}=\frac14(\mathbf{R}\mathbf{X}\circledast\mathbf{F}^{-2}\mathbf{Y})\). Compute it with a circulant matrix.`],
 'p2-1':[R`Nonzero bins of a real signal come in pairs \(k,\,N-k\): 2 with 18, and 5 with 15.`,
   R`Bin spacing is \(f_s/N=12\) Hz, so \(f=12k\).`,
-  R`The assumption \(f_s>2f_2\) tells you to use the low half (\(k<N/2\)).`],
+  R`The assumption \(f_s>2f_2\) tells you to use the low half (\(k\lt N/2\)).`],
 'p2-2':[R`\(N=32\) and the signal is real. DC is \(X[0]/N\).`,
   R`Each listed \(k\) (other than 0 and 16) gives a cosine with \(A=2|X[k]|/N\) and phase \(\angle X[k]\).`,
   R`\(\omega=2\pi k/32\): \(3\pi/16\) and \(7\pi/16\).`],
@@ -875,7 +880,8 @@ const LESSONS = [
   <tr><td>4</td><td>Stem plot: draw the missing stems and write \(s[n]\)</td><td>Old man / star / sun</td></tr>
   <tr><td>5</td><td>DFT after adding a constant, shifting or flipping</td><td>Spike trick, Shifts</td></tr>
   <tr><td>6</td><td>Circular convolution, circulant matrices, MATLAB code</td><td>Convolution</td></tr></table></section>
-  <section><h4>How to use these lessons</h4><p>Each lesson explains the idea, works one real exam example, and ends with a quick "check yourself" question. The button at the bottom opens the matching problems on the Problems tab.</p></section>`},
+  <section><h4>How to use these lessons</h4><p>Each lesson explains the idea, works one real exam example, and ends with a quick "check yourself" question. The button at the bottom opens the matching problems on the Problems tab.</p></section>
+  <section><h4>Homework 11–19 topics (added)</h4><p>Your homework covers ideas the exams build on, so they now have their own lessons: <b>projections and angles</b>, <b>orthogonal columns with unknowns</b>, <b>sinusoids as DFT columns</b>, <b>magnitude and phase</b>, <b>operator combinations</b>, <b>where the spectrum is zero</b>, and <b>convolution with shifted inputs</b>.</p></section>`},
 { id:'what', color:'inner', topic:'inner', kicker:'Foundation', title:'What a DFT value actually means',
   key:R`\(X[k]\) answers one question: how much of the sinusoid \(e^{j2\pi kn/N}\) is inside \(\mathbf{x}\)? Every DFT property follows from that.`,
   body:R`<section><h4>The idea</h4>
@@ -1338,13 +1344,556 @@ function renderLesson() {
   box.querySelectorAll('[data-widget]').forEach(w => { if (WIDGETS[w.dataset.widget]) WIDGETS[w.dataset.widget](w); });
 }
 function deepHTML(d) {
-  const titles = { spike: 'Spike explorer', shift: 'Shift & modulation explorer', ext: 'Extension explorer', conv: 'Circulant matrix builder' };
-  const hints = { spike: 'Pick N and where the spike goes. Watch the DFT row.', shift: 'Pick an operation on x = [a b c d e f g h]. See what happens to the time vector and to its DFT [A B C D E F G H].', ext: 'Type a short vector, then switch between periodic and zero-pad to compare the two spectra.', conv: 'Type a first column. The page builds the circulant matrix and solves A·u = b the FFT way.' };
+  const titles = { spike: 'Spike explorer', shift: 'Shift & modulation explorer', ext: 'Extension explorer', conv: 'Circulant matrix builder', proj: 'Projection calculator', rep: 'Sinusoid to DFT', phase: 'Magnitude and phase calculator', supp: 'Support explorer', cconv: 'Circular convolution with shifts' };
+  const hints = { proj: 'Type s and one or more vectors v. It finds each projection, checks orthogonality and gives the angle.', rep: 'Choose a cosine or sine and a bin. See which DFT entries are nonzero and what they equal.', phase: 'Type a complex number such as -4-5j. It shows the quadrant and the correct phase.', supp: 'Pick N and the block of nonzero bins, then add a cosine modulation or a delay pair. The grid shows which bins stay nonzero.', cconv: 'Type x and y. See the convolution, then advance each input and watch the output advance by the total.', spike: 'Pick N and where the spike goes. Watch the DFT row.', shift: 'Pick an operation on x = [a b c d e f g h]. See what happens to the time vector and to its DFT [A B C D E F G H].', ext: 'Type a short vector, then switch between periodic and zero-pad to compare the two spectra.', conv: 'Type a first column. The page builds the circulant matrix and solves A·u = b the FFT way.' };
   return `${d.intro || ''}${d.table ? `<section><h4>The cheat table</h4>${d.table}</section>` : ''}
-    <section><h4>Try it: ${titles[d.widget]}</h4><p style="color:var(--muted)">${hints[d.widget]}</p><div class="widget" data-widget="${d.widget}"></div></section>
+    ${d.widget ? `<section><h4>Try it: ${titles[d.widget]}</h4><p style="color:var(--muted)">${hints[d.widget]}</p><div class="widget" data-widget="${d.widget}"></div></section>` : ''}
     <section><h4>Step-by-step walkthroughs</h4><div class="walks">${d.walks.map(w => `<div class="walk"><div class="walk-title">${w.t}</div><p class="walk-q">${w.q}</p><ol class="steps">${w.s.map(s => `<li>${s}</li>`).join('')}</ol></div>`).join('')}</div></section>
     <section><h4>Mistakes people make</h4><ul class="mistakes">${d.mistakes.map(m => `<li>${m}</li>`).join('')}</ul></section>`;
 }
+
+/* ---------------- homework 11-19: new topics and problems ---------------- */
+Object.assign(TOPICS, { proj: 'Projections & orthogonal columns', rep: 'Sinusoids as DFT columns', supp: 'Where the spectrum is zero' });
+SOURCES.push('Homework 11–19');
+P.push(
+{ id:'h11a', src:5, num:'Problem 11 (i)–(iii)', topic:'proj', title:'Orthogonal vectors, projections and an angle',
+  q:R`<p>\(\mathbf{v}^{(1)}=[3,1,1,-1]^T,\ \mathbf{v}^{(2)}=[1,-2,0,1]^T,\ \mathbf{v}^{(3)}=[-1,1,5,3]^T,\ \mathbf{s}=[1,6,2,7]^T\).</p>
+  <p>(i) Show the three vectors are mutually orthogonal and find their norms.<br>(ii) Find the projection of \(\mathbf{s}\) onto each \(\mathbf{v}^{(i)}\).<br>(iii) Find the angle between \(\mathbf{s}\) and \(\mathbf{v}^{(1)}\).</p>`,
+  hint:R`Orthogonal means every pair has dot product 0. The projection onto \(\mathbf{v}\) is \(\frac{\mathbf{s}\cdot\mathbf{v}}{\|\mathbf{v}\|^2}\mathbf{v}\).`,
+  sol:R`<p>(i) \(\mathbf{v}^{(1)}\!\cdot\mathbf{v}^{(2)}=3-2+0-1=0\), \(\mathbf{v}^{(1)}\!\cdot\mathbf{v}^{(3)}=-3+1+5-3=0\), \(\mathbf{v}^{(2)}\!\cdot\mathbf{v}^{(3)}=-1-2+0+3=0\). Norms squared: 12, 6, 36, so the norms are \(2\sqrt3\), \(\sqrt6\), 6.</p>
+  <p>(ii) \(\mathbf{s}\cdot\mathbf{v}^{(i)}=4,\ -4,\ 36\), so the coefficients are \(\tfrac{4}{12}=\tfrac13,\ -\tfrac46=-\tfrac23,\ 1\).</p>
+  <p>\(\mathbf{f}^{(1)}=[1,\tfrac13,\tfrac13,-\tfrac13]^T,\quad \mathbf{f}^{(2)}=[-\tfrac23,\tfrac43,0,-\tfrac23]^T,\quad \mathbf{f}^{(3)}=[-1,1,5,3]^T\)</p>
+  <p>(iii) \(\|\mathbf{s}\|^2=90\). \(\cos\theta=\frac{4}{\sqrt{90}\sqrt{12}}=\frac{\sqrt{30}}{45}\approx0.1217\), so <span class="answer">\(\theta\approx83.0^\circ\)</span></p>`},
+{ id:'h11b', src:5, num:'Problem 11 (iv)–(vii)', topic:'proj', title:'Angle to a plane, 3-D projection, solving without elimination',
+  q:R`<p>Same vectors as the previous problem.</p>
+  <p>(iv) Find the angle between \(\mathbf{s}\) and the plane spanned by \(\mathbf{v}^{(2)},\mathbf{v}^{(3)}\).<br>(v) Find the projection \(\mathbf{g}\) of \(\mathbf{s}\) onto the space spanned by all three.<br>(vi) Show \(\mathbf{s}-\mathbf{g}\) is orthogonal to each \(\mathbf{v}^{(i)}\).<br>(vii) Let \(\mathbf{w}=[1,2,-2,3]^T\) (a multiple of \(\mathbf{s}-\mathbf{g}\)). Solve \([\mathbf{v}^{(1)}\ \mathbf{v}^{(2)}\ \mathbf{v}^{(3)}\ \mathbf{w}]\,\mathbf{d}=[1,8,4,9]^T\) <b>without</b> Gaussian elimination.</p>`,
+  hint:R`The angle to a plane is the angle to its projection \(\mathbf{p}\), so \(\cos\theta=\|\mathbf{p}\|/\|\mathbf{s}\|\). Pythagoras gives \(\|\mathbf{p}\|\) from the single projections. For (vii), all four columns are mutually orthogonal.`,
+  sol:R`<p>(iv) \(\mathbf{v}^{(2)}\perp\mathbf{v}^{(3)}\), so \(\|\mathbf{p}\|^2=\frac{(\mathbf{s}\cdot\mathbf{v}^{(2)})^2}{\|\mathbf{v}^{(2)}\|^2}+\frac{(\mathbf{s}\cdot\mathbf{v}^{(3)})^2}{\|\mathbf{v}^{(3)}\|^2}=\frac{16}{6}+\frac{1296}{36}=\frac{116}{3}\). Then \(\cos\theta=\sqrt{\tfrac{116/3}{90}}=\sqrt{\tfrac{58}{135}}\approx0.6555\), so <span class="answer">\(\theta\approx49.0^\circ\)</span></p>
+  <p>(v) Add the three projections: <span class="answer">\(\mathbf{g}=[-\tfrac23,\ \tfrac83,\ \tfrac{16}3,\ 2]^T\)</span></p>
+  <p>(vi) \(\mathbf{s}-\mathbf{g}=\tfrac53[1,2,-2,3]^T=\tfrac53\mathbf{w}\), and \(\mathbf{w}\cdot\mathbf{v}^{(1)}=3+2-2-3=0\), \(\mathbf{w}\cdot\mathbf{v}^{(2)}=1-4+0+3=0\), \(\mathbf{w}\cdot\mathbf{v}^{(3)}=-1+2-10+9=0\).</p>
+  <p>(vii) All four columns are orthogonal, so \(d_i=\frac{\mathbf{b}\cdot\text{col}_i}{\|\text{col}_i\|^2}\). The dot products with \(\mathbf{b}=[1,8,4,9]\) are 6, −6, 54, 36 and the norms squared are 12, 6, 36, 18.</p>
+  <p class="answer">\(\mathbf{d}=[\tfrac12,\ -1,\ \tfrac32,\ 2]^T\)</p>`},
+{ id:'h12a', src:5, num:'Problem 12 (i)', topic:'proj', title:'Choosing unknowns so circulant columns are orthogonal',
+  q:R`<p>\(\mathbf{V}\) is a \(4\times4\) circulant matrix with first column \([2,\alpha,-8,\beta]^T\), where \(\alpha=a+jb\) and \(\beta=3+jc\) (\(a,b,c\) real, \(c>0\)). Its columns are \(\mathbf{v}^{(1)}=[2,\alpha,-8,\beta]^T\), \(\mathbf{v}^{(2)}=[\beta,2,\alpha,-8]^T\), \(\mathbf{v}^{(3)}=[-8,\beta,2,\alpha]^T\), \(\mathbf{v}^{(4)}=[\alpha,-8,\beta,2]^T\).</p>
+  <p>Find \(a,b,c\) so that the columns are mutually orthogonal, then find the column norms.</p>`,
+  hint:R`Each column is the previous one shifted, so you only need \(\mathbf{v}^{(1)H}\mathbf{v}^{(2)}=0\) and \(\mathbf{v}^{(1)H}\mathbf{v}^{(3)}=0\). Set real and imaginary parts to zero separately.`,
+  sol:R`<p>Lag 2: \(\mathbf{v}^{(1)H}\mathbf{v}^{(3)}=-32+\alpha^*\beta+\beta^*\alpha=-32+2\operatorname{Re}(\alpha^*\beta)\). Since \(\alpha^*\beta=(3a+bc)+j(ac-3b)\), this gives \(3a+bc=16\).</p>
+  <p>Lag 1: \(\mathbf{v}^{(1)H}\mathbf{v}^{(2)}=(-18-6a)+j(10c-10b)=0\), so \(a=-3\) and \(b=c\).</p>
+  <p>Then \(-9+c^2=16\), so \(c=\pm5\). The condition \(c>0\) picks \(c=5\).</p>
+  <p class="answer">\(a=-3,\ b=5,\ c=5\)</p>
+  <p>Then \(|\alpha|^2=|\beta|^2=34\), so \(\|\mathbf{v}^{(k)}\|^2=4+64+34+34=136\) for every \(k\): <span class="answer">\(\|\mathbf{v}^{(k)}\|=2\sqrt{34}\approx11.66\)</span>, and \(\mathbf{V}^H\mathbf{V}=136\,\mathbf{I}\).</p>`},
+{ id:'h12b', src:5, num:'Problem 12 (ii)–(iv)', topic:'proj', title:'Solving, projecting and measuring with orthogonal columns',
+  q:R`<p>Using \(\mathbf{V}\) from the previous problem (\(\alpha=-3+5j\), \(\beta=3+5j\)) and \(\mathbf{s}=[27,45,41,23]^T\):</p>
+  <p>(ii) Find \(\mathbf{d}\) with \(\mathbf{s}=\mathbf{V}\mathbf{d}\).<br>(iii) Find the projection of \(\mathbf{s}\) onto the span of \(\mathbf{v}^{(2)},\mathbf{v}^{(4)}\), and the squared error.<br>(iv) If \(\mathbf{x}-\mathbf{y}=(1-j)\mathbf{v}^{(1)}+(3+2j)\mathbf{v}^{(2)}+4\mathbf{v}^{(3)}+j\mathbf{v}^{(4)}\), find \(\|\mathbf{x}-\mathbf{y}\|^2\) without computing any entries.</p>`,
+  hint:R`\(\mathbf{V}^H\mathbf{V}=136\mathbf{I}\), so \(\mathbf{d}=\mathbf{V}^H\mathbf{s}/136\). Orthogonality gives \(\|\sum c_k\mathbf{v}^{(k)}\|^2=136\sum|c_k|^2\).`,
+  sol:R`<p>(ii) \(d_k=\mathbf{v}^{(k)H}\mathbf{s}/136\):</p>
+  <p class="answer">\(\mathbf{d}=[-2.5-2.5j,\ -1-2.5j,\ -0.5-2.5j,\ -2-2.5j]^T\)</p>
+  <p>(iii) \(\hat{\mathbf{s}}=d_2\mathbf{v}^{(2)}+d_4\mathbf{v}^{(4)}=[28-15j,\ 14+15j,\ 22-15j,\ 4+15j]^T\). The error is the dropped energy: \(136(|d_1|^2+|d_3|^2)=136(12.5+6.5)=\) <span class="answer">2584</span>. Check: \(\|\mathbf{s}\|^2-\|\hat{\mathbf{s}}\|^2=4964-136(17.5)=2584\).</p>
+  <p>(iv) \(\|\mathbf{x}-\mathbf{y}\|^2=136(|1-j|^2+|3+2j|^2+|4|^2+|j|^2)=136(2+13+16+1)=\) <span class="answer">4352</span></p>`},
+{ id:'h13a', src:5, num:'Problem 13 (i)–(ii)', topic:'rep', title:'Writing 8-point vectors as combinations of DFT columns',
+  q:R`<p>\(N=8\) and \(\mathbf{v}^{(k)}[n]=e^{j2\pi kn/8}\). Write each vector as a combination of columns, and say which columns are used.</p>
+  <p>(i) \(\mathbf{x}=[3,1,-5,3,3,1,-5,3]^T=\mathbf{V}\mathbf{c}\)<br>(ii) \(\mathbf{y}=[0,0,2,0,0,0,-2,0]^T=\mathbf{V}\mathbf{d}\)</p>`,
+  hint:R`The coefficient on each column is \(X[k]/8\). \(\mathbf{x}\) repeats every 4 samples, so which bins can be nonzero? For \(\mathbf{y}\), only two samples are nonzero, so write its DFT directly.`,
+  sol:R`<p>(i) \(\mathbf{x}\) repeats every 4, so odd bins vanish: \(X[k]\propto 1+(-1)^k=0\). For even bins \(X[2m]=2\sum_{n=0}^{3}x[n](-j)^{mn}\):</p>
+  <p>\(X[0]=4,\ X[2]=16+4j,\ X[4]=-12,\ X[6]=16-4j\), so</p>
+  <p class="answer">\(\mathbf{c}=[0.5,\ 0,\ 2+0.5j,\ 0,\ -1.5,\ 0,\ 2-0.5j,\ 0]^T\)</p>
+  <p>That uses only \(\mathbf{v}^{(0)},\mathbf{v}^{(2)},\mathbf{v}^{(4)},\mathbf{v}^{(6)}\).</p>
+  <p>(ii) \(Y[k]=2e^{-j\pi k/2}-2e^{-j3\pi k/2}=-4j\sin(\pi k/2)=[0,-4j,0,4j,0,-4j,0,4j]\), so</p>
+  <p class="answer">\(\mathbf{d}=[0,\ -\tfrac j2,\ 0,\ \tfrac j2,\ 0,\ -\tfrac j2,\ 0,\ \tfrac j2]^T\)</p>
+  <p>That uses only the odd columns \(\mathbf{v}^{(1)},\mathbf{v}^{(3)},\mathbf{v}^{(5)},\mathbf{v}^{(7)}\).</p>`},
+{ id:'h13b', src:5, num:'Problem 13 (iv)–(v)', topic:'ls', title:'Orthogonality of x and y, least squares with three columns',
+  q:R`<p>Using \(\mathbf{x}\) and \(\mathbf{y}\) from the previous problem:</p>
+  <p>(iv) Compute \(\mathbf{x}^T\mathbf{y}\). Is that what you expected from (i) and (ii)?<br>(v) Find the least-squares approximation of \(\mathbf{s}=\mathbf{x}+\mathbf{y}\) using only \(\mathbf{v}^{(0)},\mathbf{v}^{(1)},\mathbf{v}^{(7)}\), and the squared error.</p>`,
+  hint:R`\(\mathbf{x}\) uses even columns and \(\mathbf{y}\) uses odd columns, and all columns are orthogonal. For (v), keep only the coefficients on the allowed columns, then use Pythagoras for the error.`,
+  sol:R`<p>(iv) \(\mathbf{x}^T\mathbf{y}=(-5)(2)+(-5)(-2)=\) <span class="answer">0</span>. Yes: even columns and odd columns are orthogonal, so any vectors built from them are orthogonal.</p>
+  <p>(v) The allowed coefficients are \(c_0=0.5\), \(d_1=-j/2\), \(d_7=j/2\) (\(\mathbf{x}\) has nothing on \(\mathbf{v}^{(1)},\mathbf{v}^{(7)}\), and \(\mathbf{y}\) has nothing on \(\mathbf{v}^{(0)}\)).</p>
+  <p>\(\hat s[n]=0.5-\tfrac j2(e^{j\pi n/4}-e^{-j\pi n/4})=0.5+\sin(\pi n/4)\), so</p>
+  <p class="answer">\(\hat{\mathbf{s}}=[0.5,\ 1.2071,\ 1.5,\ 1.2071,\ 0.5,\ -0.2071,\ -0.5,\ -0.2071]^T\)</p>
+  <p>Error: \(\|\mathbf{s}\|^2=\|\mathbf{x}\|^2+\|\mathbf{y}\|^2=88+8=96\) and \(\|\hat{\mathbf{s}}\|^2=8(0.25+0.25+0.25)=6\), so <span class="answer">\(\|\mathbf{s}-\hat{\mathbf{s}}\|^2=90\)</span>.</p>`},
+{ id:'h14a', src:5, num:'Problem 14 (i)–(iv)', topic:'rep', title:'DFT of cosines and sines (N = 9)',
+  q:R`<p>For \(N=9\), find the DFT of each of these 9-point signals:</p>
+  <p>(i) \(x^{(1)}=[2,-1,-1,2,-1,-1,2,-1,-1]\)<br>(ii) \(x^{(2)}=[0,1,-1,0,1,-1,0,1,-1]\)<br>(iii) \(x^{(3)}[n]=\cos\!\big(\tfrac{2\pi n}{9}\big)+3\cos\!\big(\tfrac{4\pi n}{9}\big)\)<br>(iv) \(x^{(4)}[n]=\sin\!\big(\tfrac{8\pi n}{9}\big)\)</p>`,
+  hint:R`Write each as complex exponentials, match each to a column \(\mathbf{v}^{(k)}\) (frequency \(-k\) is column \(9-k\)), then multiply the coefficients by 9.`,
+  sol:R`<p>(i) Period 3, so \(\omega=2\pi/3\), and \(x^{(1)}[n]=2\cos(2\pi n/3)=\mathbf{v}^{(3)}+\mathbf{v}^{(6)}\). <span class="answer">\(\mathbf{X}^{(1)}=[0,0,0,9,0,0,9,0,0]^T\)</span></p>
+  <p>(ii) Try \(A\sin(2\pi n/3)\): at \(n=1\), \(A\sqrt3/2=1\), so \(A=2/\sqrt3\). Then \(x^{(2)}=\tfrac{-j}{\sqrt3}\mathbf{v}^{(3)}+\tfrac{j}{\sqrt3}\mathbf{v}^{(6)}\). <span class="answer">\(\mathbf{X}^{(2)}=[0,0,0,-j3\sqrt3,0,0,j3\sqrt3,0,0]^T\)</span> (\(3\sqrt3\approx5.196\))</p>
+  <p>(iii) \(x^{(3)}=\tfrac12(\mathbf{v}^{(1)}+\mathbf{v}^{(8)})+\tfrac32(\mathbf{v}^{(2)}+\mathbf{v}^{(7)})\). <span class="answer">\(\mathbf{X}^{(3)}=[0,4.5,13.5,0,0,0,0,13.5,4.5]^T\)</span></p>
+  <p>(iv) \(8\pi/9=2\pi\cdot4/9\), and \(-4\equiv5\). \(x^{(4)}=\tfrac{-j}{2}\mathbf{v}^{(4)}+\tfrac{j}{2}\mathbf{v}^{(5)}\). <span class="answer">\(\mathbf{X}^{(4)}=[0,0,0,0,-4.5j,4.5j,0,0,0]^T\)</span></p>`},
+{ id:'h14b', src:5, num:'Problem 14 (v)', topic:'rep', title:'Going back: from a 9-point DFT to a signal',
+  q:R`<p>A 9-point signal has DFT with nonzero entries \(X[0]=18\), \(X[2]=9j\), \(X[3]=27\), \(X[6]=27\), \(X[7]=-9j\). Find \(x[n]\) as real sinusoids.</p>`,
+  hint:R`Group the bins into conjugate pairs: \((2,7)\) and \((3,6)\), plus bin 0. Each pair gives one real sinusoid.`,
+  sol:R`<p>\(k=0\): \(18/9=2\).</p>
+  <p>\(k=2,7\): \(\tfrac{9j}{9}e^{j4\pi n/9}+\tfrac{-9j}{9}e^{-j4\pi n/9}=j(e^{j\theta}-e^{-j\theta})=-2\sin\theta\) with \(\theta=4\pi n/9\).</p>
+  <p>\(k=3,6\): \(3(e^{j6\pi n/9}+e^{-j6\pi n/9})=6\cos(2\pi n/3)\).</p>
+  <p class="answer">\(x[n]=2+6\cos\!\big(\tfrac{2\pi n}{3}\big)-2\sin\!\big(\tfrac{4\pi n}{9}\big),\quad n=0:8\)</p>
+  <p>Check: \(x[0]=8=\tfrac19\sum X[k]=\tfrac19(18+9j+27+27-9j)\).</p>`},
+{ id:'h15a', src:5, num:'Problem 15 (i)–(iii)', topic:'sym', title:'Missing DFT entries and sums of samples (N = 8)',
+  q:R`<p>A <b>real</b> 8-point signal \(\mathbf{s}\) has DFT \(\mathbf{S}=[16,\ z_1,\ z_2,\ z_3,\ -4,\ 7{+}j,\ 2j,\ -4{+}5j]^T\).</p>
+  <p>(i) Find \(z_1,z_2,z_3\).<br>(ii) Find \(\sum_{n=0}^{7}s[n]\).<br>(iii) Find \(s[0]+s[2]+s[4]+s[6]\).</p>`,
+  hint:R`Real means \(S[8-k]=S[k]^*\). \(S[0]\) is the sum of all samples. \(S[4]\) is the sum with alternating signs.`,
+  sol:R`<p>(i) \(z_1=S[7]^*=-4-5j\), \(z_2=S[6]^*=-2j\), \(z_3=S[5]^*=7-j\). (\(S[0]\) and \(S[4]\) are real ✓.)</p>
+  <p>(ii) \(\sum s[n]=S[0]=\) <span class="answer">16</span></p>
+  <p>(iii) \(S[0]+S[4]=\sum s[n](1+(-1)^n)=2(s[0]+s[2]+s[4]+s[6])\), so the answer is \(\frac{16-4}{2}=\) <span class="answer">6</span></p>`},
+{ id:'h15b', src:5, num:'Problem 15 (iv)–(v)', topic:'read', title:'Magnitude, phase, and writing s[n]',
+  q:R`<p>Using the completed \(\mathbf{S}=[16,\ -4{-}5j,\ -2j,\ 7{-}j,\ -4,\ 7{+}j,\ 2j,\ -4{+}5j]^T\):</p>
+  <p>(iv) Find \(|\mathbf{S}|\) and \(\angle\mathbf{S}\).<br>(v) Write \(s[n]\) as a sum of real sinusoids.</p>`,
+  hint:R`Find the quadrant of each entry before using arctan. For the sinusoids: \(1/N\) for DC and the \(k=N/2\) term, \(2|S|/N\) for the others.`,
+  sol:R`<p>(iv) \(|\mathbf{S}|\approx[16,\ 6.403,\ 2,\ 7.071,\ 4,\ 7.071,\ 2,\ 6.403]\).</p>
+  <p>Phases: \(S[1]=-4-5j\) is in quadrant III: \(-\pi+\arctan(5/4)=-2.2455\). \(S[2]=-2j\): \(-\pi/2\). \(S[3]=7-j\) (quadrant IV): \(-\arctan(1/7)=-0.1419\). \(S[4]=-4\): \(\pi\). The conjugates have the negated phases.</p>
+  <p class="answer">\(\angle\mathbf{S}\approx[0,\ -2.2455,\ -\tfrac\pi2,\ -0.1419,\ \pi,\ 0.1419,\ \tfrac\pi2,\ 2.2455]\)</p>
+  <p>(v) \[s[n]=2+\tfrac{\sqrt{41}}{4}\cos\!\big(\tfrac{\pi n}{4}-2.2455\big)+\tfrac12\cos\!\big(\tfrac{\pi n}{2}-\tfrac\pi2\big)+\tfrac{5\sqrt2}{4}\cos\!\big(\tfrac{3\pi n}{4}-0.1419\big)-\tfrac12\cos(\pi n)\]
+  The last term is \(S[4]/8=-\tfrac12\) times \((-1)^n\), with no factor of 2.</p>`},
+{ id:'h16a', src:5, num:'Problem 16 (i)', topic:'shift', title:'Write out four operator combinations',
+  q:R`<p>\(\mathbf{s}=[a,b,c,d,e,f,g,h]^T\) (\(N=8\)). Write each of these as a vector of \(a,\dots,h\):</p>
+  <p>\(\mathbf{s}^{(1)}=\mathbf{s}+\mathbf{R}\mathbf{s}\), \(\mathbf{s}^{(2)}=\mathbf{P}^4\mathbf{R}\mathbf{s}-\mathbf{s}\), \(\mathbf{s}^{(3)}=\mathbf{F}^2\mathbf{s}+\mathbf{F}^{-2}\mathbf{s}\), \(\mathbf{s}^{(4)}=\mathbf{P}\mathbf{s}+\mathbf{P}^5\mathbf{s}\)</p>`,
+  hint:R`\(\mathbf{R}\mathbf{s}=[a,h,g,f,e,d,c,b]\). \(\mathbf{P}^m\) moves entries down by \(m\). \(\mathbf{F}^m\mathbf{s}\) multiplies entry \(n\) by \(e^{j2\pi mn/8}\).`,
+  sol:R`<p>\(\mathbf{s}^{(1)}=[2a,\ b{+}h,\ c{+}g,\ d{+}f,\ 2e,\ d{+}f,\ c{+}g,\ b{+}h]^T\)</p>
+  <p>\(\mathbf{P}^4\mathbf{R}\mathbf{s}=[e,d,c,b,a,h,g,f]\), so \(\mathbf{s}^{(2)}=[e{-}a,\ d{-}b,\ 0,\ b{-}d,\ a{-}e,\ h{-}f,\ 0,\ f{-}h]^T\)</p>
+  <p>\(\mathbf{F}^2+\mathbf{F}^{-2}\) multiplies entry \(n\) by \(2\cos(\pi n/2)=2,0,-2,0,2,0,-2,0\): \(\mathbf{s}^{(3)}=[2a,0,-2c,0,2e,0,-2g,0]^T\)</p>
+  <p>\(\mathbf{P}^5\mathbf{s}=\mathbf{P}^{-3}\mathbf{s}\), so entry \(n\) is \(s[n-1]+s[n+3]\): \(\mathbf{s}^{(4)}=[d{+}h,\ a{+}e,\ b{+}f,\ c{+}g,\ d{+}h,\ a{+}e,\ b{+}f,\ c{+}g]^T\)</p>`},
+{ id:'h16b', src:5, num:'Problem 16 (ii)', topic:'shift', title:'Find the operator expression from the vector',
+  q:R`<p>Express each of these as an operator applied to \(\mathbf{s}=[a,\dots,h]^T\):</p>
+  <p>\(\mathbf{s}^{(5)}=[h{-}b,\ a{-}c,\ b{-}d,\ \dots,\ g{-}a]^T\) (entry \(n\) is \(s[n-1]-s[n+1]\))<br>
+  \(\mathbf{s}^{(6)}=[a{+}e,\ b{-}f,\ c{+}g,\ d{-}h,\ e{+}a,\ f{-}b,\ g{+}c,\ h{-}d]^T\)<br>
+  \(\mathbf{s}^{(7)}=[0,\ \sqrt2 b,\ 2c,\ \sqrt2 d,\ 0,\ -\sqrt2 f,\ -2g,\ -\sqrt2 h]^T\)</p>`,
+  hint:R`For each, look at entry \(n\): which \(s\)-indices appear, and is there a sign or multiplier that depends on \(n\)? \(s[n\pm m]\) is \(\mathbf{P}^{\mp m}\). \((-1)^n=\mathbf{F}^4\). A multiplier \(2\sin(\pi n/4)\) comes from \(\mathbf{F}-\mathbf{F}^{-1}\) over \(j\).`,
+  sol:R`<p>\(\mathbf{s}^{(5)}\): \(s[n-1]\) is \(\mathbf{P}\mathbf{s}\) and \(s[n+1]\) is \(\mathbf{P}^{-1}\mathbf{s}\), so <span class="answer">\(\mathbf{s}^{(5)}=\mathbf{P}\mathbf{s}-\mathbf{P}^{-1}\mathbf{s}=(\mathbf{P}-\mathbf{P}^7)\mathbf{s}\)</span></p>
+  <p>\(\mathbf{s}^{(6)}\): entry \(n\) is \(s[n]+(-1)^ns[n+4]\), and \(s[n+4]=s[n-4]=(\mathbf{P}^4\mathbf{s})[n]\), so <span class="answer">\(\mathbf{s}^{(6)}=\mathbf{s}+\mathbf{F}^4\mathbf{P}^4\mathbf{s}\)</span></p>
+  <p>\(\mathbf{s}^{(7)}\): the multiplier is \(2\sin(\pi n/4)=0,\sqrt2,2,\sqrt2,0,-\sqrt2,-2,-\sqrt2\). \((\mathbf{F}-\mathbf{F}^{-1})\) gives \(2j\sin(\pi n/4)\), so <span class="answer">\(\mathbf{s}^{(7)}=-j(\mathbf{F}-\mathbf{F}^{-1})\mathbf{s}=j(\mathbf{F}^{-1}-\mathbf{F})\mathbf{s}\)</span></p>`},
+{ id:'h17', src:5, num:'Problem 17', topic:'shift', title:'DFTs of the seven operator combinations',
+  q:R`<p>A signal \(\mathbf{s}\) (\(N=8\)) has DFT \(\mathbf{S}=[4,\ 1{+}2j,\ 5,\ 3j,\ -7,\ -3j,\ 5,\ 1{-}2j]^T\). Find the DFT \(\mathbf{S}^{(i)}\) of each combination \(\mathbf{s}^{(1)},\dots,\mathbf{s}^{(7)}\) from Problem 16.</p>`,
+  hint:R`Translate each operator to the DFT side: \(\mathbf{R}\to\) index \(-k\); \(\mathbf{P}^m\to\) factor \(e^{-j2\pi mk/8}\); \(\mathbf{F}^m\to\) shift the spectrum by \(m\) (\(S[k-m]\)). Then evaluate at \(k=0..7\).`,
+  sol:R`<p>(1) \(\mathbf{S}+\mathbf{R}\mathbf{S}=2\operatorname{Re}\mathbf{S}\): <span class="answer">\([8,\ 2,\ 10,\ 0,\ -14,\ 0,\ 10,\ 2]\)</span></p>
+  <p>(2) \((-1)^kS[-k]-S[k]\): <span class="answer">\([0,\ -2,\ 0,\ 0,\ 0,\ 0,\ 0,\ -2]\)</span></p>
+  <p>(3) \(S[k-2]+S[k+2]\): <span class="answer">\([10,\ 1{+}j,\ -3,\ 1{-}j,\ 10,\ 1{+}j,\ -3,\ 1{-}j]\)</span></p>
+  <p>(4) \(e^{-j\pi k/4}(1+(-1)^k)S[k]\), zero for odd \(k\): <span class="answer">\([8,\ 0,\ -10j,\ 0,\ 14,\ 0,\ 10j,\ 0]\)</span></p>
+  <p>(5) \(-2j\sin(\pi k/4)S[k]\): <span class="answer">\([0,\ 2\sqrt2{-}j\sqrt2,\ -10j,\ 3\sqrt2,\ 0,\ 3\sqrt2,\ 10j,\ 2\sqrt2{+}j\sqrt2]\)</span></p>
+  <p>(6) \(S[k]+(-1)^kS[k+4]\): <span class="answer">\([-3,\ 1{+}5j,\ 10,\ -1{+}5j,\ -3,\ -1{-}5j,\ 10,\ 1{-}5j]\)</span></p>
+  <p>(7) \(-j(S[k-1]-S[k+1])\): <span class="answer">\([-4,\ j,\ -1{-}j,\ -12j,\ 6,\ 12j,\ -1{+}j,\ -j]\)</span></p>`},
+{ id:'h18a', src:5, num:'Problem 18 (i)–(iii)', topic:'supp', title:'Zero patterns after mirroring, modulation and delay (N = 64)',
+  q:R`<p>A <b>real</b> 64-point signal \(\mathbf{x}\) has \(X[k]\ne0\) for \(k=0{:}13\) and \(X[k]=0\) for \(k=14{:}32\).</p>
+  <p>(i) For which \(k\) in \(33{:}63\) is \(X[k]=0\)?<br>(ii) \(x^{(1)}[n]=x[n]\cos(3\pi n/8)\). For which \(k\) is \(X^{(1)}[k]=0\)?<br>(iii) \(x^{(2)}[n]=x[n-4]+x[n+4]\). For which \(k\) is \(X^{(2)}[k]=0\)?</p>`,
+  hint:R`(i) Real means \(X[64-k]=X[k]^*\). (ii) \(3\pi/8=2\pi\cdot12/64\), so the spectrum is copied 12 bins left and right at half height. (iii) The delay pair multiplies \(X[k]\) by \(2\cos(\pi k/8)\).`,
+  sol:R`<p>(i) The zeros \(14{:}32\) mirror to \(64-k=50\) down to \(32\): <span class="answer">\(X[k]=0\) for \(k=33{:}50\)</span>. The nonzero block is \(k=-13,\dots,13\).</p>
+  <p>(ii) \(X^{(1)}[k]=\tfrac12(X[k-12]+X[k+12])\). The block \([-13,13]\) is copied to \([-25,1]\) and \([-1,25]\). They overlap, so the union is \([-25,25]\): <span class="answer">\(X^{(1)}[k]=0\) for \(k=26{:}38\)</span></p>
+  <p>(iii) \(X^{(2)}[k]=(e^{-j2\pi4k/64}+e^{j2\pi4k/64})X[k]=2\cos(\pi k/8)X[k]\). The cosine is 0 at \(k=4+8m=4,12,20,28,36,44,52,60\). Of those, 20, 28, 36, 44 were already zeros. <span class="answer">\(X^{(2)}[k]=0\) for \(k=4,\ 12,\ 14{:}50,\ 52,\ 60\)</span></p>`},
+{ id:'h18b', src:5, num:'Problem 18 (iv)–(v)', topic:'supp', title:'Symmetrizing a real signal, and when a modulated DFT stays real',
+  q:R`<p>Same \(\mathbf{x}\) (real, \(N=64\)). Let \(\mathbf{y}=\mathbf{x}+\mathbf{R}\mathbf{x}\).</p>
+  <p>(iv) What is \(\operatorname{Im}(\mathbf{Y})\)? Is \(\mathbf{Y}=\mathbf{R}\mathbf{Y}\)?<br>(v) Let \(y^{(1)}[n]=y[n]\cos(\omega n)\). For which \(\omega\) is \(\mathbf{Y}^{(1)}\) real?</p>`,
+  hint:R`\(\mathbf{R}\mathbf{x}\leftrightarrow\mathbf{R}\mathbf{X}\), and for real \(\mathbf{x}\), \(\mathbf{R}\mathbf{X}=\mathbf{X}^*\). A DFT is real exactly when the signal is circularly symmetric (\(y[64-n]=y[n]\)).`,
+  sol:R`<p>(iv) \(\mathbf{Y}=\mathbf{X}+\mathbf{R}\mathbf{X}=\mathbf{X}+\mathbf{X}^*=2\operatorname{Re}(\mathbf{X})\), so <span class="answer">\(\operatorname{Im}(\mathbf{Y})=\mathbf{0}\)</span>. And \(\mathbf{Y}=\mathbf{R}\mathbf{Y}\): yes, because \(\mathbf{R}\mathbf{y}=\mathbf{R}\mathbf{x}+\mathbf{x}=\mathbf{y}\) (symmetric signal, real symmetric DFT).</p>
+  <p>(v) \(y^{(1)}[64-n]=y[n]\cos(64\omega-\omega n)\), which equals \(y[n]\cos(\omega n)\) for every symmetric \(\mathbf{y}\) only when \(64\omega\) is a multiple of \(2\pi\):</p>
+  <p class="answer">\(\omega=\tfrac{2\pi m}{64}=\tfrac{\pi m}{32},\ m\in\mathbb{Z}\)</p>
+  <p>Those are exactly the frequencies that land on DFT bins.</p>`},
+{ id:'h19a', src:5, num:'Problem 19 (i)–(ii)', topic:'conv', title:'Circular convolution by hand, and shifted inputs',
+  q:R`<p>(i) \(N=5\), \(\mathbf{x}=[4,-3,1,-1,2]^T\), \(\mathbf{y}=[5,2,3,0,-2]^T\). Find \(\mathbf{s}=\mathbf{x}\circledast\mathbf{y}\), \(s[n]=\sum_m x[m]y[(n-m)\bmod5]\).</p>
+  <p>(ii) \(\mathbf{a}=[1,-1,2,4,-3]^T\) and \(\mathbf{b}=[2,3,0,-2,5]^T\). Find \(\mathbf{a}\circledast\mathbf{b}\) using (i), without redoing the sums.</p>`,
+  hint:R`(ii) Compare \(\mathbf{a}\) with \(\mathbf{x}\) and \(\mathbf{b}\) with \(\mathbf{y}\): each is a circular shift. Shifts of the inputs become phase factors, which multiply together.`,
+  sol:R`<p>(i) \(s[0]=x_0y_0+x_1y_4+x_2y_3+x_3y_2+x_4y_1=20+6+0-3+4=27\), and similarly:</p>
+  <p class="answer">\(\mathbf{s}=[27,\ -3,\ 13,\ -16,\ 3]^T\)</p>
+  <p>(ii) \(\mathbf{a}=\mathbf{P}^{-2}\mathbf{x}\) (x moved left 2) and \(\mathbf{b}=\mathbf{P}^{-1}\mathbf{y}\) (y moved left 1). In the DFT domain \(A[k]B[k]=e^{j2\pi3k/5}X[k]Y[k]=e^{j2\pi3k/5}S[k]\), so \(\mathbf{a}\circledast\mathbf{b}=\mathbf{P}^{-3}\mathbf{s}\): \(\mathbf{s}\) moved left 3 with wraparound.</p>
+  <p class="answer">\(\mathbf{a}\circledast\mathbf{b}=[s_3,\ s_4,\ s_0,\ s_1,\ s_2]=[-16,\ 3,\ 27,\ -3,\ 13]^T\)</p>`},
+{ id:'h19b', src:5, num:'Problem 19 (iii)–(iv)', topic:'conv', title:'Solve a 6×6 circulant system, and the DFT of x and 1/x',
+  q:R`<p>(iii) \(\mathbf{A}\) is the \(6\times6\) circulant matrix with first column \(\mathbf{h}=[2,-1,5,-3,3,-2]^T\). Solve \(\mathbf{A}\mathbf{c}=\mathbf{b}\) for \(\mathbf{b}=[-1,-7,9,2,12,-7]^T\).</p>
+  <p>(iv) If \(x[n]=1/y[n]\) for every \(n\) (\(N\)-point signals), what is \(\mathbf{X}\circledast\mathbf{Y}\)?</p>`,
+  hint:R`(iii) A circulant matrix times \(\mathbf{c}\) is \(\mathbf{h}\circledast\mathbf{c}\), so \(C[k]=B[k]/H[k]\). (iv) \(x[n]y[n]=1\) for all \(n\) means the elementwise product is the all-ones vector. Use the product rule.`,
+  sol:R`<p>(iii) \(\mathbf{A}\mathbf{c}=\mathbf{h}\circledast\mathbf{c}=\mathbf{b}\), so \(\mathbf{C}=\mathbf{B}./\mathbf{H}\):</p>
+  <p class="mono">c = real(ifft(fft(b) ./ fft(h)))</p>
+  <p class="answer">\(\mathbf{c}=[1,\ 2,\ 3,\ 0,\ -2,\ -2]^T\)</p>
+  <p>Check: \(H[0]=4\) and \(B[0]=8\), so \(C[0]=2=\sum c\) ✓.</p>
+  <p>(iv) \(\mathbf{x}\odot\mathbf{y}=\mathbf{1}\), and the DFT of all ones is \(N\boldsymbol\delta_0\). The product rule says \(\text{DFT}(\mathbf{x}\odot\mathbf{y})=\frac1N\mathbf{X}\circledast\mathbf{Y}\), so \(\mathbf{X}\circledast\mathbf{Y}=N\cdot N\boldsymbol\delta_0\):</p>
+  <p class="answer">\(\mathbf{X}\circledast\mathbf{Y}=[N^2,\ 0,\ 0,\ \dots,\ 0]^T\)</p>`}
+);
+Object.assign(THINK, {
+'h11a':[R`Check orthogonality first: every pair must have dot product 0. That's what lets you treat each vector on its own.`,
+  R`Projection onto one vector is \(\frac{\mathbf{s}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}\mathbf{v}\). Divide by \(\|\mathbf{v}\|^2\), not \(\|\mathbf{v}\|\).`,
+  R`The angle uses \(\cos\theta=\frac{\mathbf{s}\cdot\mathbf{v}}{\|\mathbf{s}\|\|\mathbf{v}\|}\). You already have the dot product from (ii).`],
+'h11b':[R`The plane is spanned by two <i>orthogonal</i> vectors, so the projection is the sum of two single projections. Pythagoras gives its length without adding any vectors.`,
+  R`Angle to a plane: \(\cos\theta=\|\mathbf{p}\|/\|\mathbf{s}\|\), the adjacent-over-hypotenuse ratio in the right triangle \(\mathbf{s},\mathbf{p},\mathbf{s}-\mathbf{p}\).`,
+  R`The error \(\mathbf{s}-\mathbf{g}\) is perpendicular to everything in the space. That's why the fourth column \(\mathbf{w}\) is orthogonal to the other three.`,
+  R`With four mutually orthogonal columns, each unknown is one ratio: \(d_i=\mathbf{b}\cdot\text{col}_i/\|\text{col}_i\|^2\). No elimination.`],
+'h12a':[R`Circulant means each column is the previous one shifted down. Shifting both vectors doesn't change an inner product, so orthogonality only depends on the gap (lag) between the columns.`,
+  R`That means only two conditions: lag 1 and lag 2. Lag 3 is the conjugate of lag 1.`,
+  R`Expand each inner product with the first vector <b>conjugated</b>. Real and imaginary parts must each be 0.`,
+  R`The condition \(c>0\) is there only to choose between \(c=5\) and \(c=-5\).`],
+'h12b':[R`Equal norms \(L\) and orthogonal columns give \(\mathbf{V}^H\mathbf{V}=L\mathbf{I}\), so \(\mathbf{d}=\mathbf{V}^H\mathbf{s}/L\). Each \(d_k\) is one conjugated column dotted with \(\mathbf{s}\).`,
+  R`Projecting onto some of the columns keeps those \(d_k\) and drops the rest. The error is the dropped energy: \(L\sum|d_k|^2\).`,
+  R`For \(\|\mathbf{x}-\mathbf{y}\|^2\) you never need the entries. Combine coefficients per column, then \(L\sum|\text{coefficient}|^2\).`],
+'h13a':[R`Look for repetition. \(\mathbf{x}\) repeats every 4 samples while \(N=8\), so only even bins can be nonzero.`,
+  R`Compute only the even bins with \(X[2m]=2\sum_{n=0}^{3}x[n](-j)^{mn}\), then \(c_k=X[k]/8\).`,
+  R`\(\mathbf{y}\) has just two nonzero samples, so write its DFT from the definition and simplify to a sine. It lands on the odd bins.`],
+'h13b':[R`\(\mathbf{x}\) uses even columns and \(\mathbf{y}\) uses odd columns, and all columns are orthogonal. So \(\mathbf{x}\cdot\mathbf{y}=0\) before you compute anything. Confirm with the direct dot product.`,
+  R`Least squares with orthogonal columns just keeps the coefficients on the allowed columns.`,
+  R`Error \(=\) total energy \(-\) kept energy. The total is \(\|\mathbf{x}\|^2+\|\mathbf{y}\|^2\) because they're orthogonal.`],
+'h14a':[R`Find the frequency from the period, then write the real sinusoid as two complex exponentials.`,
+  R`Match exponents to columns: \(e^{j2\pi kn/9}\) is column \(k\), and negative frequency \(-k\) is column \(9-k\).`,
+  R`The DFT is \(9\times\) the coefficients. For a sine, the coefficients are \(\mp\frac{A}{2}j\), so the DFT entries are imaginary.`],
+'h14b':[R`Group the bins into conjugate pairs. Each pair becomes one real sinusoid.`,
+  R`The pair \(9j\) at \(k=2\) and \(-9j\) at \(k=7\) gives \(j(e^{j\theta}-e^{-j\theta})=-2\sin\theta\).`,
+  R`Check at \(n=0\): \(x[0]=\frac19\sum X[k]\).`],
+'h15a':[R`Real signal means \(S[8-k]=S[k]^*\). Pair (1,7), (2,6), (3,5).`,
+  R`\(S[0]=\sum s[n]\) and \(S[4]=\sum(-1)^ns[n]\).`,
+  R`Even samples plus odd samples is \(S[0]\). Even minus odd is \(S[4]\). Add them and halve to isolate the even sum.`],
+'h15b':[R`Magnitude is \(\sqrt{a^2+b^2}\). For phase, find the quadrant first, since arctan alone is only right in the right half-plane.`,
+  R`Build \(s[n]\): \(1/N\) for DC and for the \(k=N/2\) term, \(2|S|/N\) for the others, \(\omega=2\pi k/N\), phase \(\angle S[k]\).`],
+'h16a':[R`Write out each operator on the letters one position at a time. \(\mathbf{R}\mathbf{s}=[a\,h\,g\,f\,e\,d\,c\,b]\) (entry 0 stays). \(\mathbf{P}^m\) moves entries down by \(m\).`,
+  R`\(\mathbf{F}^2+\mathbf{F}^{-2}\) multiplies entry \(n\) by \(2\cos(\pi n/2)\), which is \(2,0,-2,0,\dots\).`,
+  R`\(\mathbf{P}^5\) is the same as \(\mathbf{P}^{-3}\), so entry \(n\) of \(\mathbf{s}^{(4)}\) is \(s[n-1]+s[n+3]\).`],
+'h16b':[R`Look at entry \(n\) and ask which indices of \(\mathbf{s}\) appear, and whether there's a sign or multiplier that depends on \(n\).`,
+  R`\(s[n\pm m]\) is \(\mathbf{P}^{\mp m}\mathbf{s}\). A sign flipping with \(n\) is \((-1)^n=\mathbf{F}^4\).`,
+  R`A multiplier like \(2\sin(\pi n/4)\) comes from \(\mathbf{F}-\mathbf{F}^{-1}\) divided by \(j\).`],
+'h17':[R`Translate each operator: \(\mathbf{R}\to\) index \(-k\), \(\mathbf{P}^m\to e^{-j2\pi mk/8}\), \(\mathbf{F}^m\to S[k-m]\).`,
+  R`Since \(\mathbf{s}\) is real, \(\mathbf{R}\mathbf{S}=\mathbf{S}^*\), so \(\mathbf{s}+\mathbf{R}\mathbf{s}\) has DFT \(2\operatorname{Re}\mathbf{S}\).`,
+  R`Evaluate at \(k=0..7\). Check conjugate symmetry whenever the result should be a real signal.`],
+'h18a':[R`Draw the nonzero bins as a block on a circle of 64 positions: \(k=-13..13\).`,
+  R`Mirror: for a real signal, zeros at \(k\) are also zeros at \(64-k\).`,
+  R`Cosine modulation copies the block \(m\) bins left and right. Compute both copies, then take the union.`,
+  R`A delay pair multiplies by \(2\cos(2\pi dk/N)\). Find where that is 0 and add those bins to the zero set.`],
+'h18b':[R`\(\mathbf{R}\mathbf{x}\leftrightarrow\mathbf{R}\mathbf{X}\), and for real \(\mathbf{x}\), \(\mathbf{R}\mathbf{X}=\mathbf{X}^*\). So \(\mathbf{X}+\mathbf{R}\mathbf{X}=2\operatorname{Re}\mathbf{X}\).`,
+  R`A DFT is real exactly when the signal is circularly symmetric: \(y[N-n]=y[n]\).`,
+  R`\(\cos(\omega n)\) is symmetric about \(n\to N-n\) only when \(N\omega\) is a multiple of \(2\pi\).`],
+'h19a':[R`Use the definition with indices mod 5: entry \(n\) takes \(x[m]y[n-m]\). The indices of each pair add up to \(n\).`,
+  R`Compare \(\mathbf{a}\) with \(\mathbf{x}\) and \(\mathbf{b}\) with \(\mathbf{y}\). Each is a circular shift (left shifts are advances, \(\mathbf{P}^{-p}\)).`,
+  R`Shifts become phase factors, and the factors multiply. Shifting each input shifts the output by the sum of the shifts.`],
+'h19b':[R`A circulant matrix times \(\mathbf{c}\) is a circular convolution with the first column, so \(\mathbf{C}=\mathbf{B}./\mathbf{H}\).`,
+  R`If \(x[n]y[n]=1\) for all \(n\), the elementwise product is the all-ones vector.`,
+  R`The DFT of all ones is \(N\) at bin 0. The product rule has a \(\frac1N\), so \(\mathbf{X}\circledast\mathbf{Y}=N\cdot N\boldsymbol\delta_0\).`]
+});
+
+/* ---------------- homework 11-19: new lessons ---------------- */
+LESSONS.push(
+{ id:'proj', color:'proj', topic:'proj', kicker:'Homework 11 · foundation', title:'Projections and angles (any vectors)',
+  key:R`The multiple of \(\mathbf{v}\) closest to \(\mathbf{s}\) is the one that leaves an error perpendicular to \(\mathbf{v}\). That one rule gives the projection formula, the angle, and the size of the error.`,
+  body:R`<section><h4>The one rule behind everything</h4>
+  <p>Look for \(\alpha\mathbf{v}\) closest to \(\mathbf{s}\). The leftover \(\mathbf{s}-\alpha\mathbf{v}\) must be perpendicular to \(\mathbf{v}\), so \(\mathbf{v}^H(\mathbf{s}-\alpha\mathbf{v})=0\). Solving:</p>
+  <p>\[\alpha=\frac{\mathbf{v}^H\mathbf{s}}{\mathbf{v}^H\mathbf{v}},\qquad \mathbf{f}=\frac{\mathbf{v}^H\mathbf{s}}{\|\mathbf{v}\|^2}\,\mathbf{v}\]</p>
+  <p>For real vectors, \(\mathbf{v}^H\mathbf{s}\) is the ordinary dot product. Divide by \(\|\mathbf{v}\|^2\), not \(\|\mathbf{v}\|\).</p></section>
+  <section><h4>Several vectors at once</h4>
+  <ul><li>If the vectors are <b>mutually orthogonal</b>, the projection onto the space they span is just the sum of the individual projections. The coefficients don't interact.</li>
+  <li>If they are <i>not</i> orthogonal, adding single projections is wrong.</li>
+  <li><b>Pythagoras:</b> the error is perpendicular to the projection, so \(\|\mathbf{s}\|^2=\|\hat{\mathbf{s}}\|^2+\|\mathbf{s}-\hat{\mathbf{s}}\|^2\). For orthogonal vectors, \(\|\sum c_i\mathbf{v}^{(i)}\|^2=\sum|c_i|^2\|\mathbf{v}^{(i)}\|^2\).</li></ul></section>
+  <section><h4>Angles</h4><ul>
+  <li>Between two vectors: \(\cos\theta=\dfrac{\mathbf{s}\cdot\mathbf{v}}{\|\mathbf{s}\|\,\|\mathbf{v}\|}\).</li>
+  <li>Between a vector and a plane (or any space): the smallest angle is the one to the closest point, which is the projection \(\mathbf{p}\). The triangle \(\mathbf{s},\ \mathbf{p},\ \mathbf{s}-\mathbf{p}\) has a right angle at \(\mathbf{p}\), so \(\cos\theta=\|\mathbf{p}\|/\|\mathbf{s}\|\).</li></ul></section>
+  <section><h4>Solving a system with orthogonal columns</h4>
+  <p>If the columns of a matrix are mutually orthogonal, \(d_1\mathbf{c}_1+d_2\mathbf{c}_2+\dots=\mathbf{b}\) is solved by dotting both sides with one column. Every cross term is 0, so \(d_i=\dfrac{\mathbf{b}\cdot\mathbf{c}_i}{\|\mathbf{c}_i\|^2}\). This is exactly why the DFT works: the Fourier vectors are orthogonal with norm\(^2\) \(N\), so \(X[k]/N\) is the coefficient on column \(k\).</p></section>`},
+{ id:'cols', color:'proj', topic:'proj', kicker:'Homework 12', title:'Orthogonal columns with unknowns (circulant V)',
+  key:R`In a circulant matrix every column is the previous one shifted down. Orthogonality of two columns depends only on how far apart they are, so you only need to check two pairs.`,
+  body:R`<section><h4>Why two checks are enough</h4>
+  <p>Shifting both vectors the same way doesn't change their inner product: \((\mathbf{P}\mathbf{u})^H(\mathbf{P}\mathbf{v})=\mathbf{u}^H\mathbf{v}\). So \(\mathbf{v}^{(i)H}\mathbf{v}^{(k)}\) depends only on the lag \(k-i\) (mod \(N\)).</p>
+  <ul><li>Lag 1: pairs (1,2), (2,3), (3,4), and (4,1).</li><li>Lag 2: pairs (1,3), (2,4).</li><li>Lag 3 is lag \(-1\), which gives the conjugates of the lag-1 values.</li></ul>
+  <p>For a 4-column circulant, the columns are all mutually orthogonal exactly when \(\mathbf{v}^{(1)H}\mathbf{v}^{(2)}=0\) and \(\mathbf{v}^{(1)H}\mathbf{v}^{(3)}=0\).</p></section>
+  <section><h4>What you get once they are orthogonal</h4><ul>
+  <li>All column norms are equal (same entries, shuffled), say \(\|\mathbf{v}\|^2=L\), so \(\mathbf{V}^H\mathbf{V}=L\mathbf{I}\).</li>
+  <li>Solving \(\mathbf{V}\mathbf{d}=\mathbf{s}\): \(\mathbf{d}=\mathbf{V}^H\mathbf{s}/L\), so \(d_k=\mathbf{v}^{(k)H}\mathbf{s}/L\).</li>
+  <li>Projection onto a subset of columns: keep those \(d_k\). The error is the dropped energy, \(L\sum_{\text{dropped}}|d_k|^2\).</li>
+  <li>Size of a combination: \(\|\sum c_k\mathbf{v}^{(k)}\|^2=L\sum|c_k|^2\). You never need the entries.</li></ul></section>`},
+{ id:'rep', color:'rep', topic:'rep', kicker:'Homework 13–14', title:'Sinusoids as DFT columns: x = Vc',
+  key:R`Every real cosine or sine is a pair of DFT columns. Once you write it with exponentials, the DFT entries are just \(N\) times the coefficients.`,
+  body:R`<section><h4>The link</h4>
+  <p>If \(\mathbf{x}=\sum_k c_k\mathbf{v}^{(k)}\), then \(X[k]=N\,c_k\). So converting between "a signal made of sinusoids" and "its DFT" is just multiplying or dividing by \(N\).</p></section>
+  <section><h4>Rewriting real sinusoids</h4>
+  <ul><li>\(\cos\theta=\tfrac12(e^{j\theta}+e^{-j\theta})\) and \(\sin\theta=\tfrac1{2j}(e^{j\theta}-e^{-j\theta})=\tfrac{-j}{2}e^{j\theta}+\tfrac{j}{2}e^{-j\theta}\).</li>
+  <li>\(e^{j2\pi kn/N}\) is column \(k\). Frequency \(-k\) is column \(N-k\), because \(e^{-j2\pi kn/N}=e^{j2\pi(N-k)n/N}\) for integer \(n\).</li></ul>
+  <table class="simple"><tr><th>Signal</th><th>Nonzero DFT entries</th></tr>
+  <tr><td>\(A\cos(2\pi kn/N)\)</td><td>\(X[k]=X[N-k]=AN/2\)</td></tr>
+  <tr><td>\(A\sin(2\pi kn/N)\)</td><td>\(X[k]=-jAN/2,\quad X[N-k]=+jAN/2\)</td></tr>
+  <tr><td>constant \(A\)</td><td>\(X[0]=AN\)</td></tr></table></section>
+  <section><h4>Repeating signals leave gaps</h4>
+  <p>If \(\mathbf{x}\) repeats every \(p\) samples (\(p\) divides \(N\)), only bins that are multiples of \(N/p\) can be nonzero. For \(N=8\) and period 4, odd bins vanish because \(X[k]\) contains the factor \(1+(-1)^k\).</p></section>
+  <section><h4>Recipe</h4><ol><li>Find the frequency (from the period or the formula).</li><li>Write it as exponentials.</li><li>Match each exponent to a column \(k\) (use \(N-k\) for negative frequencies).</li><li>Multiply the coefficients by \(N\).</li></ol></section>`},
+{ id:'phase', color:'read', topic:'read', kicker:'Homework 15', title:'Magnitude and phase from a complex number',
+  key:R`\(\arctan(b/a)\) only knows the right half-plane. Check which quadrant the number is in before trusting it.`,
+  body:R`<section><h4>Magnitude and phase</h4>
+  <p>For \(z=a+jb\): \(|z|=\sqrt{a^2+b^2}\). For the phase, find the quadrant first.</p>
+  <table class="simple"><tr><th>Where \(z\) is</th><th>Phase</th></tr>
+  <tr><td>Right half-plane (\(a>0\))</td><td>\(\arctan(b/a)\)</td></tr>
+  <tr><td>Quadrant II (\(a<0,\ b>0\))</td><td>\(\arctan(b/a)+\pi\)</td></tr>
+  <tr><td>Quadrant III (\(a<0,\ b<0\))</td><td>\(\arctan(b/a)-\pi\)</td></tr>
+  <tr><td>On an axis</td><td>\(a>0\): 0 &nbsp; \(a<0\): \(\pi\) &nbsp; \(+j\): \(\pi/2\) &nbsp; \(-j\): \(-\pi/2\)</td></tr></table>
+  <p>Conjugate entries have the same magnitude and negated phase, so only compute half of the spectrum.</p></section>
+  <section><h4>Sums of subsets of samples</h4>
+  <p>\(S[0]=\sum s[n]\) and, for even \(N\), \(S[N/2]=\sum(-1)^ns[n]\). So \(S[0]+S[N/2]=2\times\)(sum of even-indexed samples) and \(S[0]-S[N/2]=2\times\)(sum of odd-indexed samples).</p></section>`},
+{ id:'ops', color:'shift', topic:'shift', kicker:'Homework 16–17', title:'Operator combinations and their DFTs',
+  key:R`Every operator expression is a rearrangement of samples (\(\mathbf{P}\), \(\mathbf{R}\)) or a multiplier that depends on \(n\) (\(\mathbf{F}\)). Translate each piece to its DFT effect, then add the pieces.`,
+  body:R`<section><h4>Seven combinations you should recognise (\(N=8\))</h4>
+  <div class="scroll-x"><table class="simple"><tr><th>Expression</th><th>Time domain</th><th>DFT</th></tr>
+  <tr><td>\(\mathbf{s}+\mathbf{R}\mathbf{s}\)</td><td>\([2a,\ b{+}h,\ c{+}g,\ d{+}f,\ 2e,\dots]\)</td><td>\(S[k]+S[-k]\) (\(=2\operatorname{Re}S\) for real \(\mathbf{s}\))</td></tr>
+  <tr><td>\(\mathbf{P}^4\mathbf{R}\mathbf{s}-\mathbf{s}\)</td><td>\([e{-}a,\ d{-}b,\ 0,\ b{-}d,\ a{-}e,\dots]\)</td><td>\((-1)^kS[-k]-S[k]\)</td></tr>
+  <tr><td>\(\mathbf{F}^2\mathbf{s}+\mathbf{F}^{-2}\mathbf{s}\)</td><td>\(2\cos(\pi n/2)\,s[n]=[2a,0,-2c,0,\dots]\)</td><td>\(S[k-2]+S[k+2]\)</td></tr>
+  <tr><td>\(\mathbf{P}\mathbf{s}+\mathbf{P}^5\mathbf{s}\)</td><td>\(s[n-1]+s[n+3]\)</td><td>\(e^{-j\pi k/4}(1+(-1)^k)S[k]\)</td></tr>
+  <tr><td>\(\mathbf{P}\mathbf{s}-\mathbf{P}^{-1}\mathbf{s}\)</td><td>\(s[n-1]-s[n+1]\)</td><td>\(-2j\sin(\pi k/4)S[k]\)</td></tr>
+  <tr><td>\(\mathbf{s}+\mathbf{F}^4\mathbf{P}^4\mathbf{s}\)</td><td>\(s[n]+(-1)^ns[n+4]\)</td><td>\(S[k]+(-1)^kS[k+4]\)</td></tr>
+  <tr><td>\(-j(\mathbf{F}-\mathbf{F}^{-1})\mathbf{s}\)</td><td>\(2\sin(\pi n/4)\,s[n]\)</td><td>\(-j\big(S[k-1]-S[k+1]\big)\)</td></tr></table></div></section>
+  <section><h4>How to read an operator off a vector</h4><ol>
+  <li>Look at entry \(n\). Which indices of \(\mathbf{s}\) appear?</li>
+  <li>\(s[n-m]\) is \(\mathbf{P}^m\mathbf{s}\). \(s[n+m]\) is \(\mathbf{P}^{-m}\mathbf{s}\). Reversed order, entry 0 fixed, is \(\mathbf{R}\).</li>
+  <li>A sign that alternates with \(n\) is \((-1)^n=\mathbf{F}^4\) (for \(N=8\)).</li>
+  <li>A multiplier like \(2\cos(\pi n/2)\) or \(2\sin(\pi n/4)\) is a sum or difference of \(\mathbf{F}^{\pm m}\).</li></ol></section>
+  <section><h4>Going to the DFT side</h4><ul>
+  <li>\(\mathbf{P}^m\) multiplies \(S[k]\) by \(e^{-j2\pi mk/N}\). When two delays combine, you get \(2\cos\) or \(-2j\sin\) of \(2\pi mk/N\).</li>
+  <li>\(\mathbf{F}^m\) shifts the spectrum: \(S[k-m]\).</li>
+  <li>\(\mathbf{R}\) reverses the index: \(S[-k]\).</li></ul></section>`,
+  example:R`<p><b>Reading \(\mathbf{s}^{(6)}=[a{+}e,\ b{-}f,\ c{+}g,\ d{-}h,\ e{+}a,\ f{-}b,\ g{+}c,\ h{-}d]\).</b></p>
+  <p>Entry \(n\) combines \(s[n]\) and \(s[n+4]\). The sign is + for even \(n\) and − for odd \(n\), so it's \(s[n]+(-1)^ns[n+4]\). Since \(s[n+4]=s[n-4]=(\mathbf{P}^4\mathbf{s})[n]\) and \((-1)^n=\mathbf{F}^4\): \(\mathbf{s}^{(6)}=\mathbf{s}+\mathbf{F}^4\mathbf{P}^4\mathbf{s}\).</p>
+  <p><b>Its DFT.</b> \(\mathbf{P}^4\mathbf{s}\leftrightarrow(-1)^kS[k]\). Then \(\mathbf{F}^4\) shifts by 4, giving \((-1)^kS[k+4]\). So \(S^{(6)}[k]=S[k]+(-1)^kS[k+4]\).</p>`,
+  check:{q:R`With \(N=8\), what is the DFT of \(\mathbf{P}\mathbf{s}+\mathbf{P}^5\mathbf{s}\) at an odd \(k\)?`, a:R`\(e^{-j\pi k/4}(1+(-1)^k)S[k]\), and \(1+(-1)^k=0\) for odd \(k\). So it's 0. Only even bins survive.`}},
+{ id:'supp', color:'supp', topic:'supp', kicker:'Homework 18', title:'Where is the spectrum zero? Mirror, modulate, delay',
+  key:R`Draw the nonzero bins as a block on a circle of \(N\) positions. Mirroring flips the block, a cosine modulation copies it left and right, and a delay pair multiplies by a factor that can add new zeros.`,
+  body:R`<section><h4>Four rules</h4><ul>
+  <li><b>Real signal:</b> \(X[N-k]=X[k]^*\), so zeros at \(k\) are also zeros at \(N-k\). A block of nonzero bins \(0..K\) becomes \(-K..K\).</li>
+  <li><b>Cosine modulation:</b> \(x[n]\cos(2\pi mn/N)\leftrightarrow\tfrac12\big(X[k-m]+X[k+m]\big)\). Copy the block \(m\) bins to each side and take the union. If the copies are too far apart, a gap of zeros appears in the middle.</li>
+  <li><b>Delay pair:</b> \(x[n-d]+x[n+d]\leftrightarrow2\cos(2\pi dk/N)X[k]\). New zeros appear wherever the cosine is 0.</li>
+  <li><b>Symmetrizing:</b> \(\mathbf{y}=\mathbf{x}+\mathbf{R}\mathbf{x}\) has \(\mathbf{Y}=\mathbf{X}+\mathbf{X}^*=2\operatorname{Re}\mathbf{X}\), which is real. In general, a DFT is real exactly when the signal is circularly symmetric: \(y[N-n]=y[n]\).</li></ul></section>
+  <section><h4>When does a cosine keep a symmetric signal symmetric?</h4>
+  <p>\(\cos(\omega n)\) satisfies \(\cos(\omega(N-n))=\cos(\omega n)\) for all \(n\) only if \(N\omega\) is a multiple of \(2\pi\). Those are exactly the frequencies that land on DFT bins, \(\omega=2\pi m/N\).</p></section>`},
+{ id:'convplus', color:'conv', topic:'conv', kicker:'Homework 19', title:'Convolution by hand, shifted inputs, inverses',
+  key:R`Shifting an input of a circular convolution shifts the output by the same amount. And if \(x[n]y[n]=1\) for every \(n\), then \(\mathbf{X}\circledast\mathbf{Y}=N^2\boldsymbol\delta_0\).`,
+  body:R`<section><h4>Three facts</h4><ul>
+  <li><b>By hand:</b> \(s[n]=\sum_m x[m]\,y[(n-m)\bmod N]\). In each term, the indices of \(x\) and \(y\) add up to \(n\) (mod \(N\)).</li>
+  <li><b>Shifted inputs:</b> advancing \(\mathbf{x}\) by \(p\) and \(\mathbf{y}\) by \(q\) (that's \(\mathbf{P}^{-p}\mathbf{x}\) and \(\mathbf{P}^{-q}\mathbf{y}\)) multiplies the DFTs by \(e^{j2\pi pk/N}\) and \(e^{j2\pi qk/N}\). The product has \(e^{j2\pi(p+q)k/N}\), so \((\mathbf{P}^{-p}\mathbf{x})\circledast(\mathbf{P}^{-q}\mathbf{y})=\mathbf{P}^{-(p+q)}(\mathbf{x}\circledast\mathbf{y})\).</li>
+  <li><b>Product with the reciprocal:</b> \(\mathbf{x}\odot\mathbf{y}=\mathbf{1}\) (all ones), the DFT of all ones is \(N\boldsymbol\delta_0\), and \(\text{DFT}(\mathbf{x}\odot\mathbf{y})=\tfrac1N\mathbf{X}\circledast\mathbf{Y}\). So \(\mathbf{X}\circledast\mathbf{Y}=N^2\boldsymbol\delta_0\).</li></ul></section>
+  <section><h4>Circulant systems</h4><p>As in the circulant lesson: take the <b>first column</b> as \(\mathbf{h}\), then \(\mathbf{A}\mathbf{c}=\mathbf{b}\) means \(\mathbf{h}\circledast\mathbf{c}=\mathbf{b}\), so <span class="mono">c = real(ifft(fft(b)./fft(h)))</span>. It only works if every \(H[k]\ne0\).</p></section>`}
+);
+{ const order = ['map','what','proj','cols','rep','synth','phase','samp','fill','spike','shift','ops','ext','conv','convplus','supp','ls','check'];
+  LESSONS.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id)); }
+
+DEEP.proj = { widget:'proj',
+  walks:[
+   { t:R`Example 1 · Problem 11 (i)–(iii): orthogonality, projections, angle`, q:R`\(\mathbf{v}^{(1)}=[3,1,1,-1],\ \mathbf{v}^{(2)}=[1,-2,0,1],\ \mathbf{v}^{(3)}=[-1,1,5,3],\ \mathbf{s}=[1,6,2,7]\).`,
+     s:[R`<b>Check orthogonality.</b> \(\mathbf{v}^{(1)}\!\cdot\mathbf{v}^{(2)}=3-2+0-1=0\), \(\mathbf{v}^{(1)}\!\cdot\mathbf{v}^{(3)}=-3+1+5-3=0\), \(\mathbf{v}^{(2)}\!\cdot\mathbf{v}^{(3)}=-1-2+0+3=0\). All pairs are 0.`,
+        R`<b>Norms squared.</b> \(9+1+1+1=12\), \(1+4+0+1=6\), \(1+1+25+9=36\).`,
+        R`<b>Dot products with \(\mathbf{s}\).</b> \(\mathbf{s}\cdot\mathbf{v}^{(1)}=3+6+2-7=4\), \(\mathbf{s}\cdot\mathbf{v}^{(2)}=-4\), \(\mathbf{s}\cdot\mathbf{v}^{(3)}=36\).`,
+        R`<b>Coefficients</b> (dot product over norm squared): \(\tfrac4{12}=\tfrac13\), \(\tfrac{-4}{6}=-\tfrac23\), \(\tfrac{36}{36}=1\). Multiply each vector by its coefficient to get \(\mathbf{f}^{(i)}\).`,
+        R`<b>Angle with \(\mathbf{v}^{(1)}\).</b> \(\|\mathbf{s}\|^2=90\), so \(\cos\theta=\frac{4}{\sqrt{90}\sqrt{12}}\approx0.1217\) and \(\theta\approx83.0^\circ\).`] },
+   { t:R`Example 2 · Problem 11 (iv)–(vii): plane angle, 3-D projection, solving`, q:R`Same vectors. Find the angle to the plane of \(\mathbf{v}^{(2)},\mathbf{v}^{(3)}\), the projection onto all three, and solve a system.`,
+     s:[R`<b>Projection onto the plane.</b> \(\mathbf{v}^{(2)}\perp\mathbf{v}^{(3)}\), so \(\mathbf{p}=\mathbf{f}^{(2)}+\mathbf{f}^{(3)}\), and by Pythagoras \(\|\mathbf{p}\|^2=\frac{16}{6}+\frac{1296}{36}=\frac{116}{3}\).`,
+        R`<b>Angle.</b> \(\cos\theta=\|\mathbf{p}\|/\|\mathbf{s}\|=\sqrt{\tfrac{116/3}{90}}\approx0.6555\), so \(\theta\approx49.0^\circ\).`,
+        R`<b>3-D projection.</b> Add all three entry by entry: \(\mathbf{g}=[-\tfrac23,\tfrac83,\tfrac{16}3,2]\).`,
+        R`<b>Error.</b> \(\mathbf{s}-\mathbf{g}=\tfrac53[1,2,-2,3]=\tfrac53\mathbf{w}\), and \(\mathbf{w}\) is orthogonal to all three vectors.`,
+        R`<b>Solve.</b> The columns \(\mathbf{v}^{(1)},\mathbf{v}^{(2)},\mathbf{v}^{(3)},\mathbf{w}\) are mutually orthogonal, so \(d_i=\frac{\mathbf{b}\cdot\text{col}_i}{\|\text{col}_i\|^2}\). With \(\mathbf{b}=[1,8,4,9]\): \(\tfrac6{12},\tfrac{-6}6,\tfrac{54}{36},\tfrac{36}{18}\), so \(\mathbf{d}=[\tfrac12,-1,\tfrac32,2]\).`] }],
+  mistakes:[R`Dividing by \(\|\mathbf{v}\|\) instead of \(\|\mathbf{v}\|^2\) in the projection.`,
+    R`Adding single projections when the vectors aren't orthogonal.`,
+    R`Using \(\cos\theta=\|\mathbf{s}-\mathbf{p}\|/\|\mathbf{s}\|\) for the angle to a plane. That ratio is the sine.`] };
+DEEP.cols = {
+  walks:[
+   { t:R`Example 1 · Problem 12 (i): find \(a,b,c\) and the norms`, q:R`\(\mathbf{V}\) is circulant with first column \([2,\alpha,-8,\beta]\), where \(\alpha=a+jb\), \(\beta=3+jc\), \(c>0\).`,
+     s:[R`<b>List the columns.</b> \(\mathbf{v}^{(1)}=[2,\alpha,-8,\beta]\), \(\mathbf{v}^{(2)}=[\beta,2,\alpha,-8]\), \(\mathbf{v}^{(3)}=[-8,\beta,2,\alpha]\), \(\mathbf{v}^{(4)}=[\alpha,-8,\beta,2]\).`,
+        R`<b>Pick the two checks.</b> Only \(\mathbf{v}^{(1)H}\mathbf{v}^{(3)}\) (lag 2) and \(\mathbf{v}^{(1)H}\mathbf{v}^{(2)}\) (lag 1) are needed.`,
+        R`<b>Lag 2.</b> \(2(-8)+\alpha^*\beta+(-8)(2)+\beta^*\alpha=-32+2\operatorname{Re}(\alpha^*\beta)\). With \(\alpha^*\beta=(3a+bc)+j(ac-3b)\), setting this to 0 gives \(3a+bc=16\).`,
+        R`<b>Lag 1.</b> Expanding \(\mathbf{v}^{(1)H}\mathbf{v}^{(2)}=2\beta+2\alpha^*-8\alpha-8\beta^*\) gives \((-18-6a)+j(10c-10b)\). Both parts must be 0: \(a=-3\) and \(b=c\).`,
+        R`<b>Combine.</b> \(3(-3)+c^2=16\) gives \(c^2=25\). Since \(c>0\), \(c=5\) and \(b=5\).`,
+        R`<b>Norms.</b> \(|\alpha|^2=9+25=34=|\beta|^2\), so every column has \(\|\mathbf{v}\|^2=4+64+34+34=136\), and \(\mathbf{V}^H\mathbf{V}=136\mathbf{I}\).`] },
+   { t:R`Example 2 · Problem 12 (ii)–(iv): solve, project, measure`, q:R`\(\mathbf{s}=[27,45,41,23]^T\). Find \(\mathbf{d}\), the projection onto \(\mathbf{v}^{(2)},\mathbf{v}^{(4)}\), and \(\|\mathbf{x}-\mathbf{y}\|^2\) for a given combination.`,
+     s:[R`<b>Solve.</b> \(d_k=\mathbf{v}^{(k)H}\mathbf{s}/136\), which gives \(\mathbf{d}=[-2.5{-}2.5j,\ -1{-}2.5j,\ -0.5{-}2.5j,\ -2{-}2.5j]\).`,
+        R`<b>Project onto columns 2 and 4.</b> Keep \(d_2\) and \(d_4\): \(\hat{\mathbf{s}}=d_2\mathbf{v}^{(2)}+d_4\mathbf{v}^{(4)}\).`,
+        R`<b>Error.</b> It's the dropped part: \(136(|d_1|^2+|d_3|^2)=136(12.5+6.5)=2584\).`,
+        R`<b>Check with Pythagoras.</b> \(\|\mathbf{s}\|^2=4964\), \(\|\hat{\mathbf{s}}\|^2=136(|d_2|^2+|d_4|^2)=2380\), and \(4964-2380=2584\) ✓.`,
+        R`<b>Size of a combination.</b> For \(\mathbf{x}-\mathbf{y}=(1-j)\mathbf{v}^{(1)}+(3+2j)\mathbf{v}^{(2)}+4\mathbf{v}^{(3)}+j\mathbf{v}^{(4)}\): \(136(2+13+16+1)=4352\).`] }],
+  mistakes:[R`Forgetting to conjugate the first vector in the inner product.`,
+    R`Setting only the real part to zero. A complex inner product needs both parts to be 0.`,
+    R`Forgetting the condition (\(c>0\)) that picks between two valid roots.`] };
+DEEP.rep = { widget:'rep',
+  walks:[
+   { t:R`Example 1 · Problem 14 (i), (ii): cos and sin with period 3, N = 9`, q:R`Find the DFT of \([2,-1,-1,\dots]\) and of \([0,1,-1,0,1,-1,\dots]\).`,
+     s:[R`<b>Frequency.</b> Both repeat every 3, so \(\omega=2\pi/3=2\pi\cdot3/9\). That's column 3, and its negative is column \(9-3=6\).`,
+        R`<b>First signal.</b> \(2\cos(2\pi n/3)=e^{j2\pi n/3}+e^{-j2\pi n/3}=\mathbf{v}^{(3)}+\mathbf{v}^{(6)}\). The coefficients are 1, so \(X[3]=X[6]=9\).`,
+        R`<b>Second signal.</b> Try \(A\sin(2\pi n/3)\). At \(n=1\): \(A\cdot\tfrac{\sqrt3}2=1\), so \(A=\tfrac2{\sqrt3}\).`,
+        R`<b>Exponentials.</b> \(\tfrac2{\sqrt3}\cdot\tfrac1{2j}(\mathbf{v}^{(3)}-\mathbf{v}^{(6)})=\tfrac{-j}{\sqrt3}\mathbf{v}^{(3)}+\tfrac{j}{\sqrt3}\mathbf{v}^{(6)}\).`,
+        R`<b>Multiply by 9.</b> \(X[3]=-3\sqrt3\,j\) and \(X[6]=+3\sqrt3\,j\).`] },
+   { t:R`Example 2 · Problem 14 (iii), (iv): other bins`, q:R`\(x^{(3)}[n]=\cos(2\pi n/9)+3\cos(4\pi n/9)\) and \(x^{(4)}[n]=\sin(8\pi n/9)\), \(N=9\).`,
+     s:[R`<b>Bins.</b> \(2\pi n/9\) is column 1 (mirror 8). \(4\pi n/9\) is column 2 (mirror 7).`,
+        R`<b>Coefficients.</b> \(\cos\) splits into \(\tfrac12\) each: \(\tfrac12\) on columns 1 and 8, \(\tfrac32\) on columns 2 and 7.`,
+        R`<b>DFT.</b> Multiply by 9: \([0,4.5,13.5,0,0,0,0,13.5,4.5]\).`,
+        R`<b>The sine.</b> \(8\pi/9=2\pi\cdot4/9\), so column 4 with mirror 5. The coefficients are \(\tfrac{-j}2\) and \(\tfrac j2\), giving \(X[4]=-4.5j\), \(X[5]=+4.5j\).`] },
+   { t:R`Example 3 · Problem 14 (v): DFT back to a signal`, q:R`\(X[0]=18,\ X[2]=9j,\ X[3]=27,\ X[6]=27,\ X[7]=-9j\) (N = 9).`,
+     s:[R`<b>Group by conjugate pairs.</b> bin 0 alone, pair (2,7), pair (3,6).`,
+        R`<b>Bin 0.</b> \(18/9=2\).`,
+        R`<b>Pair (2,7).</b> \(\tfrac{9j}9e^{j\theta}+\tfrac{-9j}9e^{-j\theta}=j(e^{j\theta}-e^{-j\theta})=-2\sin\theta\), where \(\theta=4\pi n/9\).`,
+        R`<b>Pair (3,6).</b> \(\tfrac{27}9\big(e^{j6\pi n/9}+e^{-j6\pi n/9}\big)=6\cos(2\pi n/3)\).`,
+        R`<b>Add.</b> \(x[n]=2+6\cos(2\pi n/3)-2\sin(4\pi n/9)\). Check: \(x[0]=8=\tfrac19\sum X[k]\) ✓.`] },
+   { t:R`Example 4 · Problem 13 (i): a periodic 8-point vector`, q:R`\(\mathbf{x}=[3,1,-5,3,3,1,-5,3]\), \(N=8\). Find \(\mathbf{c}\) with \(\mathbf{x}=\mathbf{V}\mathbf{c}\).`,
+     s:[R`<b>Spot the period.</b> \(\mathbf{x}\) repeats every 4, so \(X[k]\) has a factor \(1+(-1)^k\), which is 0 for odd \(k\).`,
+        R`<b>Even bins.</b> \(X[2m]=2\sum_{n=0}^{3}x[n](-j)^{mn}\), with \((-j)^n=1,-j,-1,j\).`,
+        R`<b>Compute.</b> \(X[0]=2(3+1-5+3)=4\), \(X[2]=2(3-j+5+3j)=16+4j\), \(X[4]=2(3-1-5-3)=-12\), \(X[6]=16-4j\).`,
+        R`<b>Divide by 8.</b> \(\mathbf{c}=[0.5,0,2+0.5j,0,-1.5,0,2-0.5j,0]\). Only four columns are used.`] }],
+  mistakes:[R`Forgetting that a sine gives \(\mp j\) coefficients, so its DFT entries are imaginary.`,
+    R`Writing frequency \(-k\) as column \(-k\). Use \(N-k\).`,
+    R`Doubling the amplitude for DC or for the \(N/2\) term. Those have no mirror partner.`] };
+DEEP.phase = { widget:'phase',
+  walks:[
+   { t:R`Example 1 · Problem 15: phase by quadrant`, q:R`\(\mathbf{S}=[16,\ -4{-}5j,\ -2j,\ 7{-}j,\ -4,\ 7{+}j,\ 2j,\ -4{+}5j]\). Find the phase of each entry.`,
+     s:[R`<b>Easy ones first.</b> \(16\) is on the positive real axis: 0. \(-4\) is on the negative real axis: \(\pi\). \(-2j\) is straight down: \(-\pi/2\).`,
+        R`<b>\(-4-5j\)</b> is in quadrant III. \(\arctan(5/4)=0.8961\), so the phase is \(0.8961-\pi=-2.2455\).`,
+        R`<b>\(7-j\)</b> is in quadrant IV (right half-plane), so arctan is fine: \(-\arctan(1/7)=-0.1419\).`,
+        R`<b>The rest are conjugates</b> of those, so negate: \(+0.1419\), \(+\pi/2\), \(+2.2455\).`,
+        R`<b>Magnitudes.</b> \(|-4-5j|=\sqrt{41}\approx6.403\), \(|7-j|=\sqrt{50}=5\sqrt2\approx7.071\).`] },
+   { t:R`Example 2 · Problem 15: sums of samples and building s[n]`, q:R`Using the same \(\mathbf{S}\): find \(\sum s[n]\), \(s[0]+s[2]+s[4]+s[6]\), and write \(s[n]\).`,
+     s:[R`<b>All samples.</b> \(\sum s[n]=S[0]=16\).`,
+        R`<b>Even samples.</b> \(S[0]+S[4]=2(s_0+s_2+s_4+s_6)\), so the sum is \(\tfrac{16-4}2=6\).`,
+        R`<b>Amplitudes.</b> DC: \(16/8=2\). Sun (\(k=4\)): \(-4/8=-\tfrac12\), no factor of 2. Others: \(2|S[k]|/8\), giving \(\tfrac{\sqrt{41}}4\), \(\tfrac12\), \(\tfrac{5\sqrt2}4\).`,
+        R`<b>Assemble.</b> \(s[n]=2+\tfrac{\sqrt{41}}4\cos(\tfrac{\pi n}4-2.2455)+\tfrac12\cos(\tfrac{\pi n}2-\tfrac\pi2)+\tfrac{5\sqrt2}4\cos(\tfrac{3\pi n}4-0.1419)-\tfrac12\cos(\pi n)\).`] }],
+  mistakes:[R`Leaving a quadrant II or III answer as plain \(\arctan(b/a)\) (off by \(\pi\)).`,
+    R`Giving the sun term (\(k=N/2\)) a factor of 2.`,
+    R`Mixing up \(S[0]+S[N/2]\) (even samples) with \(S[0]-S[N/2]\) (odd samples).`] };
+DEEP.supp = { widget:'supp',
+  walks:[
+   { t:R`Example 1 · Problem 18 (i)–(iii): N = 64`, q:R`Real \(\mathbf{x}\), \(X[k]\ne0\) for \(k=0{:}13\), \(X[k]=0\) for \(k=14{:}32\).`,
+     s:[R`<b>Mirror.</b> The zeros \(14{:}32\) mirror to \(64-k=50\) down to 32. So \(X[k]=0\) for \(k=33{:}50\). The nonzero block is \(k=-13..13\).`,
+        R`<b>Modulation.</b> \(\cos(3\pi n/8)=\cos(2\pi\cdot12n/64)\), so \(m=12\) and \(X^{(1)}[k]=\tfrac12(X[k-12]+X[k+12])\).`,
+        R`<b>Copy the block.</b> \([-13,13]\) goes to \([-25,1]\) and \([-1,25]\). They overlap, so the union is \([-25,25]\).`,
+        R`<b>Zeros.</b> Everything else: \(k=26{:}38\). Check the edges: \(k=26\) needs \(X[14]\) and \(X[38]\), both zero; \(k=25\) needs \(X[13]\ne0\).`,
+        R`<b>Delay pair.</b> \(x[n-4]+x[n+4]\) multiplies by \(2\cos(2\pi4k/64)=2\cos(\pi k/8)\). It is 0 at \(k=4,12,20,28,36,44,52,60\).`,
+        R`<b>Combine with the old zeros.</b> 20, 28, 36, 44 were already zero. The new zeros are 4, 12, 52, 60, so the full set is \(4,\ 12,\ 14{:}50,\ 52,\ 60\).`] }],
+  mistakes:[R`Forgetting the mirror, so you only count zeros on one side.`,
+    R`Copying the block by the wrong amount: \(\cos(2\pi mn/N)\) shifts by \(m\), not \(2m\).`,
+    R`Not checking whether the two copies overlap. If they don't, there's a gap of zeros between them.`] };
+DEEP.convplus = { widget:'cconv',
+  walks:[
+   { t:R`Example 1 · Problem 19 (i), (ii): by hand, then with shifts`, q:R`\(\mathbf{x}=[4,-3,1,-1,2]\), \(\mathbf{y}=[5,2,3,0,-2]\), \(N=5\). Find \(\mathbf{x}\circledast\mathbf{y}\), then \(\mathbf{a}\circledast\mathbf{b}\) for \(\mathbf{a}=[1,-1,2,4,-3]\), \(\mathbf{b}=[2,3,0,-2,5]\).`,
+     s:[R`<b>Entry 0.</b> \(s[0]=x_0y_0+x_1y_4+x_2y_3+x_3y_2+x_4y_1=20+6+0-3+4=27\). The indices in each term add to 0 (mod 5).`,
+        R`<b>Entry 1.</b> \(x_0y_1+x_1y_0+x_2y_4+x_3y_3+x_4y_2=8-15-2+0+6=-3\). The rest give \(\mathbf{s}=[27,-3,13,-16,3]\).`,
+        R`<b>Compare vectors.</b> \(\mathbf{a}=[1,-1,2,4,-3]\) is \(\mathbf{x}=[4,-3,1,-1,2]\) moved left by 2. \(\mathbf{b}=[2,3,0,-2,5]\) is \(\mathbf{y}\) moved left by 1.`,
+        R`<b>Phase factors multiply.</b> \(A[k]B[k]=e^{j2\pi2k/5}e^{j2\pi k/5}X[k]Y[k]=e^{j2\pi3k/5}S[k]\), which means \(\mathbf{s}\) moved left by 3.`,
+        R`<b>Shift.</b> \([s_3,s_4,s_0,s_1,s_2]=[-16,3,27,-3,13]\).`] },
+   { t:R`Example 2 · Problem 19 (iii), (iv): circulant solve and the reciprocal`, q:R`Solve \(\mathbf{A}\mathbf{c}=\mathbf{b}\) with first column \(\mathbf{h}=[2,-1,5,-3,3,-2]\), \(\mathbf{b}=[-1,-7,9,2,12,-7]\). Then find \(\mathbf{X}\circledast\mathbf{Y}\) if \(x[n]=1/y[n]\).`,
+     s:[R`<b>Recognize the circulant.</b> Each column is the previous one shifted down, so \(\mathbf{A}\mathbf{c}=\mathbf{h}\circledast\mathbf{c}\).`,
+        R`<b>DFT.</b> \(H[k]C[k]=B[k]\), so \(C[k]=B[k]/H[k]\). Check \(H[0]=\sum h=4\) and \(B[0]=8\), so \(C[0]=2\).`,
+        R`<b>Invert.</b> <span class="mono">c = real(ifft(fft(b)./fft(h)))</span> gives \([1,2,3,0,-2,-2]\). The sum is 2 ✓.`,
+        R`<b>Reciprocal.</b> \(x[n]y[n]=1\) for all \(n\) means \(\mathbf{x}\odot\mathbf{y}=\mathbf{1}\).`,
+        R`<b>DFT of both sides.</b> \(\tfrac1N\mathbf{X}\circledast\mathbf{Y}=N\boldsymbol\delta_0\), so \(\mathbf{X}\circledast\mathbf{Y}=[N^2,0,\dots,0]\).`] }],
+  mistakes:[R`Shifting the wrong way. Moving a vector <i>left</i> is an advance, \(\mathbf{P}^{-p}\), and the output moves left too.`,
+    R`Forgetting that the shifts <b>add</b> in the output.`,
+    R`Forgetting the \(\frac1N\) in the product rule, which turns \(N\) into \(N^2\).`] };
+
+/* ---------------- homework 11-19: new interactive tools ---------------- */
+const cfmt = (re, im) => { const r = fmt(re), i = fmt(Math.abs(im)); if (Math.abs(im) < 1e-9) return r; if (Math.abs(re) < 1e-9) return (im < 0 ? '-' : '') + (Math.abs(Math.abs(im) - 1) < 1e-9 ? '' : i) + 'j'; return r + (im < 0 ? ' - ' : ' + ') + (Math.abs(Math.abs(im) - 1) < 1e-9 ? '' : i) + 'j'; };
+WIDGETS.proj = el => {
+  el.innerHTML = `<div class="form-row"><label for="wpS">Vector s (real numbers)</label><input type="text" id="wpS" value="1, 6, 2, 7"></div>
+    <div class="form-row"><label for="wpV">Vectors v, separated by semicolons</label><input type="text" id="wpV" value="3,1,1,-1; 1,-2,0,1; -1,1,5,3"></div><div id="wpOut"></div>`;
+  const out = el.querySelector('#wpOut');
+  const dot = (a, b) => a.reduce((t, x, i) => t + x * b[i], 0);
+  const vec = v => '[' + v.map(fmt).join(', ') + ']';
+  const draw = () => {
+    try {
+      const s = el.querySelector('#wpS').value.split(/[,\s]+/).filter(Boolean).map(Number);
+      const vs = el.querySelector('#wpV').value.split(';').map(t => t.split(/[,\s]+/).filter(Boolean).map(Number)).filter(v => v.length);
+      if (!s.length || s.some(isNaN) || !vs.length || vs.some(v => v.length !== s.length || v.some(isNaN))) throw new Error('every vector must be numbers, and each v needs the same length as s');
+      if (vs.some(v => dot(v, v) === 0)) throw new Error('a v vector can\'t be all zeros');
+      const n2 = dot(s, s); if (n2 === 0) throw new Error('s can\'t be all zeros');
+      let orth = true, rows = '';
+      for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) { const d = dot(vs[i], vs[j]); if (Math.abs(d) > 1e-9) orth = false; rows += `<tr><td>v${i + 1} · v${j + 1}</td><td>${fmt(d)}</td></tr>`; }
+      const f = vs.map(v => { const a = dot(s, v) / dot(v, v); return { a, f: v.map(x => a * x), dv: dot(s, v), nv: dot(v, v) }; });
+      const g = s.map((_, i) => f.reduce((t, p) => t + p.f[i], 0)), e = s.map((x, i) => x - g[i]);
+      const ng = dot(g, g), ne = dot(e, e);
+      const ang = vs.length === 1 ? Math.acos(Math.max(-1, Math.min(1, dot(s, vs[0]) / Math.sqrt(n2 * dot(vs[0], vs[0]))))) : Math.acos(Math.min(1, Math.sqrt(ng / n2)));
+      out.innerHTML = `${vs.length > 1 ? `<table class="out widget-table"><tr><th>pair</th><th>dot product</th></tr>${rows}</table><p class="note-guide">${orth ? 'All pairs are orthogonal, so adding the individual projections is correct.' : 'These vectors are NOT all orthogonal, so the sum below is not the projection onto their span.'}</p>` : ''}
+        <div class="scroll-x"><table class="out widget-table"><tr><th>v</th><th>s·v</th><th>‖v‖²</th><th>coefficient</th><th>projection</th></tr>
+        ${f.map((p, i) => `<tr><td>v${i + 1}</td><td>${fmt(p.dv)}</td><td>${fmt(p.nv)}</td><td>${fmt(p.a)}</td><td>${vec(p.f)}</td></tr>`).join('')}</table></div>
+        <p class="mono" style="margin:10px 0 2px">${vs.length > 1 ? 'sum g = ' + vec(g) : 'projection = ' + vec(g)}</p><p class="mono" style="margin:0 0 2px">error s − g = ${vec(e)}</p>
+        <p class="mono" style="margin:0 0 2px">‖s‖² = ${fmt(n2)} · ‖g‖² = ${fmt(ng)} · ‖s−g‖² = ${fmt(ne)} ${Math.abs(n2 - ng - ne) < 1e-7 ? '(Pythagoras holds)' : ''}</p>
+        <p class="mono" style="margin:0">${vs.length === 1 ? 'angle between s and v' : 'angle between s and the span'} = ${fmt(ang * 180 / Math.PI)}°</p>`;
+    } catch (err) { out.innerHTML = `<p class="err">Check the input: ${err.message}.</p>`; }
+  };
+  el.querySelector('#wpS').oninput = draw; el.querySelector('#wpV').oninput = draw; draw();
+};
+WIDGETS.rep = el => {
+  el.innerHTML = `<div class="row2" style="max-width:520px"><div class="form-row"><label for="wrN">Length N</label><select id="wrN">${[4, 6, 8, 9, 10, 12].map(n => `<option ${n === 9 ? 'selected' : ''}>${n}</option>`).join('')}</select></div>
+    <div class="form-row"><label for="wrT">Signal</label><select id="wrT"><option value="cos">A cos(2πkn/N)</option><option value="sin">A sin(2πkn/N)</option></select></div>
+    <div class="form-row"><label for="wrK">Bin k (0 to N−1)</label><input type="number" id="wrK" value="3" min="0" step="1"></div>
+    <div class="form-row"><label for="wrA">Amplitude A</label><input type="number" id="wrA" value="1" step="0.5"></div></div><div id="wrOut"></div>`;
+  const out = el.querySelector('#wrOut');
+  const draw = () => {
+    const N = +el.querySelector('#wrN').value, t = el.querySelector('#wrT').value, A = Number(el.querySelector('#wrA').value);
+    let k = Math.round(Number(el.querySelector('#wrK').value));
+    if (isNaN(k) || isNaN(A)) { out.innerHTML = `<p class="err">Enter a whole number for k and a number for A.</p>`; return; }
+    k = ((k % N) + N) % N;
+    const x = Array.from({ length: N }, (_, n) => [A * (t === 'cos' ? Math.cos(2 * Math.PI * k * n / N) : Math.sin(2 * Math.PI * k * n / N)), 0]);
+    const X = dft(x, false), nz = X.map((v, i) => [i, v]).filter(([, v]) => Math.hypot(v[0], v[1]) > 1e-9);
+    const mirror = (N - k) % N, pair = k === mirror;
+    let why;
+    if (nz.length === 0) why = 'This signal is identically zero (a sine at bin 0 or N/2 is all zeros).';
+    else if (t === 'cos') why = pair ? `Bin ${k} is its own mirror, so there's no pair and no factor of 1/2: X[${k}] = A·N = ${fmt(A * N)}.` : `cos splits into two exponentials with coefficient A/2, on columns ${k} and ${mirror}. Multiply by N: X = A·N/2 = ${fmt(A * N / 2)} at both.`;
+    else why = `sin splits into (A/2j)(v${k} − v${mirror}) = (−jA/2) v${k} + (jA/2) v${mirror}. Multiply by N: X[${k}] = −jAN/2 = ${cfmt(0, -A * N / 2)} and X[${mirror}] = +jAN/2 = ${cfmt(0, A * N / 2)}.`;
+    out.innerHTML = `<p class="mono" style="margin:0 0 6px">x = [${x.map(v => fmt(v[0])).join(', ')}]</p>
+      <div class="scroll-x"><table class="out widget-table"><tr><th>bin k</th>${X.map((_, i) => `<th>${i}</th>`).join('')}</tr><tr><td>X[k]</td>${X.map((v, i) => `<td class="${Math.hypot(v[0], v[1]) > 1e-9 ? 'hot' : ''}">${cfmt(v[0], v[1])}</td>`).join('')}</tr></table></div>
+      <p class="note-guide">${why}${k !== +el.querySelector('#wrK').value ? ' (k was reduced mod N.)' : ''} Bins k and N−k are the same sinusoid at opposite frequencies.</p>`;
+  };
+  ['#wrN', '#wrT'].forEach(id => el.querySelector(id).onchange = draw); ['#wrK', '#wrA'].forEach(id => el.querySelector(id).oninput = draw); draw();
+};
+WIDGETS.phase = el => {
+  el.innerHTML = `<div class="row2" style="max-width:560px"><div class="form-row"><label for="wzZ">Complex number S[k]</label><input type="text" id="wzZ" value="-4-5j"></div>
+    <div class="form-row"><label for="wzN">N (length of the real signal)</label><input type="number" id="wzN" value="8" min="2" step="1"></div>
+    <div class="form-row"><label for="wzK">Bin k</label><input type="number" id="wzK" value="1" min="0" step="1"></div></div><div id="wzOut"></div>`;
+  const out = el.querySelector('#wzOut');
+  const draw = () => {
+    try {
+      const [a, b] = parseComplex(el.querySelector('#wzZ').value), N = Math.round(+el.querySelector('#wzN').value), k = Math.round(+el.querySelector('#wzK').value);
+      const mag = Math.hypot(a, b);
+      let quad;
+      if (mag < 1e-12) quad = 'zero (the phase is undefined)'; else if (Math.abs(b) < 1e-12) quad = a > 0 ? 'positive real axis' : 'negative real axis';
+      else if (Math.abs(a) < 1e-12) quad = b > 0 ? '+j axis' : '−j axis'; else quad = a > 0 ? (b > 0 ? 'quadrant I' : 'quadrant IV') : (b > 0 ? 'quadrant II' : 'quadrant III');
+      const naive = Math.abs(a) < 1e-12 ? NaN : Math.atan(b / a), ph = Math.atan2(b, a);
+      let amp = '';
+      if (N >= 2 && k >= 0 && k < N) {
+        const half = N % 2 === 0 && k === N / 2;
+        amp = k === 0 || half ? `<p>For bin ${k} of a real ${N}-point signal (no mirror partner): amplitude |S|/N = ${fmt(mag / N)}.${k === 0 ? ' This is the DC term.' : ' This is the (−1)ⁿ term.'}</p>` : (k > N / 2 ? `<p>Bin ${k} is in the mirrored half (it equals the conjugate of bin ${N - k}). Use the entry at ${N - k} for the cosine.</p>` : `<p>Bin ${k} of a real ${N}-point signal gives the cosine: (2|S|/N) cos(2π·${k}·n/${N} + φ) = ${fmt(2 * mag / N)} cos(${fmt(2 * k / N)}πn ${ph < 0 ? '−' : '+'} ${fmt(Math.abs(ph))}).</p>`);
+      }
+      out.innerHTML = `<table class="out widget-table"><tr><td>magnitude</td><td>${fmt(mag)}</td></tr><tr><td>where it is</td><td>${quad}</td></tr>
+        <tr><td>plain arctan(b/a)</td><td>${isNaN(naive) ? 'undefined (a = 0)' : fmt(naive) + ' rad'}</td></tr>
+        <tr><td><b>correct phase</b></td><td><b>${fmt(ph)} rad = ${fmt(ph / Math.PI)}π</b></td></tr>
+        <tr><td>conjugate partner</td><td>${cfmt(a, -b)} with phase ${fmt(-ph)}</td></tr></table>
+        <p class="note-guide">${!isNaN(naive) && Math.abs(naive - ph) > 1e-9 ? 'The plain arctan is off here because a < 0. ' + (b > 0 ? 'Add π.' : 'Subtract π.') : 'Here the plain arctan already gives the right answer.'}</p>${amp}`;
+    } catch (err) { out.innerHTML = `<p class="err">Check the input: ${err.message}. Try forms like -4-5j, 7-j, 3j or 16.</p>`; }
+  };
+  ['#wzZ', '#wzN', '#wzK'].forEach(id => el.querySelector(id).oninput = draw); draw();
+};
+WIDGETS.supp = el => {
+  el.innerHTML = `<div class="row2" style="max-width:640px"><div class="form-row"><label for="wuN">Length N</label><select id="wuN"><option>16</option><option>32</option><option selected>64</option></select></div>
+    <div class="form-row"><label for="wuK">Nonzero bins are −K … K (real signal), K =</label><input type="number" id="wuK" value="13" min="0" step="1"></div>
+    <div class="form-row"><label for="wuO">Operation</label><select id="wuO"><option value="none">None (just the mirror)</option><option value="mod" selected>Multiply by cos(2π m n / N)</option><option value="delay">x[n−d] + x[n+d]</option></select></div>
+    <div class="form-row"><label for="wuM">m or d</label><input type="number" id="wuM" value="12" min="0" step="1"></div></div><div id="wuOut"></div>`;
+  const out = el.querySelector('#wuOut');
+  const ranges = z => { const r = []; let i = 0; while (i < z.length) { let j = i; while (j + 1 < z.length && z[j + 1] === z[j] + 1) j++; r.push(i === j ? `${z[i]}` : `${z[i]}–${z[j]}`); i = j + 1; } return r.join(', '); };
+  const draw = () => {
+    const N = +el.querySelector('#wuN').value, op = el.querySelector('#wuO').value;
+    const K = Math.max(0, Math.min(Math.floor(N / 2), Math.round(+el.querySelector('#wuK').value) || 0)), m = Math.max(0, Math.round(+el.querySelector('#wuM').value) || 0);
+    const md = j => ((j % N) + N) % N;
+    const base = new Set(); for (let j = -K; j <= K; j++) base.add(md(j));
+    let set = new Set(base);
+    if (op === 'mod') { set = new Set(); base.forEach(k => { set.add(md(k - m)); set.add(md(k + m)); }); }
+    else if (op === 'delay') { set = new Set([...base].filter(k => Math.abs(Math.cos(2 * Math.PI * m * k / N)) > 1e-9)); }
+    const zeros = Array.from({ length: N }, (_, k) => k).filter(k => !set.has(k));
+    const cols = N <= 16 ? 16 : 16;
+    out.innerHTML = `<div class="supp-grid" style="grid-template-columns:repeat(${cols}, minmax(0, 1fr))">${Array.from({ length: N }, (_, k) => `<div class="supp-cell ${set.has(k) ? 'on' : 'off'}" title="k = ${k}">${k}</div>`).join('')}</div>
+      <p class="note-guide"><b>Colored</b> = may be nonzero. <b>Gray</b> = zero.</p>
+      <p class="mono" style="margin:6px 0 0">zero bins: ${zeros.length ? ranges(zeros) : 'none'}</p>
+      <p class="mono" style="margin:2px 0 0">${op === 'mod' ? `copies: ${-K - m}..${K - m} and ${-K + m}..${K + m}` : op === 'delay' ? `factor 2cos(2π·${m}·k/${N}) is 0 at k = ${Array.from({ length: N }, (_, k) => k).filter(k => Math.abs(Math.cos(2 * Math.PI * m * k / N)) < 1e-9).join(', ') || 'none'}` : 'mirror only'}</p>`;
+  };
+  ['#wuN', '#wuO'].forEach(id => el.querySelector(id).onchange = draw); ['#wuK', '#wuM'].forEach(id => el.querySelector(id).oninput = draw); draw();
+};
+WIDGETS.cconv = el => {
+  el.innerHTML = `<div class="row2" style="max-width:640px"><div class="form-row"><label for="wvX">x</label><input type="text" id="wvX" value="4, -3, 1, -1, 2"></div><div class="form-row"><label for="wvY">y (same length)</label><input type="text" id="wvY" value="5, 2, 3, 0, -2"></div>
+    <div class="form-row"><label for="wvP">Advance x by p (move left)</label><input type="number" id="wvP" value="2" min="0" step="1"></div><div class="form-row"><label for="wvQ">Advance y by q (move left)</label><input type="number" id="wvQ" value="1" min="0" step="1"></div></div><div id="wvOut"></div>`;
+  const out = el.querySelector('#wvOut');
+  const conv = (x, y) => x.map((_, n) => x.reduce((t, xm, m) => t + xm * y[((n - m) % x.length + x.length) % x.length], 0));
+  const adv = (v, p) => v.map((_, n) => v[(n + p) % v.length]);
+  const draw = () => {
+    try {
+      const x = parseVec(el.querySelector('#wvX').value).map(v => v[0]), y = parseVec(el.querySelector('#wvY').value).map(v => v[0]);
+      if (x.length < 2 || x.length > 8 || x.length !== y.length) throw new Error('x and y need the same length, between 2 and 8');
+      const N = x.length, p = Math.max(0, Math.round(+el.querySelector('#wvP').value) || 0), q = Math.max(0, Math.round(+el.querySelector('#wvQ').value) || 0);
+      const s = conv(x, y), a = adv(x, p % N), b = adv(y, q % N), ab = conv(a, b), sh = adv(s, (p + q) % N);
+      const same = ab.every((v, i) => Math.abs(v - sh[i]) < 1e-9);
+      const terms = x.map((xm, m) => `${fmt(xm)}·${fmt(y[(0 - m + N) % N])}`).join(' + ');
+      out.innerHTML = `<p class="mono" style="margin:0 0 4px">s[0] = ${terms} = ${fmt(s[0])}</p>
+        <p class="mono" style="margin:0 0 8px"><b>s = x ⊛ y = [${s.map(fmt).join(', ')}]</b></p>
+        <p class="mono" style="margin:0 0 2px">a = x moved left ${p % N} = [${a.map(fmt).join(', ')}]</p><p class="mono" style="margin:0 0 2px">b = y moved left ${q % N} = [${b.map(fmt).join(', ')}]</p>
+        <p class="mono" style="margin:0 0 2px">a ⊛ b = [${ab.map(fmt).join(', ')}]</p><p class="mono" style="margin:0 0 6px">s moved left ${(p + q) % N} = [${sh.map(fmt).join(', ')}]</p>
+        <p class="note-guide">${same ? 'They match: advancing the inputs advances the output by p + q.' : 'These differ, which shouldn\'t happen. Check the inputs.'}</p>`;
+    } catch (err) { out.innerHTML = `<p class="err">Check the input: ${err.message}.</p>`; }
+  };
+  ['#wvX', '#wvY', '#wvP', '#wvQ'].forEach(id => el.querySelector(id).oninput = draw); draw();
+};
 
 /* ---------------- state ---------------- */
 const store = {
