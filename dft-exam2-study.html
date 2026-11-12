@@ -374,7 +374,7 @@ ul.mistakes li::before { content: "✕"; position: absolute; left: 4px; top: 0; 
     </aside>
     <div>
       <h2 id="probCount">Problems</h2>
-      <p class="lede">Try each problem before you open the hint or solution. Mark it so the drill knows what to bring back. Answers to the Fall 2020 exam and the practice sets are my own, each checked numerically. The Homework 11–19 problems are rebuilt from your solutions PDF, so the wording may differ from your assignment sheet. The numbers and answers match the PDF, and I rechecked them numerically.</p>
+      <p class="lede">Try each problem before you open the hint or solution. Mark it so the drill knows what to bring back. Answers to the Fall 2020 exam and the practice sets are my own, each checked numerically. The Homework 11–19 problems are rebuilt from your solutions PDF, so the wording may differ from your assignment sheet. The numbers and answers match the PDF, and I rechecked them numerically. The 18 Extra practice problems are my own, written to cover each topic once more, and every answer was checked numerically.</p>
       <div class="cards" id="cards"></div>
     </div>
   </div>
@@ -1584,6 +1584,165 @@ Object.assign(THINK, {
   R`If \(x[n]y[n]=1\) for all \(n\), the elementwise product is the all-ones vector.`,
   R`The DFT of all ones is \(N\) at bin 0. The product rule has a \(\frac1N\), so \(\mathbf{X}\circledast\mathbf{Y}=N\cdot N\boldsymbol\delta_0\).`]
 });
+/* ---------- EXTRA PRACTICE (written for this guide, answers checked numerically) ---------- */
+SOURCES.push('Extra practice');
+P.push(
+{ id:'x01', src:6, num:'Extra 1', topic:'samp', title:'Smallest N for exactly five nonzero bins',
+  q:R`<p>\(x(t)=a+b\cos(40\pi t+0.3)+c\cos(100\pi t-1)\) is sampled at \(f_s=200\) Hz starting at \(t=0\). What is the smallest \(N>5\) so that the DFT of \(x[0:N-1]\) has <b>exactly five</b> nonzero entries?</p>`,
+  choices:['10','20','40','100'], correct:1,
+  hint:R`The frequencies are 20 Hz and 50 Hz, so \(\omega=\pi/5\) and \(\pi/2\). Each must equal \(2\pi k/N\) for a whole number \(k\).`,
+  sol:R`<p>\(\omega_1=2\pi\cdot20/200=2\pi/10\) needs \(10\mid N\). \(\omega_2=2\pi\cdot50/200=2\pi/4\) needs \(4\mid N\). The smallest common multiple is 20.</p>
+  <p>At \(N=20\): DC at \(k=0\), the 20 Hz cosine at \(k=2,18\), the 50 Hz cosine at \(k=5,15\). That is 5 bins.</p>
+  <p class="answer">N = 20</p>
+  <p>(At \(N=10\), the 50 Hz cosine would sit at \(k=2.5\), so it leaks and all 10 bins are nonzero.)</p>`},
+{ id:'x02', src:6, num:'Extra 2', topic:'samp', title:'Which bins are nonzero?',
+  q:R`<p>\(x(t)=3\cos(30\pi t+0.4)+2\sin(80\pi t)\) is sampled at \(f_s=120\) Hz. (i) What is the smallest \(N\) for which each sinusoid lands exactly on a bin? (ii) For that \(N\), which DFT entries are nonzero?</p>`,
+  hint:R`Convert to Hz first: \(30\pi t\) is 15 Hz and \(80\pi t\) is 40 Hz. Then \(f/f_s\) as a reduced fraction gives the denominator \(N\) must be a multiple of.`,
+  sol:R`<p>(i) \(15/120=1/8\) and \(40/120=1/3\). \(N\) must be a multiple of both 8 and 3, so <span class="answer">\(N=24\)</span></p>
+  <p>(ii) \(k=fN/f_s\): the 15 Hz cosine is at \(k=3\) (mirror 21). The 40 Hz sine is at \(k=8\) (mirror 16). There is no DC term.</p>
+  <p class="answer">Nonzero: \(k=3,\ 8,\ 16,\ 21\)</p>`},
+{ id:'x03', src:6, num:'Extra 3', topic:'read', title:'From an 8-point spectrum back to a formula',
+  q:R`<p>A real signal has \(N=8\) and \(\mathbf{X}=[8,\ 0,\ -4j,\ 0,\ 0,\ 0,\ 4j,\ 0]^T\). Find \(x[n]\) as a formula, then list \(x[0:7]\).</p>`,
+  hint:R`DC \(=X[0]/N\). A pair \(X[k],X[N-k]\) is one cosine with amplitude \(2|X[k]|/N\) and phase \(\angle X[k]\).`,
+  sol:R`<p>DC \(=8/8=1\). The pair at \(k=2,6\) has \(|X[2]|=4\), so amplitude \(2\cdot4/8=1\), and \(\angle X[2]=-\pi/2\). The frequency is \(2\pi\cdot2/8=\pi/2\).</p>
+  <p>\(x[n]=1+\cos(\pi n/2-\pi/2)=1+\sin(\pi n/2)\)</p>
+  <p class="answer">\(\mathbf{x}=[1,\ 2,\ 1,\ 0,\ 1,\ 2,\ 1,\ 0]^T\)</p>`},
+{ id:'x04', src:6, num:'Extra 4', topic:'read', title:'DFT value of a single cosine',
+  q:R`<p>\(x[n]=4\cos\!\left(\frac{3\pi n}{8}-\frac{\pi}{3}\right)\) for \(n=0,\dots,15\) (\(N=16\)). Find \(X[3]\) and \(X[13]\) in polar form, and say which other entries are nonzero.</p>`,
+  hint:R`Match \(3\pi/8\) to \(2\pi k/N\). A cosine with amplitude \(A\) and phase \(\phi\) gives \(X[k]=\frac{NA}{2}e^{j\phi}\) and \(X[N-k]=\frac{NA}{2}e^{-j\phi}\).`,
+  sol:R`<p>\(3\pi/8=2\pi\cdot3/16\), so \(k=3\) and the mirror is \(16-3=13\). \(NA/2=16\cdot4/2=32\).</p>
+  <p class="answer">\(X[3]=32e^{-j\pi/3}\), \(X[13]=32e^{+j\pi/3}\). All other entries are 0.</p>`},
+{ id:'x05', src:6, num:'Extra 5', topic:'inner', title:'A cosine-weighted sum of eight samples',
+  q:R`<p>\(\mathbf{x}=x_{0:7}\) has DFT \(\mathbf{X}\). Express \(r=x_0-x_2+x_4-x_6\) using \(X[k]\).</p>`,
+  hint:R`List the weight on each \(x_n\) for \(n=0,\dots,7\). Odd entries get weight 0. What cosine has those weights?`,
+  sol:R`<p>The weights are \([1,0,-1,0,1,0,-1,0]=\cos(\pi n/2)=\tfrac12\left(e^{j\pi n/2}+e^{-j\pi n/2}\right)\).</p>
+  <p>\(\sum x_ne^{-j2\pi2n/8}=\sum x_ne^{-j\pi n/2}=X[2]\) and \(\sum x_ne^{+j\pi n/2}=\sum x_ne^{-j2\pi6n/8}=X[6]\).</p>
+  <p class="answer">\(r=\tfrac12\big(X[2]+X[6]\big)\)</p>`},
+{ id:'x06', src:6, num:'Extra 6', topic:'inner', title:'Alternating and even-index sums (N = 10)',
+  q:R`<p>\(\mathbf{x}=x_{0:9}\) has DFT \(\mathbf{X}\). Express (i) \(r_1=x_0-x_1+x_2-x_3+\dots-x_9\) and (ii) \(r_2=x_0+x_2+x_4+x_6+x_8\) using \(X[k]\).</p>`,
+  hint:R`\((-1)^n=e^{-j2\pi(N/2)n/N}\) picks out \(X[N/2]\). Plain \(\sum x_n\) is \(X[0]\). For (ii), add and subtract.`,
+  sol:R`<p>(i) \((-1)^n=e^{-j2\pi5n/10}\), so <span class="answer">\(r_1=X[5]\)</span></p>
+  <p>(ii) \(X[0]=\sum x_n=r_2+\text{odd sum}\) and \(X[5]=r_2-\text{odd sum}\). Adding gives <span class="answer">\(r_2=\tfrac12\big(X[0]+X[5]\big)\)</span></p>`},
+{ id:'x07', src:6, num:'Extra 7', topic:'sym', title:'Fill in the rest of a real signal’s DFT',
+  q:R`<p>\(\mathbf{x}\) is real with \(N=8\). Its DFT has \(X[0]=6\), \(X[1]=2+3j\), \(X[2]=-1+2j\), \(X[3]=-j\), \(X[4]=1\). Find \(X[5],X[6],X[7]\) and \(x[0]\).</p>`,
+  hint:R`Real signal means \(X[N-k]=X[k]^*\). And \(x[0]=\frac1N\sum_k X[k]\) (every exponential equals 1 at \(n=0\)).`,
+  sol:R`<p>Mirror and conjugate: \(X[7]=(2+3j)^*\), \(X[6]=(-1+2j)^*\), \(X[5]=(-j)^*\).</p>
+  <p class="answer">\(X[5]=j,\ X[6]=-1-2j,\ X[7]=2-3j\)</p>
+  <p>The sum: \(6+1+2\operatorname{Re}(2+3j)+2\operatorname{Re}(-1+2j)+2\operatorname{Re}(-j)=7+4-2+0=9\).</p>
+  <p class="answer">\(x[0]=9/8\)</p>`},
+{ id:'x08', src:6, num:'Extra 8', topic:'sym', title:'Symmetry of an imaginary signal',
+  q:R`<p>\(\mathbf{x}\) is <b>purely imaginary</b> with \(N=6\), and \(X[1]=3-2j\). What is \(X[5]\)?</p>`,
+  choices:['3+2j','−3+2j','−3−2j','3−2j'], correct:2,
+  hint:R`Write \(\mathbf{x}=j\mathbf{r}\) with \(\mathbf{r}\) real. For a real signal, \(R[N-k]=R[k]^*\). Then multiply by \(j\).`,
+  sol:R`<p>\(\mathbf{X}=j\mathbf{R}\) and \(R[5]=R[1]^*\), so \(X[5]=jR[1]^*\). Since \(X[1]=jR[1]\), we have \(X[1]^*=-jR[1]^*\), so \(jR[1]^*=-X[1]^*\).</p>
+  <p class="answer">\(X[5]=-X[1]^*=-3-2j\)</p>
+  <p>Real signal: \(X[N-k]=X[k]^*\). Imaginary signal: \(X[N-k]=-X[k]^*\).</p>`},
+{ id:'x09', src:6, num:'Extra 9', topic:'ls', title:'Best fit with a constant and an alternating pattern',
+  q:R`<p>\(\mathbf{s}=[5,\ 1,\ 3,\ -1]^T\). Find the least-squares approximation of the form \(\alpha[1,1,1,1]^T+\beta[1,-1,1,-1]^T\), and the squared length of the error.</p>`,
+  hint:R`The two columns are orthogonal, so each coefficient is \(\frac{\mathbf{s}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}\) on its own. Check the error with Parseval if you like.`,
+  sol:R`<p>\(\alpha=\frac{5+1+3-1}{4}=2\), \(\beta=\frac{5-1+3+1}{4}=2\). The fit is \([4,0,4,0]\).</p>
+  <p class="answer">\(\alpha=2,\ \beta=2\). Error \(\mathbf{e}=[1,1,-1,-1]\), \(\|\mathbf{e}\|^2=4\).</p>
+  <p>Check: \(\mathbf{S}=[8,\,2-2j,\,8,\,2+2j]\). The dropped bins \(k=1,3\) give \(\frac14(8+8)=4\) ✓.</p>`},
+{ id:'x10', src:6, num:'Extra 10', topic:'ls', title:'Least-squares error from a magnitude plot',
+  q:R`<p>A real 8-point signal has \(|X[k]|=[16,\ 10,\ 6,\ 4,\ 2,\ 4,\ 6,\ 10]\) for \(k=0,\dots,7\). It is approximated by its DC plus its \(k=\pm1\) sinusoid only (the best fit using those columns). Find the squared error.</p>`,
+  hint:R`Keeping a set of Fourier columns keeps those DFT bins. The error is \(\frac1N\) times the sum of \(|X[k]|^2\) over the dropped bins (Parseval).`,
+  sol:R`<p>Dropped bins: \(k=2,3,4,5,6\). \(\frac18(36+16+4+16+36)=\frac{108}{8}\).</p>
+  <p class="answer">Error \(=13.5\)</p>
+  <p>Check: total energy \(\frac18\sum|X|^2=70.5\), and the kept part is \(\frac18(256+100+100)=57\). \(70.5-57=13.5\) ✓</p>`},
+{ id:'x11', src:6, num:'Extra 11', topic:'shift', title:'A shift and a modulation, N = 6',
+  q:R`<p>\(\mathbf{s}=[a\ b\ c\ d\ e\ f]^T\) has DFT \(\mathbf{S}=[A\ B\ C\ D\ E\ F]^T\). Find the DFT of (i) \(\mathbf{x}=[d\ e\ f\ a\ b\ c]^T\) and (ii) \(\mathbf{y}=[a\ {-b}\ c\ {-d}\ e\ {-f}]^T\).</p>`,
+  hint:R`(i) is \(\mathbf{s}\) moved by half its length. A shift by \(m\) multiplies \(S[k]\) by \(e^{-j2\pi km/N}\). (ii) multiplies the time signal by \((-1)^n\). What does that do to \(\mathbf{S}\)?`,
+  sol:R`<p>(i) A shift by 3 with \(N=6\): the factor is \(e^{-j2\pi k3/6}=(-1)^k\). <span class="answer">\(\mathbf{X}=[A,\ -B,\ C,\ -D,\ E,\ -F]^T\)</span></p>
+  <p>(ii) \((-1)^n=e^{-j2\pi3n/6}\) moves the spectrum by 3: \(Y[k]=S[k-3]\). <span class="answer">\(\mathbf{Y}=[D,\ E,\ F,\ A,\ B,\ C]^T\)</span></p>
+  <p>Notice the symmetry: shifting by \(N/2\) in one domain is multiplying by a \((-1)\) pattern in the other.</p>`},
+{ id:'x12', src:6, num:'Extra 12', topic:'shift', title:'Duality: which signal has this DFT?',
+  q:R`<p>Find the 4-point vector \(\mathbf{u}\) whose DFT is \(\mathbf{w}=[4,\ 2,\ 0,\ -2]^T\).</p>`,
+  hint:R`Duality: \(\mathbf{u}=\frac1N\mathbf{R}\,\text{DFT}(\mathbf{w})\), where \(\mathbf{R}\) keeps entry 0 and reverses the rest.`,
+  sol:R`<p>\(\text{DFT}(\mathbf{w})=[4,\ 4-4j,\ 4,\ 4+4j]\). Apply \(\mathbf{R}\) (keep the first, reverse the other three): \([4,\ 4+4j,\ 4,\ 4-4j]\). Divide by 4.</p>
+  <p class="answer">\(\mathbf{u}=[1,\ 1+j,\ 1,\ 1-j]^T\)</p>
+  <p>Check: \(\sum u=4=w_0\) ✓, and \(\text{DFT}(\mathbf{u})=[4,2,0,-2]\).</p>`},
+{ id:'x13', src:6, num:'Extra 13', topic:'ext', title:'Periodic extension versus zero-padding',
+  q:R`<p>\(\mathbf{u}=[2,\ 1,\ 4,\ 3]^T\) has DFT \(\mathbf{U}=[10,\ -2+2j,\ 2,\ -2-2j]^T\). (i) \(\mathbf{x}=[\mathbf{u};\mathbf{u};\mathbf{u}]\) has length 12. Which entries of \(\mathbf{X}\) are nonzero, and what are they? (ii) \(\mathbf{z}\) is \(\mathbf{u}\) followed by 8 zeros. Find \(Z[0],Z[3],Z[6],Z[9]\). Can you find \(Z[1]\) from \(\mathbf{U}\)?</p>`,
+  hint:R`Periodic extension by \(M\) multiplies the sampled values by \(M\) and zeroes everything between. Zero-padding by \(M\) keeps the same values but adds in-between entries you can't read off \(\mathbf{U}\).`,
+  sol:R`<p>(i) \(M=3\): \(X[3k]=3U[k]\), all others 0.</p>
+  <p class="answer">\(X[0]=30,\ X[3]=-6+6j,\ X[6]=6,\ X[9]=-6-6j\)</p>
+  <p>(ii) Zero-padding to \(3\times\) the length: \(Z[3k]=U[k]\).</p>
+  <p class="answer">\(Z[0]=10,\ Z[3]=-2+2j,\ Z[6]=2,\ Z[9]=-2-2j\)</p>
+  <p>\(Z[1]\) can't be found from \(\mathbf{U}\): it's an in-between value (an interpolation). You'd need \(\mathbf{u}\) itself.</p>`},
+{ id:'x14', src:6, num:'Extra 14', topic:'supp', title:'Where does the block of nonzero bins go?',
+  q:R`<p>\(\mathbf{x}\) is real with \(N=64\), and \(X[k]\neq0\) only for \(5\le k\le12\) and \(52\le k\le59\). Let \(y[n]=x[n](-1)^n\). For which \(k\) is \(Y[k]\) nonzero? Is \(\mathbf{y}\) still real?</p>`,
+  hint:R`\((-1)^n=e^{-j2\pi32n/64}\), so multiplying by it moves the spectrum by 32 places (mod 64). Check the mirror pairs \(k\leftrightarrow64-k\).`,
+  sol:R`<p>\(Y[k]=X[k-32]\). The block \(5\dots12\) moves to \(37\dots44\). The block \(52\dots59\) moves to \(84\dots91\equiv20\dots27\).</p>
+  <p class="answer">\(Y[k]\neq0\) for \(20\le k\le27\) and \(37\le k\le44\)</p>
+  <p>Real? Yes: \(\mathbf{x}\) is real and \((-1)^n\) is real. The mirror of 20 is 44 and the mirror of 27 is 37, so the two blocks are mirror images, as a real signal needs.</p>`},
+{ id:'x15', src:6, num:'Extra 15', topic:'conv', title:'A 4-point circular convolution and a check',
+  q:R`<p>\(\mathbf{x}=[1,\ 2,\ 0,\ -1]^T\) and \(\mathbf{y}=[3,\ 0,\ 1,\ 2]^T\). Find \(\mathbf{s}=\mathbf{x}\circledast\mathbf{y}\), and use \(S[0]\) as a check.</p>`,
+  hint:R`\(s[n]=\sum_mx[m]\,y[(n-m)\bmod4]\). Convolution in time is a product in frequency, so \(S[0]=X[0]Y[0]\), which is (sum of \(\mathbf{x}\))×(sum of \(\mathbf{y}\)).`,
+  sol:R`<p>\(s[0]=x_0y_0+x_1y_3+x_2y_2+x_3y_1=3+4+0+0=7\). The other entries work the same way.</p>
+  <p class="answer">\(\mathbf{s}=[7,\ 5,\ -1,\ 1]^T\)</p>
+  <p>Check: \(\sum x=2\), \(\sum y=6\), and \(2\cdot6=12=7+5-1+1\) ✓</p>`},
+{ id:'x16', src:6, num:'Extra 16', topic:'conv', title:'Solve a circulant system, and when it can’t be solved',
+  q:R`<p>(i) \(\mathbf{A}\) is the \(4\times4\) circulant matrix with first column \(\mathbf{h}=[3,\ 1,\ 0,\ 1]^T\). Solve \(\mathbf{A}\mathbf{u}=\mathbf{b}\) for \(\mathbf{b}=[4,\ 7,\ 1,\ -2]^T\).<br>
+  (ii) Is the circulant matrix with first column \([1,\ 0,\ 1,\ 0]^T\) invertible?</p>`,
+  hint:R`A circulant matrix times \(\mathbf{u}\) is \(\mathbf{h}\circledast\mathbf{u}\), so \(U[k]=B[k]/H[k]\). It can only be solved if no \(H[k]\) is zero.`,
+  sol:R`<p>(i) \(\mathbf{H}=[5,\ 3,\ 1,\ 3]\) (no zeros). Then <span class="mono">u = real(ifft(fft(b) ./ fft(h)))</span>:</p>
+  <p class="answer">\(\mathbf{u}=[1,\ 2,\ 0,\ -1]^T\)</p>
+  <p>Check: \(\sum b=10=H[0]\sum u=5\cdot2\) ✓</p>
+  <p>(ii) \(\mathbf{H}=[2,\ 0,\ 2,\ 0]\), with zeros at \(k=1\) and \(k=3\). Division by zero means it's <b>not invertible</b>.</p>`},
+{ id:'x17', src:6, num:'Extra 17', topic:'proj', title:'Projection, angle and leftover error',
+  q:R`<p>\(\mathbf{s}=[2,\ 1,\ 2]^T\) and \(\mathbf{v}=[1,\ 2,\ 2]^T\). Find the projection of \(\mathbf{s}\) onto \(\mathbf{v}\), the angle between them, and the squared length of the leftover \(\mathbf{s}-\text{proj}\).</p>`,
+  hint:R`Projection \(=\frac{\mathbf{s}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}\mathbf{v}\). The leftover is perpendicular to \(\mathbf{v}\), so Pythagoras gives \(\|\mathbf{s}\|^2-\|\text{proj}\|^2\).`,
+  sol:R`<p>\(\mathbf{s}\cdot\mathbf{v}=2+2+4=8\), \(\mathbf{v}\cdot\mathbf{v}=9\), \(\|\mathbf{s}\|=3\).</p>
+  <p class="answer">Projection \(=\frac89\mathbf{v}=[\frac89,\ \frac{16}9,\ \frac{16}9]^T\)</p>
+  <p>\(\cos\theta=\frac{8}{3\cdot3}=\frac89\), so \(\theta\approx27.3^\circ\).</p>
+  <p>Leftover: \(\|\mathbf{s}\|^2-\frac{(\mathbf{s}\cdot\mathbf{v})^2}{\mathbf{v}\cdot\mathbf{v}}=9-\frac{64}{9}\): <span class="answer">\(\frac{17}{9}\)</span></p>`},
+{ id:'x18', src:6, num:'Extra 18', topic:'rep', title:'DFT of a cosine plus a sine (N = 6)',
+  q:R`<p>\(x[n]=2\cos\!\left(\frac{\pi n}{3}\right)-4\sin\!\left(\frac{2\pi n}{3}\right)\) for \(n=0,\dots,5\). Find \(\mathbf{X}\).</p>`,
+  hint:R`\(\pi/3=2\pi\cdot1/6\) and \(2\pi/3=2\pi\cdot2/6\). Write the sine as \(\frac{1}{2j}(e^{j\theta}-e^{-j\theta})\). The coefficient on \(e^{+j2\pi kn/N}\) times \(N\) is \(X[k]\).`,
+  sol:R`<p>Cosine: \(2\cos\theta=e^{j\theta}+e^{-j\theta}\), so \(X[1]=X[5]=6\cdot1=6\).</p>
+  <p>Sine: \(-4\sin\theta=2j(e^{j\theta}-e^{-j\theta})\), so \(X[2]=6\cdot2j=12j\) and \(X[4]=-12j\).</p>
+  <p class="answer">\(\mathbf{X}=[0,\ 6,\ 12j,\ 0,\ -12j,\ 6]^T\)</p>`}
+);
+Object.assign(THINK, {
+'x01':[R`Turn each frequency into \(\omega=2\pi f/f_s\) and write it as \(2\pi\cdot\)(fraction). The fraction's denominator must divide \(N\).`,
+  R`Find the smallest \(N\) that works for every sinusoid. Then count bins: 1 for DC, 2 for each cosine.`],
+'x02':[R`Read the frequencies off the arguments: \(30\pi t=2\pi\cdot15t\), so 15 Hz.`,
+  R`Reduce \(f/f_s\) to lowest terms. \(N\) is the least common multiple of the denominators.`,
+  R`Bin \(=fN/f_s\), plus its mirror \(N-k\) for each sinusoid.`],
+'x03':[R`DC first: \(X[0]/N\). Then pair up \(k\) with \(N-k\): one cosine per pair.`,
+  R`\(-4j\) has magnitude 4 and angle \(-\pi/2\). A cosine with phase \(-\pi/2\) is a sine.`],
+'x04':[R`Match the frequency to a bin: \(3\pi/8=2\pi k/16\).`,
+  R`Size is \(NA/2\). Phase goes on \(k\), and the opposite phase goes on \(N-k\).`],
+'x05':[R`Write the weight on every \(x_n\), including the zeros.`,
+  R`Recognize them as a cosine, split into two exponentials, and match each to \(X[k]\) using \(e^{+j\dots}=e^{-j\dots(N-k)}\).`],
+'x06':[R`\((-1)^n=e^{-j\pi n}\) and \(\pi=2\pi\cdot(N/2)/N\), so it's the \(k=N/2\) exponential.`,
+  R`For the even-only sum, use the trick: even \(=\frac12(\text{all}+\text{alternating})\).`],
+'x07':[R`Real signal: each missing entry is the conjugate of its mirror, \(X[N-k]=X[k]^*\).`,
+  R`For \(x[0]\), set \(n=0\) in the IDFT: every exponential is 1, so \(x[0]=\frac1N\sum X[k]\).`],
+'x08':[R`Make it a real problem: \(\mathbf{x}=j\mathbf{r}\), so \(\mathbf{X}=j\mathbf{R}\).`,
+  R`Use the real-signal rule on \(\mathbf{R}\), then multiply back by \(j\). The sign flips because \(j^*=-j\).`],
+'x09':[R`Are the columns orthogonal? \([1,1,1,1]\cdot[1,-1,1,-1]=0\), so solve each coefficient separately.`,
+  R`The error is what's left. To double-check, it must equal the dropped DFT energy over \(N\).`],
+'x10':[R`Which bins do the kept columns use? DC is \(k=0\), and a sinusoid uses \(k\) and \(N-k\), so \(k=1,7\).`,
+  R`Error = energy in the other bins, divided by \(N\). Don't forget both mirror bins of each.`],
+'x11':[R`For (i), count how far the vector moved. Shifting by half the length gives a factor \((-1)^k\).`,
+  R`For (ii), the signs alternate in time. That's multiplication by \((-1)^n\), which shifts the spectrum by \(N/2\).`],
+'x12':[R`You're given a DFT and asked for the signal behind it. Use duality: transform \(\mathbf{w}\), reverse the result (keeping index 0), divide by \(N\).`,
+  R`Check the first entry: \(u[0]\) should equal \(\frac1N\sum w\).`],
+'x13':[R`Periodic extension: keep every \(M\)th bin, multiply by \(M\), zero the rest. Zero-padding: keep every \(M\)th bin as is, and the rest are interpolated.`,
+  R`The in-between entries aren't in \(\mathbf{U}\). To know them you'd need \(\mathbf{u}\).`],
+'x14':[R`Multiplying by \((-1)^n\) is a modulation by \(e^{-j2\pi(N/2)n/N}\), so it shifts the spectrum by \(N/2=32\).`,
+  R`Wrap around modulo 64, and confirm the mirror symmetry \(k\leftrightarrow64-k\) to check that the result is real.`],
+'x15':[R`Write \(s[n]=\sum_mx[m]y[(n-m)\bmod N]\). Compute one entry at a time, and wrap negative indices around.`,
+  R`The check: \(S[0]=X[0]Y[0]\), which is the product of the two sums.`],
+'x16':[R`A circulant times \(\mathbf{u}\) is the circular convolution of its first column with \(\mathbf{u}\). So divide in the DFT domain.`,
+  R`A zero in \(H[k]\) kills that frequency, so you can't divide it back out: the matrix is singular.`],
+'x17':[R`Projection onto a single vector: dot product over \(\mathbf{v}\cdot\mathbf{v}\) (not \(\|\mathbf{v}\|\)), times \(\mathbf{v}\).`,
+  R`The leftover is perpendicular to \(\mathbf{v}\), so use Pythagoras instead of subtracting vectors.`],
+'x18':[R`Match each frequency to a bin: \(\pi/3\to k=1\), \(2\pi/3\to k=2\).`,
+  R`Cosine: coefficient \(1\) on each exponential. Sine: coefficient \(\mp j\) times half the amplitude, with opposite signs on \(k\) and \(N-k\). Multiply by \(N\).`]
+});
+
 
 /* ---------------- homework 11-19: new lessons ---------------- */
 LESSONS.push(
